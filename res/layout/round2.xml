@@ -1,0 +1,121 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/AbsoluteLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="15dp"
+        android:layout_y="188dp"
+        android:text="@string/a"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="15dp"
+        android:layout_y="108dp"
+        android:text="@string/c"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/txtQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="0dp"
+        android:layout_y="0dp"
+        android:text="@string/question"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/txt500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="130dp"
+        android:layout_y="108dp"
+        android:text="@string/answer"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/txt250"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="130dp"
+        android:layout_y="148dp"
+        android:text="@string/answer"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/txt100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="130dp"
+        android:layout_y="188dp"
+        android:text="@string/answer"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/response"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        android:layout_x="349dp"
+        android:layout_y="110dp"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="382dp"
+        android:layout_y="164dp"
+        android:text="@string/submit" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="558dp"
+        android:layout_height="wrap_content"
+        android:layout_x="1dp"
+        android:layout_y="40dp"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rdbGuest1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/guest1" />
+
+        <RadioButton
+            android:id="@+id/rdbGuest2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/guest2" />
+
+        <RadioButton
+            android:id="@+id/rdbGuest3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/guest3" />
+
+        <RadioButton
+            android:id="@+id/rdbOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selectOwn" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="15dp"
+        android:layout_y="146dp"
+        android:text="@string/b"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</AbsoluteLayout>

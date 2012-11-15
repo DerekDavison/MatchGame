@@ -1,0 +1,29 @@
+<resources>
+
+    <string name="app_name">MatchGame</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_round1">Round1</string>
+    <string name="title_activity_round2">Round2</string>
+    <string name="title_activity_round3">Round3</string>
+    <string name="title_activity_game_over">GameOver</string>
+    <string name="title_activity_game_play">GamePlay</string>
+    <string name="question">Question/phrase</string>
+    <string name="player1">Player 1</string>
+    <string name="player2">Player 2</string>
+    <string name="guest1">Guest 1</string>
+    <string name="guest2">Guest 2</string>
+    <string name="guest3">Guest 3</string>
+    <string name="guest4">Guest 4</string>
+    <string name="guest5">Guest 5</string>
+    <string name="guest6">Guest 6</string>
+    <string name="answer">Answer!</string>
+    <string name="c">$500</string>
+    <string name="b">$250</string>
+    <string name="a">$100</string>
+    <string name="selectOwn">Select Own</string>
+    <string name="submit">Submit</string>
+    <string name="continue_">Continue</string>
+
+</resources>
