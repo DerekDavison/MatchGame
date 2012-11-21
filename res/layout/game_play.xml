@@ -78,7 +78,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imvMatchGame"
         android:layout_width="155dp"
         android:layout_height="118dp"
         android:layout_x="160dp"
