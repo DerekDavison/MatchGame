@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Login extends Activity implements OnClickListener
 {
@@ -33,7 +34,6 @@ public class Login extends Activity implements OnClickListener
         edtLoginSignUpPasswordFirst = (EditText)findViewById(R.id.edtLoginSignUpPasswordFirst);
         edtLoginSignUpPasswordSecond = (EditText)findViewById(R.id.edtLoginSignUpPasswordSecond);
         
-        
         btnSignUp.setOnClickListener(this);
         btnLogIn.setOnClickListener(this);
     }
@@ -42,24 +42,9 @@ public class Login extends Activity implements OnClickListener
 	{
 		switch(v.getId()) 
     	{  
-	    	case R.id.btnSignUp:
+	    	case R.id.btnSignUp:   
 	    		
-	    		try
-	    		{
-	    			newUserNameValuePairs = new ArrayList<NameValuePair>();
-					
-	    			newUserNameValuePairs.add(new BasicNameValuePair("userId", "0"));
-	    			newUserNameValuePairs.add(new BasicNameValuePair("name", edtLoginSignUpName.getText().toString()));
-	    			newUserNameValuePairs.add(new BasicNameValuePair("email", edtLoginSignUpEmail.getText().toString()));
-		    		newUserNameValuePairs.add(new BasicNameValuePair("password", edtLoginSignUpPasswordFirst.getText().toString()));
-					
-					DBHelper dbHelper = new DBHelper();
-					dbHelper.insertUser(newUserNameValuePairs, StaticData.TEST_INSERT_PHP_FILE);
-	    		}
-	    		catch(Exception e) 
-	    		{
-	    			System.out.println(e.toString());
-	    		}
+	    		insertUser();
 	    		
 	    	break; 
 	    	
@@ -76,6 +61,49 @@ public class Login extends Activity implements OnClickListener
     {
         getMenuInflater().inflate(R.menu.login, menu);
         return true;
+    }
+    
+    private void insertUser()
+    {
+    	if (edtLoginSignUpName.getText().toString().matches(""))
+		{
+			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_SHORT).show();
+		}
+		else if (edtLoginSignUpEmail.getText().toString().matches(""))
+		{
+			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_SHORT).show();
+		}
+		else if (edtLoginSignUpPasswordFirst.getText().toString().matches(""))
+		{
+			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_SHORT).show();
+		}
+		else if (edtLoginSignUpPasswordSecond.getText().toString().matches(""))
+		{
+			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_SHORT).show();
+		}
+		else if (!edtLoginSignUpPasswordFirst.getText().toString().equals(edtLoginSignUpPasswordSecond.getText().toString()))
+		{
+			Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_SHORT).show();
+			edtLoginSignUpPasswordFirst.setText("");
+			edtLoginSignUpPasswordSecond.setText("");
+		}
+		else
+		{
+			newUserNameValuePairs = new ArrayList<NameValuePair>();
+			
+			newUserNameValuePairs.add(new BasicNameValuePair("userId", "0"));
+			newUserNameValuePairs.add(new BasicNameValuePair("name", edtLoginSignUpName.getText().toString()));
+			newUserNameValuePairs.add(new BasicNameValuePair("email", edtLoginSignUpEmail.getText().toString()));
+			newUserNameValuePairs.add(new BasicNameValuePair("password", edtLoginSignUpPasswordFirst.getText().toString()));
+			
+			DBHelper dbHelper = new DBHelper();
+			dbHelper.insertUser(newUserNameValuePairs, StaticData.TEST_INSERT_PHP_FILE);
+			
+			edtLoginSignUpName.setText("");
+			edtLoginSignUpEmail.setText("");
+			edtLoginSignUpPasswordFirst.setText("");
+			edtLoginSignUpPasswordSecond.setText("");
+		}
     }
     
     private void startNewIntent()
