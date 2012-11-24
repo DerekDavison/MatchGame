@@ -23,7 +23,6 @@ public class Login extends Activity implements OnClickListener
 	private Button btnSignUp, btnLogIn;
 	private ArrayList<NameValuePair> newUserNameValuePairs, userByEmailNameValuePairs;
 	private DBHelper dbHelper;
-	private ArrayList<String> usersByEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -98,22 +97,8 @@ public class Login extends Activity implements OnClickListener
 	            btnEnterLogin.setOnClickListener(new OnClickListener() 
 	            {
 		            public void onClick(View v) 
-		            {
-		            	// TODO:
-		            	//
-		            	// try and get user by email
-		            	//		if not possible, login failed
-		            	// if email exists, check if password retrieved by that email matches the password given in dialog
-		            	
-//		            	dbHelper = new DBHelper();
-//			    		
-//			    		userByEmailNameValuePairs = new ArrayList<NameValuePair>(); 
-//			    		userByEmailNameValuePairs.add(new BasicNameValuePair("email", "bob"));
-//			    		
-//			    		if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
-//			    		{
-//			    			
-//			    		}
+		            {	
+		            	authenticateUser(edtLoginEmail, edtLoginPassword);
 		            }
 	            });
 	            
@@ -126,11 +111,7 @@ public class Login extends Activity implements OnClickListener
 	            });
 	              
 	            loginDialog.show();
-	    		
-	    		
-	    		
-	    		
-	    		
+
 	    	break;
  
 	    	default:
@@ -147,6 +128,11 @@ public class Login extends Activity implements OnClickListener
     
     private void insertUser(EditText edtName, EditText edtEmail, EditText edtPasswordFirst, EditText edtPasswordSecond)
     {
+    	dbHelper = new DBHelper();
+    	
+		userByEmailNameValuePairs = new ArrayList<NameValuePair>(); 
+		userByEmailNameValuePairs.add(new BasicNameValuePair("email", edtEmail.getText().toString()));
+    	
     	if (edtName.getText().toString().matches(""))
 		{
 			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_SHORT).show();
@@ -160,14 +146,21 @@ public class Login extends Activity implements OnClickListener
 			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_SHORT).show();
 		}
 		else if (edtPasswordSecond.getText().toString().matches(""))
-		{
+		{ 
 			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_SHORT).show();
 		}
-		else if (!edtPasswordFirst.getText().toString().equals(edtPasswordSecond.getText().toString()))
+		else // if the two passwords don't match
+			if (!edtPasswordFirst.getText().toString().equals(edtPasswordSecond.getText().toString()))
 		{
 			Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_SHORT).show();
 			edtPasswordFirst.setText("");
 			edtPasswordSecond.setText("");
+		}
+		else // if the email is already in the database
+			if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
+		{
+				Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_SHORT).show();
+				edtEmail.setText("");
 		}
 		else
 		{
@@ -182,7 +175,6 @@ public class Login extends Activity implements OnClickListener
 			// new user, default avatar ID to 1 until user changes from default
 			newUserNameValuePairs.add(new BasicNameValuePair("avitar_picture_id", "1"));
 			
-			dbHelper = new DBHelper();
 			dbHelper.insertUser(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
 			
 			edtName.setText(""); 
@@ -193,6 +185,51 @@ public class Login extends Activity implements OnClickListener
 			finish();
 		}
     }
+    
+    private void authenticateUser(EditText edtLoginEmail, EditText edtLoginPassword)
+    {
+    	dbHelper = new DBHelper();
+		
+		userByEmailNameValuePairs = new ArrayList<NameValuePair>(); 
+		userByEmailNameValuePairs.add(new BasicNameValuePair("email", edtLoginEmail.getText().toString()));
+		
+		if (edtLoginEmail.getText().toString().matches(""))
+		{
+			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_SHORT).show();
+		}
+		else if (edtLoginPassword.getText().toString().matches(""))
+		{
+			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_SHORT).show();
+		}
+		else
+		{
+			// if user exists in database via email
+    		if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
+    		{
+    			// get password of user of record where email = email
+    			userByEmailNameValuePairs.add(new BasicNameValuePair("password", edtLoginEmail.getText().toString()));
+    			
+    			for (String password : dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "password"))
+    			{
+    				// go through array list and test password
+    				if (edtLoginPassword.getText().toString().equals(password))
+    				{
+    					startNewIntent();
+    					finish();
+    				}
+    				else
+    				{
+    					Toast.makeText(getApplicationContext(), "Password incorrect. Try again.", Toast.LENGTH_SHORT).show();
+    				}
+    			}
+    		}
+    		else // cannot get user by email (the email is not in the database)
+    		{
+    			Toast.makeText(getApplicationContext(), "Login failed. We don't have record of this email.", Toast.LENGTH_SHORT).show();
+    		}
+		}
+    }
+    
     
     private void startNewIntent()
     {

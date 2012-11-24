@@ -13,8 +13,7 @@
         android:screenOrientation="landscape"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Login"
-            android:label="@string/title_activity_login" >
+            android:name=".SplashScreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,17 +21,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Round1"
+            android:name=".RoundOne"
             android:label="@string/title_activity_round1" >
             
         </activity>
         <activity
-            android:name=".Round2"
+            android:name=".RoundTwo"
             android:label="@string/title_activity_round2" >
             
         </activity>
         <activity
-            android:name=".Round3"
+            android:name=".RoundThree"
             android:label="@string/title_activity_round3" >
             
         </activity>
@@ -46,6 +45,13 @@
             android:label="@string/title_activity_game_play" >
             
         </activity>
+        
+        <activity
+            android:name=".Login"
+            android:label="@string/title_activity_login" >
+            
+        </activity>
+        
     </application>
     
     <uses-permission android:name="android.permission.INTERNET"/>
