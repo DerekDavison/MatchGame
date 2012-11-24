@@ -4,140 +4,28 @@
     android:layout_height="fill_parent"
     android:layout_gravity="center" >
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="25dp"
-        android:layout_y="138dp"
-        android:text="Email"
-        android:textSize="12dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="25dp"
-        android:layout_y="174dp"
-        android:text="Password"
-        android:textSize="12dp" />
-
-    <EditText
-        android:id="@+id/edtLoginSignUpName"
-        android:layout_width="120dp"
-        android:layout_height="33dp"
-        android:layout_x="95dp"
-        android:layout_y="84dp"
-        android:ems="10"
-        android:textSize="12dp" >
-
-        <requestFocus />
-    </EditText>
-
-    <TextView
-        android:id="@+id/txtName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="25dp"
-        android:layout_y="92dp"
-        android:text="Name"
-        android:textSize="12dp" />
-
-    <Button
-        android:id="@+id/btnSignUp"
-        android:layout_width="140dp"
-        android:layout_height="32dp"
-        android:layout_x="25dp"
-        android:layout_y="44dp"
-        android:text="Sign Up"
-        android:textSize="10dp" />
-
-    <EditText
-        android:id="@+id/edtLoginSignUpEmail"
-        android:layout_width="120dp"
-        android:layout_height="33dp"
-        android:layout_x="95dp"
-        android:layout_y="130dp"
-        android:ems="12"
-        android:textSize="10dp" />
-
-    <EditText
-        android:id="@+id/edtLoginSignUpPasswordFirst"
-        android:layout_width="120dp"
-        android:layout_height="33dp"
-        android:layout_x="95dp"
-        android:layout_y="170dp"
-        android:ems="12"
-        android:textSize="10dp" />
-
-    <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="285dp"
-        android:layout_y="100dp"
-        android:text="Name"
-        android:textSize="12dp" />
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_x="0dp"
+        android:layout_y="-15dp"
+        android:src="@drawable/login_background" />
 
     <Button
         android:id="@+id/btnLogIn"
-        android:layout_width="140dp"
-        android:layout_height="32dp"
-        android:layout_x="285dp"
-        android:layout_y="44dp"
-        android:text="Log In"
-        android:textSize="10dp" />
+        android:layout_width="208dp"
+        android:layout_height="38dp"
+        android:layout_x="165dp"
+        android:layout_y="96dp"
+        android:text="Log In" />
 
-    <TextView
-        android:id="@+id/TextView02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="285dp"
-        android:layout_y="141dp"
-        android:text="Email"
-        android:textSize="12dp" />
-
-    <EditText
-        android:id="@+id/edtLoginName"
-        android:layout_width="120dp"
-        android:layout_height="33dp"
-        android:layout_x="340dp"
-        android:layout_y="95dp"
-        android:ems="10"
-        android:textSize="12dp" />
-
-    <EditText
-        android:id="@+id/edtLoginPassword"
-        android:layout_width="120dp"
-        android:layout_height="33dp"
-        android:layout_x="340dp"
-        android:layout_y="134dp"
-        android:ems="10"
-        android:textSize="12dp" />
-
-    <TextView
-        android:id="@+id/TextView03"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="25dp"
-        android:layout_y="210dp"
-        android:text="Password"
-        android:textSize="12dp" />
-
-    <EditText
-        android:id="@+id/edtLoginSignUpPasswordSecond"
-        android:layout_width="120dp"
-        android:layout_height="33dp"
-        android:layout_x="95dp"
-        android:layout_y="208dp"
-        android:ems="10"
-        android:textSize="12dp" />
-
-    <View
-        android:layout_width="1dp"
-        android:layout_height="220dp"
-        android:layout_x="245dp"
-        android:layout_y="29dp"
-        android:background="#B0B0B0" />
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="208dp"
+        android:layout_height="38dp"
+        android:layout_x="165dp"
+        android:layout_y="146dp"
+        android:text="Sign Up" />
 
 </AbsoluteLayout>

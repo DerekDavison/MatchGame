@@ -11,7 +11,7 @@ public class Round2 extends Activity
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.round2);
+        setContentView(R.layout.round_two);
     }
 
     @Override
