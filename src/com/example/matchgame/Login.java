@@ -43,7 +43,7 @@ public class Login extends Activity implements OnClickListener
     	{  
 	    	case R.id.btnSignUp:   
 	    		
-	    		//set up dialog
+	    		//set up dialog 
 	            final Dialog signUpDialog = new Dialog(Login.this);
 	            signUpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 	            
@@ -158,7 +158,7 @@ public class Login extends Activity implements OnClickListener
 		}
 		else // if the email is already in the database
 			if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
-		{
+		{ 
 				Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_SHORT).show();
 				edtEmail.setText("");
 		}
@@ -172,17 +172,21 @@ public class Login extends Activity implements OnClickListener
 			newUserNameValuePairs.add(new BasicNameValuePair("password", edtPasswordFirst.getText().toString()));
 			// new user, default score to 0
 			newUserNameValuePairs.add(new BasicNameValuePair("score", "0"));
-			// new user, default avatar ID to 1 until user changes from default
+			// new user, default avatar ID to 1 until user changes from default 
 			newUserNameValuePairs.add(new BasicNameValuePair("avitar_picture_id", "1"));
+			// default first player to sign in as player one
+			newUserNameValuePairs.add(new BasicNameValuePair("player_state", "first"));
+			// defualt new player to signed in
+			newUserNameValuePairs.add(new BasicNameValuePair("signed_in", "1"));
 			
 			dbHelper.insertUser(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
 			
 			edtName.setText(""); 
 			edtEmail.setText("");
 			edtPasswordFirst.setText("");
-			edtPasswordSecond.setText("");
+			edtPasswordSecond.setText(""); 
 			
-			finish();
+			startNewIntent();
 		}
     }
     
@@ -215,7 +219,6 @@ public class Login extends Activity implements OnClickListener
     				if (edtLoginPassword.getText().toString().equals(password))
     				{
     					startNewIntent();
-    					finish();
     				}
     				else
     				{
@@ -233,7 +236,8 @@ public class Login extends Activity implements OnClickListener
     
     private void startNewIntent()
     {
-    	Intent gamePlayIntent = new Intent(Login.this, GamePlay.class); 
-		startActivity(gamePlayIntent);
+    	Intent continueIntent = new Intent(Login.this, GameSetUp.class); 
+		startActivity(continueIntent);
+		finish();
     }
 }

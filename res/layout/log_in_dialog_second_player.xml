@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="20dp"
+    android:paddingRight="25dp" >
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="16dp"
+        android:text="Email"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/edtLoginEmailSecondPlayer"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_alignBaseline="@+id/TextView01"
+        android:layout_alignBottom="@+id/TextView01"
+        android:layout_toRightOf="@+id/TextView01"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtLoginEmailSecondPlayer"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/edtLoginEmailSecondPlayer"
+        android:text="Password"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/edtLoginPasswordSecondPlayer"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/edtLoginEmailSecondPlayer"
+        android:layout_alignTop="@+id/TextView02"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/btnEnterLoginSecondPlayer"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/TextView02"
+        android:layout_below="@+id/edtLoginPasswordSecondPlayer"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="22dp"
+        android:text="Enter" />
+
+    <Button
+        android:id="@+id/btnCancelLoginSecondPlayer"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_alignBaseline="@+id/btnEnterLoginSecondPlayer"
+        android:layout_alignBottom="@+id/btnEnterLoginSecondPlayer"
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@+id/btnEnterLoginSecondPlayer"
+        android:text="Cancel" />
+
+</RelativeLayout>

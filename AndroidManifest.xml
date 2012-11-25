@@ -52,6 +52,12 @@
             
         </activity>
         
+        <activity
+            android:name=".GameSetUp"
+            android:label="@string/title_activity_login" >
+            
+        </activity>
+        
     </application>
     
     <uses-permission android:name="android.permission.INTERNET"/>
