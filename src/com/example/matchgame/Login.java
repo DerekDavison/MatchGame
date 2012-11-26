@@ -223,12 +223,15 @@ public class Login extends Activity implements OnClickListener
     				else
     				{
     					Toast.makeText(getApplicationContext(), "Password incorrect. Try again.", Toast.LENGTH_SHORT).show();
+    					edtLoginPassword.setText("");
     				}
     			}
     		}
     		else // cannot get user by email (the email is not in the database)
     		{
     			Toast.makeText(getApplicationContext(), "Login failed. We don't have record of this email.", Toast.LENGTH_SHORT).show();
+    			edtLoginEmail.setText("");
+				edtLoginPassword.setText("");
     		}
 		}
     }
