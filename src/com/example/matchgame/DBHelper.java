@@ -67,7 +67,7 @@ public class DBHelper
 		return results;
 	}
 	
-	public void insertUser(ArrayList<NameValuePair> nameValuePairs, String phpFile)
+	public void modifyData(ArrayList<NameValuePair> nameValuePairs, String phpFile)
 	{
 		try
 		{ 

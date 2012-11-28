@@ -8,6 +8,7 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -21,7 +22,8 @@ import android.widget.Toast;
 public class Login extends Activity implements OnClickListener
 {
 	private Button btnSignUp, btnLogIn;
-	private ArrayList<NameValuePair> newUserNameValuePairs, userByEmailNameValuePairs;
+	private ArrayList<NameValuePair> newUserNameValuePairs, userByEmailNameValuePairs, updateUserStateByEmailNameValuePairs, 
+		updateUserSignInStateByEmail;
 	private DBHelper dbHelper;
 
     @Override
@@ -36,7 +38,7 @@ public class Login extends Activity implements OnClickListener
         btnSignUp.setOnClickListener(this);
         btnLogIn.setOnClickListener(this);
     }
-    
+     
     public void onClick(View v)
 	{
 		switch(v.getId()) 
@@ -135,31 +137,31 @@ public class Login extends Activity implements OnClickListener
     	
     	if (edtName.getText().toString().matches(""))
 		{
-			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_LONG).show();
 		}
 		else if (edtEmail.getText().toString().matches(""))
 		{
-			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show();
 		}
 		else if (edtPasswordFirst.getText().toString().matches(""))
 		{
-			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
 		}
 		else if (edtPasswordSecond.getText().toString().matches(""))
 		{ 
-			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
 		}
 		else // if the two passwords don't match
 			if (!edtPasswordFirst.getText().toString().equals(edtPasswordSecond.getText().toString()))
 		{
-			Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_LONG).show();
 			edtPasswordFirst.setText("");
 			edtPasswordSecond.setText("");
 		}
 		else // if the email is already in the database
 			if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
 		{ 
-				Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_LONG).show();
 				edtEmail.setText("");
 		}
 		else
@@ -179,13 +181,14 @@ public class Login extends Activity implements OnClickListener
 			// defualt new player to signed in
 			newUserNameValuePairs.add(new BasicNameValuePair("signed_in", "1"));
 			
-			dbHelper.insertUser(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
-			
+			dbHelper.modifyData(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
+			 
 			edtName.setText(""); 
 			edtEmail.setText("");
 			edtPasswordFirst.setText("");
 			edtPasswordSecond.setText(""); 
 			
+			test(edtEmail);
 			startNewIntent();
 		}
     }
@@ -195,41 +198,74 @@ public class Login extends Activity implements OnClickListener
     	dbHelper = new DBHelper();
 		
 		userByEmailNameValuePairs = new ArrayList<NameValuePair>(); 
+		updateUserStateByEmailNameValuePairs = new ArrayList<NameValuePair>();
+		updateUserSignInStateByEmail = new ArrayList<NameValuePair>();
 		userByEmailNameValuePairs.add(new BasicNameValuePair("email", edtLoginEmail.getText().toString()));
 		
 		if (edtLoginEmail.getText().toString().matches(""))
 		{
-			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show();
 		}
 		else if (edtLoginPassword.getText().toString().matches(""))
 		{
-			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
 		}
 		else
 		{
 			// if user exists in database via email
     		if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
     		{
-    			// get password of user of record where email = email
+    			// set up to get email by password
     			userByEmailNameValuePairs.add(new BasicNameValuePair("password", edtLoginEmail.getText().toString()));
     			
+    			// set the value we're going to send the database for user status
+    			updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("email", edtLoginEmail.getText().toString()));
+    			updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("player_state", StaticData.PLAYER_ONE_STATE));
+    			
+    			updateUserSignInStateByEmail.add(new BasicNameValuePair("email", edtLoginEmail.getText().toString()));
+    			updateUserSignInStateByEmail.add(new BasicNameValuePair("signed_in", "1"));
+    			
+    			// get password of user of record where email = email, and 
     			for (String password : dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "password"))
     			{
     				// go through array list and test password
     				if (edtLoginPassword.getText().toString().equals(password))
     				{
-    					startNewIntent();
+    					// if the password passes, update player_state in db (set as player 1 or 2) and start next intent
+    					dbHelper.modifyData(updateUserStateByEmailNameValuePairs, StaticData.UPDATE_PLAYER_STATE_BY_EMAIL);
+    					
+    					// check if the user is already signed in, and if so, don't allow again
+    					for(String signedInStated : dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "signed_in"))
+    					{
+    						if (Integer.parseInt(signedInStated) == 1)
+    						{
+    							Toast.makeText(getApplicationContext(), "Already logged in. Try again.", Toast.LENGTH_LONG).show();
+    							edtLoginEmail.setText("");
+    							edtLoginPassword.setText("");
+    							break;
+    						}
+    						else if (Integer.parseInt(signedInStated) == 0)
+    						{
+    							// update sign in status
+    							dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
+    							
+    							test(edtLoginEmail);
+    							startNewIntent();
+    							break;
+    						}
+    					}
     				}
-    				else
+    				else 
     				{
-    					Toast.makeText(getApplicationContext(), "Password incorrect. Try again.", Toast.LENGTH_SHORT).show();
+    					Toast.makeText(getApplicationContext(), "Password incorrect. Try again.", Toast.LENGTH_LONG).show();
     					edtLoginPassword.setText("");
+    					break;
     				}
     			}
     		}
     		else // cannot get user by email (the email is not in the database)
     		{
-    			Toast.makeText(getApplicationContext(), "Login failed. We don't have record of this email.", Toast.LENGTH_SHORT).show();
+    			Toast.makeText(getApplicationContext(), "Login failed. We don't have record of this email.", Toast.LENGTH_LONG).show();
     			edtLoginEmail.setText("");
 				edtLoginPassword.setText("");
     		}
@@ -242,5 +278,12 @@ public class Login extends Activity implements OnClickListener
     	Intent continueIntent = new Intent(Login.this, GameSetUp.class); 
 		startActivity(continueIntent);
 		finish();
+    }
+    
+    private void test(EditText edtEmail)
+    {
+    	SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+    	editor.putString("user_email", edtEmail.getText().toString());
+    	editor.commit();
     }
 }
