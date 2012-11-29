@@ -17,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class Login extends Activity implements OnClickListener
@@ -96,12 +97,43 @@ public class Login extends Activity implements OnClickListener
 	            Button btnEnterLogin = (Button) loginDialog.findViewById(R.id.btnEnterLogin);
 	            Button btnCancelLogin = (Button) loginDialog.findViewById(R.id.btnCancelLogin);
 	            
+	            final ProgressBar loginProgressBar = (ProgressBar) loginDialog.findViewById(R.id.pgbLoginStatus); 
+	            loginProgressBar.setProgress(0);
+	            loginProgressBar.setMax(100);
+
 	            btnEnterLogin.setOnClickListener(new OnClickListener() 
 	            {
 		            public void onClick(View v) 
 		            {	
+		            	Thread timer = new Thread()
+		            	{
+		            		int progressBarStatus = 0;
+		            	    public void run()
+		            	    {
+	            	            while(progressBarStatus < 5000)
+	            	            {
+	            	                Login.this.runOnUiThread(new Runnable()
+	            	                {
+	            	                    public void run()
+	            	                    {
+	            	                        progressBarStatus += 20;
+	            	                        loginProgressBar.setProgress(progressBarStatus);
+	            	                    }
+	            	                });
+	            	            }
+	            	            
+	            	            try {
+									Thread.sleep(500);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block   
+									e.printStackTrace();
+								} 
+		            	    }
+		            	};
+		            	timer.start();
+		            	
 		            	authenticateUser(edtLoginEmail, edtLoginPassword);
-		            }
+		            } 
 	            });
 	            
 	            btnCancelLogin.setOnClickListener(new OnClickListener() 
@@ -188,7 +220,7 @@ public class Login extends Activity implements OnClickListener
 			edtPasswordFirst.setText("");
 			edtPasswordSecond.setText(""); 
 			
-			test(edtEmail);
+			saveEmailToNextActivity(edtEmail);
 			startNewIntent();
 		}
     }
@@ -249,7 +281,7 @@ public class Login extends Activity implements OnClickListener
     							// update sign in status
     							dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
     							
-    							test(edtLoginEmail);
+    							saveEmailToNextActivity(edtLoginEmail);
     							startNewIntent();
     							break;
     						}
@@ -280,10 +312,11 @@ public class Login extends Activity implements OnClickListener
 		finish();
     }
     
-    private void test(EditText edtEmail)
+    private void saveEmailToNextActivity(EditText edtEmail)
     {
-    	SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-    	editor.putString("user_email", edtEmail.getText().toString());
+    	SharedPreferences shared = getSharedPreferences(StaticData.USER_EMAIL_SHARED_PREF, MODE_PRIVATE);
+    	SharedPreferences.Editor editor = shared.edit();
+    	editor.putString(StaticData.USER_EMAIL_SHARED_PREF_KEY, edtEmail.getText().toString());
     	editor.commit();
     }
 }

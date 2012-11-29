@@ -41,24 +41,16 @@ public class GameSetUp extends Activity implements OnClickListener
     }
 	
 	public void onClick(View v)
-	{
+	{ 
 		switch(v.getId()) 
     	{   
-	    	case R.id.btnPlayAlone:   
+	    	case R.id.btnPlayAlone:     
+
+	    		setSinglePlayerMode();
+
+    			startNewIntent();
     			
-	    		startNewIntent();
-	    		
-	    		// TODO: issue with SharedPreferences giving null pointer exception
-	    		// fix later and update player state (by email from SharedPreferences) to "single" for this event
-	    		
-//	    		SharedPreferences prefs = getPreferences(MODE_PRIVATE); 
-//	    		String sharedPreferencesEmail = prefs.getString("user_email", null);
-//	    		
-//	    		updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("email", edtLoginEmail.getText().toString()));
-//    			updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("player_state", StaticData.PLAYER_TWO_STATE));
-	    		
-	    		
-	    	break; 
+	    	break;  
 	    	
 	    	case R.id.btnSignInSecondPlayer: 
 
@@ -278,6 +270,17 @@ public class GameSetUp extends Activity implements OnClickListener
 			startNewIntent();
 		}
     }
+	
+	private void setSinglePlayerMode()
+	{
+		dbHelper = new DBHelper();
+		updateUserStateByEmailNameValuePairs = new ArrayList<NameValuePair>();
+		
+		SharedPreferences shared = getSharedPreferences(StaticData.USER_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.USER_EMAIL_SHARED_PREF_KEY, "")));
+		updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("player_state", StaticData.PLAYER_SINGLE_STATE));
+		dbHelper.modifyData(updateUserStateByEmailNameValuePairs, StaticData.UPDATE_PLAYER_STATE_BY_EMAIL);
+	}
 	
 	private void startNewIntent()
     {
