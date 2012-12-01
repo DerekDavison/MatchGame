@@ -65,5 +65,15 @@
         android:layout_marginLeft="18dp"
         android:layout_toRightOf="@+id/btnEnterLoginSecondPlayer"
         android:text="Cancel" />
+
+    <ProgressBar
+        android:id="@+id/pgbLoginSecondPlayer"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView02"
+        android:layout_alignRight="@+id/edtLoginPasswordSecondPlayer"
+        android:layout_below="@+id/btnEnterLoginSecondPlayer"
+        android:layout_marginTop="16dp" />
 
 </RelativeLayout>

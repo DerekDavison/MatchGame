@@ -27,6 +27,7 @@ public class Login extends Activity implements OnClickListener
 		updateUserSignInStateByEmail;
 	private DBHelper dbHelper;
 	private Thread progresBartimerThread, authenticationThread;
+	private Boolean progressBarIsComplete = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -83,7 +84,7 @@ public class Login extends Activity implements OnClickListener
 	    		
 	    	break; 
 	    	
-	    	case R.id.btnLogIn: 
+	    	case R.id.btnLogIn: ////////////////////////////////////////////////
 	    		
 	    		final Dialog loginDialog = new Dialog(Login.this);
 	    		loginDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -105,8 +106,9 @@ public class Login extends Activity implements OnClickListener
 
 	            btnEnterLogin.setOnClickListener(new OnClickListener() 
 	            {	
-		            public void onClick(View v) 
+		            public void onClick(final View v) 
 		            {	
+		            	// check if edit text boxes are empty
 	            		if (edtLoginEmail.getText().toString().matches(""))
 		        		{
 		        			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show();
@@ -117,23 +119,35 @@ public class Login extends Activity implements OnClickListener
 		        		}
 		        		else
 		        		{
+		        			// a separate thread for the progress bar
 		        			progresBartimerThread = new Thread()
 			            	{
-			            		int progressBarStatus = 0;
+		        				int progressBarStatus = 0;
+		        				Boolean breakLoop = false;
 			            	    public void run()
 			            	    {
+			            	    	// while progress bar is not complete, run progress bar thread on UI thread 
 		            	            while(progressBarStatus < 100)
 		            	            {
 		            	                Login.this.runOnUiThread(new Runnable()
 		            	                {
 		            	                    public void run()
 		            	                    {
-		            	                        progressBarStatus += 15; 
+	            	                    		progressBarStatus += 15; 
 		            	                        loginProgressBar.setVisibility(1);
 		            	                        loginProgressBar.setProgress(progressBarStatus);
+
+		            	                    	// to make the progress bar disappear after error
+		            	                    	if (progressBarIsComplete)
+		            	                    	{
+		            	                    		loginProgressBar.setVisibility(v.GONE);
+		            	                    		progressBarIsComplete = false;
+		            	                    		breakLoop = true;
+		            	                    	}
 		            	                    }
 		            	                });
 		            	                 
+		            	                // to control the progress bar timing by pausing the progresBartimerThread thread
 		            	                try 
 		            	                {
 											Thread.sleep(900);
@@ -142,20 +156,29 @@ public class Login extends Activity implements OnClickListener
 		            	                {
 											e.printStackTrace();
 										}
+		            	                
+		            	                // to stop looping and progress bar if authentication happens quicker than full progess is set
+		            	                if (breakLoop)
+		            	                {
+		            	                	break;
+		            	                }
 		            	            }
 			            	    }
 			            	};
 			            	progresBartimerThread.start();
 			            	progresBartimerThread.stop(); 
 			            	
+			            	// must authenticate user on different thread so the progress bar and 
+			            	// authentication thread can  run at the same time, in parallel 
 			            	authenticationThread = new Thread()
 			            	{
 			            	    public void run() 
 			            	    {
-			            	    	authenticateUser(edtLoginEmail, edtLoginPassword);
+			            	    	authenticateUser(edtLoginEmail, edtLoginPassword, loginProgressBar);
 			            	    }
 			            	};
 			            	authenticationThread.start();
+			            	// important to stop thread before moving on
 			            	authenticationThread.stop();
 		        		}
 		            } 
@@ -250,7 +273,7 @@ public class Login extends Activity implements OnClickListener
 		}
     }
     
-    private void authenticateUser(final EditText edtLoginEmail, final EditText edtLoginPassword)
+    private void authenticateUser(final EditText edtLoginEmail, final EditText edtLoginPassword, final ProgressBar loginProgressBar)
     {
     	dbHelper = new DBHelper();
 		
@@ -286,10 +309,13 @@ public class Login extends Activity implements OnClickListener
 					{
 						if (Integer.parseInt(signedInStated) == 1)
 						{
+							// need to run toast and other functions on same thread as UI or you get a thread looper exception
 							runOnUiThread(new Runnable() 
 							{
 							    public void run() 
 							    {
+							    	loginProgressBar.setProgress(100);
+							    	progressBarIsComplete = true;
 							    	Toast.makeText(getApplicationContext(), "Already logged in. Try again.", Toast.LENGTH_LONG).show();
 									edtLoginEmail.setText("");
 									edtLoginPassword.setText("");
@@ -315,6 +341,8 @@ public class Login extends Activity implements OnClickListener
 					{
 					    public void run() 
 					    {
+					    	loginProgressBar.setProgress(100);
+					    	progressBarIsComplete = true;
 					    	Toast.makeText(getApplicationContext(), "Password incorrect. Try again.", Toast.LENGTH_LONG).show();
 							edtLoginPassword.setText("");
 					    }
@@ -330,6 +358,8 @@ public class Login extends Activity implements OnClickListener
 			{
 			    public void run() 
 			    {
+			    	loginProgressBar.setProgress(100);
+			    	progressBarIsComplete = true;
 			    	Toast.makeText(getApplicationContext(), "Login failed. We don't have record of this email.", Toast.LENGTH_LONG).show();
 					edtLoginEmail.setText("");
 					edtLoginPassword.setText("");
