@@ -98,14 +98,14 @@ public class GameSetUp extends Activity implements OnClickListener
 			            	    {
 			            	    	// while progress bar is not complete, run progress bar thread on UI thread 
 		            	            while(progressBarStatus < 100)
-		            	            {
+		            	            { 
 		            	                GameSetUp.this.runOnUiThread(new Runnable()
 		            	                {
 		            	                    public void run()
 		            	                    {
 	            	                    		progressBarStatus += 15; 
 		            	                        loginProgressBar.setVisibility(1);
-		            	                        loginProgressBar.setProgress(progressBarStatus);
+		            	                        loginProgressBar.setProgress(progressBarStatus); 
 
 		            	                    	// to make the progress bar disappear after error
 		            	                    	if (progressBarIsComplete)
@@ -379,7 +379,7 @@ public class GameSetUp extends Activity implements OnClickListener
 	
 	private void startNewIntent()
     {
-    	Intent nextIntent = new Intent(GameSetUp.this, GamePlay.class); 
+    	Intent nextIntent = new Intent(GameSetUp.this, AvatarSelection.class); 
 		startActivity(nextIntent);
 		finish();
     }

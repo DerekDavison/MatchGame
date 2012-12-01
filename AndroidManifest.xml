@@ -54,7 +54,12 @@
         
         <activity
             android:name=".GameSetUp"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login" > 
+            
+        </activity>
+        
+        <activity
+            android:name=".AvatarSelection" > 
             
         </activity>
         

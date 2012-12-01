@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_x="0dp"
+        android:layout_y="-15dp"
+        android:src="@drawable/login_background" />
+
+    <Button
+        android:id="@+id/btnPlayerOne"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="80dp"
+        android:layout_y="95dp"
+        android:background="@drawable/player_one" />
+
+    <Button
+        android:id="@+id/btnPlayerTwo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="160dp"
+        android:layout_y="95dp"
+        android:background="@drawable/player_two" />
+
+    <Button
+        android:id="@+id/btnPlayerThree"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="240dp"
+        android:layout_y="95dp"
+        android:background="@drawable/player_three" />
+
+    <Button
+        android:id="@+id/btnPlayerFour"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="320dp"
+        android:layout_y="95dp"
+        android:background="@drawable/player_four" />
+
+    <Button
+        android:id="@+id/btnPlayerFive"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="400dp"
+        android:layout_y="95dp"
+        android:background="@drawable/player_five" />
+
+    <Button
+        android:id="@+id/btnPlayerSix"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="80dp"
+        android:layout_y="160dp"
+        android:background="@drawable/player_six"/>
+
+    <Button
+        android:id="@+id/btnPlayerSeven"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="160dp"
+        android:layout_y="160dp"
+        android:background="@drawable/player_seven" />
+
+    <Button
+        android:id="@+id/btnPlayerEight"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="240dp"
+        android:layout_y="160dp"
+        android:background="@drawable/player_eight" />
+
+    <Button
+        android:id="@+id/btnPlayerNine"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="320dp"
+        android:layout_y="160dp"
+        android:background="@drawable/player_nine" />
+
+    <Button
+        android:id="@+id/btnPlayerTen"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_x="400dp"
+        android:layout_y="160dp"
+        android:background="@drawable/player_ten" />
+
+    <TextView
+        android:id="@+id/txtAvatarSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="146dp"
+        android:layout_y="46dp"
+        android:text="Player 1 - Choose an Avatar"
+        android:textSize="20dp" />
+
+</AbsoluteLayout>
