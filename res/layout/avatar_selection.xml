@@ -101,4 +101,84 @@
         android:text="Player 1 - Choose an Avatar"
         android:textSize="20dp" />
 
+    <Button
+        android:id="@+id/btnCheckOne"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="75dp"
+        android:layout_y="95dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckTwo"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="150dp"
+        android:layout_y="95dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckThree"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="245dp"
+        android:layout_y="95dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckFour"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="320dp"
+        android:layout_y="95dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckFive"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="395dp"
+        android:layout_y="95dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckSix"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="75dp"
+        android:layout_y="158dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckSeven"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="150dp"
+        android:layout_y="158dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckEight"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="245dp"
+        android:layout_y="158dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckNine"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="320dp"
+        android:layout_y="158dp"
+        android:background="@drawable/check_icon" />
+
+    <Button
+        android:id="@+id/btnCheckTen"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_x="395dp"
+        android:layout_y="158dp"
+        android:background="@drawable/check_icon" />
+
 </AbsoluteLayout>
