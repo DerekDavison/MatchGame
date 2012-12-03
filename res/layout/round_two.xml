@@ -57,14 +57,15 @@
         android:layout_y="188dp"
         android:text="@string/answer"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
     <EditText
         android:id="@+id/response"
         android:layout_width="152dp"
         android:layout_height="wrap_content"
         android:layout_x="349dp"
         android:layout_y="110dp"
-        android:ems="10" />
+        android:ems="10"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/btnSubmit"

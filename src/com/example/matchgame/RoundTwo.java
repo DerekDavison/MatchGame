@@ -69,7 +69,10 @@ public class RoundTwo extends Activity implements OnClickListener
     	    		ownText.setVisibility(View.VISIBLE);
     	    		break;
     	    	case R.id.btnSubmit:
-    	    		
+    	    		//reveal answers 1 by 1
+    	    		//compare selected option to correct answers
+    	    		//add winnings to running total
+    	    		//move player to final round
     	    	
         	}
     	}
