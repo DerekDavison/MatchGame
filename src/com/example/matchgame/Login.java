@@ -28,7 +28,7 @@ public class Login extends Activity implements OnClickListener
 		updateUserSignInStateByEmail;
 	private DBHelper dbHelper;
 	private Thread progresBartimerThread, authenticationThread;
-	private Boolean progressBarIsComplete = false;
+	private Boolean progressBarIsComplete = false, addSignUpButtonsBack = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -39,7 +39,7 @@ public class Login extends Activity implements OnClickListener
         btnSignUp = (Button)findViewById(R.id.btnSignUp);
         btnLogIn = (Button)findViewById(R.id.btnLogIn);
         
-        btnSignUp.setOnClickListener(this);
+        btnSignUp.setOnClickListener(this); 
         btnLogIn.setOnClickListener(this);
     }
      
@@ -94,72 +94,74 @@ public class Login extends Activity implements OnClickListener
 			        			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
 			        		}
 			        		else
-			        		{
-//			        			progresBartimerThread = new Thread()
-//				            	{
-//			        				int progressBarStatus = 0;
-//			        				Boolean breakLoop = false;
-//				            	    public void run()
-//				            	    { 
-//				            	    	if (signUpProgressBar == null)
-//				        				{
-//				        					System.out.println("signUpProgressBar is null");
-//				        				}
-//				            	    	
-//			            	            while(progressBarStatus < 100)
-//			            	            {
-//			            	                Login.this.runOnUiThread(new Runnable()
-//			            	                {
-//			            	                    public void run()
-//			            	                    {
-//		            	                    		progressBarStatus += 15; 
-//		            	                    		btnEnterSignUp.setVisibility(v.GONE);
-//		            	                    		btnCancelSignUp.setVisibility(v.GONE);
-//		            	                    		signUpProgressBar.setVisibility(1);
-//		            	                    		signUpProgressBar.setProgress(progressBarStatus);
-//
-//			            	                    	if (progressBarIsComplete)
-//			            	                    	{ 
-//			            	                    		signUpProgressBar.setVisibility(v.GONE);
-//			            	                    		progressBarIsComplete = false;
-//			            	                    		breakLoop = true;
-//			            	                    	}
-//			            	                    }
-//			            	                });
-//			            	                 
-//			            	                try 
-//			            	                {
-//												Thread.sleep(900);
-//											} 
-//			            	                catch (InterruptedException e) 
-//			            	                {
-//												e.printStackTrace();
-//											}
-//			            	                
-//			            	                if (breakLoop)
-//			            	                {
-//			            	                	break;
-//			            	                }
-//			            	            }
-//				            	    }
-//				            	};
-//				            	progresBartimerThread.start();
-//				            	progresBartimerThread.stop(); 
-//				            	
-//				            	authenticationThread = new Thread()
-//				            	{
-//				            	    public void run() 
-//				            	    {
-				            	    	if (!insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, edtPasswordSecondSignUp))
+			        		{ 
+			        			progresBartimerThread = new Thread()
+				            	{
+			        				int progressBarStatus = 0;
+			        				Boolean breakLoop = false;
+				            	    public void run()
+				            	    { 
+				            	    	if (signUpProgressBar == null)
+				        				{
+				        					System.out.println("signUpProgressBar is null");
+				        				}
+				            	    	
+			            	            while(progressBarStatus < 100)
+			            	            {
+			            	                Login.this.runOnUiThread(new Runnable()
+			            	                {
+			            	                    public void run()
+			            	                    {
+		            	                    		progressBarStatus += 15; 
+		            	                    		btnEnterSignUp.setVisibility(v.GONE);
+		            	                    		btnCancelSignUp.setVisibility(v.GONE);
+		            	                    		signUpProgressBar.setVisibility(1);
+		            	                    		signUpProgressBar.setProgress(progressBarStatus);
+
+			            	                    	if (progressBarIsComplete)
+			            	                    	{ 
+			            	                    		signUpProgressBar.setVisibility(v.GONE);
+		            			            			btnEnterSignUp.setVisibility(v.VISIBLE);
+		            	            	    			btnCancelSignUp.setVisibility(v.VISIBLE);
+
+			            	                    		progressBarIsComplete = false;
+			            	                    		breakLoop = true;
+			            	                    	}
+			            	                    }
+			            	                });
+			            	                 
+			            	                try 
+			            	                {
+												Thread.sleep(900);
+											} 
+			            	                catch (InterruptedException e) 
+			            	                {
+												e.printStackTrace();
+											}
+			            	                
+			            	                if (breakLoop)
+			            	                {
+			            	                	break;
+			            	                }
+			            	            }
+				            	    }
+				            	};
+				            	progresBartimerThread.start();
+				            	progresBartimerThread.stop(); 
+				            	
+				            	authenticationThread = new Thread()
+				            	{
+				            	    public void run() 
+				            	    {
+				            	    	if (!insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, 
+				            	    			edtPasswordSecondSignUp, signUpProgressBar))
 				            	    	{
-				            	    		btnEnterSignUp.setVisibility(1);
-				            	    		btnCancelSignUp.setVisibility(1);
-				            	    		signUpProgressBar.setVisibility(0);
+				            	    		addSignUpButtonsBack = true;
 				            	    	}
-//				            	    }
-//				            	};
-//				            	authenticationThread.start();
-//				            	authenticationThread.stop();
+				            	    }
+				            	};
+				            	authenticationThread.start();
+				            	authenticationThread.stop();
 			        		}
 		            }
 	            });
@@ -303,7 +305,8 @@ public class Login extends Activity implements OnClickListener
         return true;
     }
     
-    private Boolean insertUser(final EditText edtName, final EditText edtEmail, final EditText edtPasswordFirst, final EditText edtPasswordSecond)
+    private Boolean insertUser(final EditText edtName, final EditText edtEmail, final EditText edtPasswordFirst, 
+    		final EditText edtPasswordSecond, final ProgressBar signUpProgressBar)
     {
     	Boolean isSuccess = false;
     	
@@ -318,6 +321,8 @@ public class Login extends Activity implements OnClickListener
 			{
 			    public void run() 
 			    {
+			    	signUpProgressBar.setProgress(100);
+			    	progressBarIsComplete = true;
 			    	Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_LONG).show();
 					edtPasswordFirst.setText("");
 					edtPasswordSecond.setText("");
@@ -331,6 +336,8 @@ public class Login extends Activity implements OnClickListener
 				{
 				    public void run() 
 				    {
+				    	signUpProgressBar.setProgress(100);
+				    	progressBarIsComplete = true;
 				    	Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_LONG).show();
 						edtEmail.setText("");
 				    }
@@ -362,6 +369,8 @@ public class Login extends Activity implements OnClickListener
 			{
 			    public void run() 
 			    {
+			    	signUpProgressBar.setProgress(100);
+			    	progressBarIsComplete = true;
 			    	edtName.setText(""); 
 					edtEmail.setText("");
 					edtPasswordFirst.setText("");

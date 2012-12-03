@@ -24,17 +24,9 @@ public class GamePlay extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
-        
-        try
-        {
-        	setPlayerOneAvatar();
-            setPlayerTwoAvatar();
-        }
-        catch(Exception e)
-        {
-        	System.out.println(e.toString());
-        }
-        
+
+    	setPlayerOneAvatar();
+        setPlayerTwoAvatar();
     }
     
 	private String getPlayerOneEmail()
