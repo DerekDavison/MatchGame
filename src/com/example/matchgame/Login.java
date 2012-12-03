@@ -84,7 +84,7 @@ public class Login extends Activity implements OnClickListener
 	    		
 	    	break; 
 	    	
-	    	case R.id.btnLogIn: ////////////////////////////////////////////////
+	    	case R.id.btnLogIn: 
 	    		
 	    		final Dialog loginDialog = new Dialog(Login.this);
 	    		loginDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -268,7 +268,7 @@ public class Login extends Activity implements OnClickListener
 			edtPasswordFirst.setText("");
 			edtPasswordSecond.setText(""); 
 			
-			saveEmailToNextActivity(edtEmail);
+			savePlayerOneEmail(edtEmail);
 			startNewIntent();
 		}
     }
@@ -329,7 +329,7 @@ public class Login extends Activity implements OnClickListener
 							// update sign in status
 							dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
 							
-							saveEmailToNextActivity(edtLoginEmail);
+							savePlayerOneEmail(edtLoginEmail);
 							startNewIntent();
 							break;
 						}
@@ -376,11 +376,11 @@ public class Login extends Activity implements OnClickListener
 		finish();
     }
     
-    private void saveEmailToNextActivity(EditText edtEmail)
+    private void savePlayerOneEmail(EditText edtEmail)
     {
-    	SharedPreferences shared = getSharedPreferences(StaticData.USER_EMAIL_SHARED_PREF, MODE_PRIVATE);
+    	SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
     	SharedPreferences.Editor editor = shared.edit();
-    	editor.putString(StaticData.USER_EMAIL_SHARED_PREF_KEY, edtEmail.getText().toString());
+    	editor.putString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, edtEmail.getText().toString());
     	editor.commit();
     }
 }

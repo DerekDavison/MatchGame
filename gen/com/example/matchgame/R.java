@@ -44,7 +44,6 @@ public final class R {
         public static final int ImageView05=0x7f08001d;
         public static final int ImageView06=0x7f08001c;
         public static final int ImageView07=0x7f08001b;
-        public static final int ImageView08=0x7f080027;
         public static final int ImageView09=0x7f080028;
         public static final int ImageView10=0x7f080029;
         public static final int ImageView11=0x7f08002a;
@@ -107,7 +106,8 @@ public final class R {
         public static final int imageView1=0x7f080000;
         public static final int imageView2=0x7f080032;
         public static final int imageView3=0x7f080020;
-        public static final int imageView4=0x7f080026;
+        public static final int imgPlayerOne=0x7f080026;
+        public static final int imgPlayerTwo=0x7f080027;
         public static final int imvMatchGame=0x7f08001f;
         public static final int menu_settings=0x7f080068;
         public static final int pgbLoginSecondPlayer=0x7f080040;

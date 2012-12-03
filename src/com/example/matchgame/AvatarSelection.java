@@ -1,7 +1,14 @@
 package com.example.matchgame;
 
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -20,6 +27,8 @@ public class AvatarSelection extends Activity implements OnClickListener
 	private TranslateAnimation playerOneTextAnimation, playerTwoTextAnimation;
 	private CountDownTimer playerOneAnimationTimer, playerTwoAnimationTimer, delayNextActivityTimer;
 	private Boolean playerOneTurn = true;
+	private ArrayList<NameValuePair> updatePlayerOneAvitarPictureIdByEmailNameValuePairs, updatePlayerTwoAvitarPictureIdByEmailNameValuePairs;  
+	private DBHelper dbHelper;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) 
@@ -74,25 +83,25 @@ public class AvatarSelection extends Activity implements OnClickListener
         btnCheckNine.setVisibility(btnCheckNine.GONE);
         btnCheckTen.setVisibility(btnCheckTen.GONE);
         
-        playerOneTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+        playerOneTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
         playerOneTextAnimation.setDuration(1000);
         playerOneTextAnimation.setFillAfter(true);
         playerOneTextAnimation.setRepeatCount(-1);
         playerOneTextAnimation.setRepeatMode(Animation.REVERSE);
 	   	txtAvatarSelection.setAnimation(playerOneTextAnimation);
 
-	   	 playerOneAnimationTimer = new CountDownTimer(3000, 1000) 
-	   	 {
-	   		 public void onTick(long millisUntilFinished) {}
+	   	playerOneAnimationTimer = new CountDownTimer(3000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) {}
 
-	   		 public void onFinish() 
-	   		 {
-	   			 playerOneTextAnimation = new TranslateAnimation(0, 0, 0, 0);
-	   			 txtAvatarSelection.setAnimation(playerOneTextAnimation);
-	   			 playerOneAnimationTimer.cancel();
-	   		 }
-	   	 };
-	   	 playerOneAnimationTimer.start();
+	   		public void onFinish() 
+	   		{
+	   			playerOneTextAnimation = new TranslateAnimation(0, 0, 0, 0);
+	   			txtAvatarSelection.setAnimation(playerOneTextAnimation);
+	   			playerOneAnimationTimer.cancel();
+	   		}
+	   	};
+	   	playerOneAnimationTimer.start();
     }
 	
 	public void onClick(View v)
@@ -101,63 +110,83 @@ public class AvatarSelection extends Activity implements OnClickListener
     	{   
 	    	case R.id.btnPlayerOne: 
 	    		
-	    		// if player one making selection
-	    		if (playerOneTurn)
+	    		try
 	    		{
-	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
+	    			// if player one making selection
+		    		if (playerOneTurn)
+		    		{
+		    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
+			    		
+			    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
+			    		playerTwoTextAnimation.setDuration(1000);
+			    		playerTwoTextAnimation.setFillAfter(true);
+			    		playerTwoTextAnimation.setRepeatCount(-1);
+			    		playerTwoTextAnimation.setRepeatMode(Animation.REVERSE);
+			  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
+
+			  	   	    // for how long the animation will run
+			  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
+			  	   	    {
+			  	   	    	public void onTick(long millisUntilFinished) {}
+
+			  	   	    	public void onFinish() 
+			  	   	    	{
+			  	   	    		playerTwoTextAnimation = new TranslateAnimation(0, 0, 0, 0);
+			  	   	    		txtAvatarSelection.setAnimation(playerTwoTextAnimation);
+			  	   	    		playerTwoAnimationTimer.cancel();
+			  	   	    	}
+			  	   	    };
+			  	   	    playerTwoAnimationTimer.start();
+			  	   	    playerOneTurn = false;
+			  	   	    
+			  	   	    btnPlayerOne.setEnabled(false);
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
-		    		playerTwoTextAnimation.setDuration(1000);
-		    		playerTwoTextAnimation.setFillAfter(true);
-		    		playerTwoTextAnimation.setRepeatCount(-1);
-		    		playerTwoTextAnimation.setRepeatMode(Animation.REVERSE);
-		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
+			    		btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
+			            btnCheckTwo.setVisibility(btnCheckTwo.GONE);
+			            btnCheckThree.setVisibility(btnCheckThree.GONE);
+			            btnCheckFour.setVisibility(btnCheckFour.GONE);
+			            btnCheckFive.setVisibility(btnCheckFive.GONE);
+			            btnCheckSix.setVisibility(btnCheckSix.GONE);
+			            btnCheckSeven.setVisibility(btnCheckSeven.GONE);
+			            btnCheckEight.setVisibility(btnCheckEight.GONE);
+			            btnCheckNine.setVisibility(btnCheckNine.GONE);
+			            btnCheckTen.setVisibility(btnCheckTen.GONE);
+			            
+			            setPlayerOneAvatarSelection("1");
+		    		}
+		    		else // player two choice
+		    		{  
+		    			setPlayerTwoAvatarSelection("1");
+		    			
+		    			btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
+		    			
+			            delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
+			            {
+			            	Boolean firstTickNotDone = true;
+			            	
+			                public void onTick(long millisUntilFinished) 
+			                { 
+			                	if (firstTickNotDone)
+			                	{
+			                		showLoadingGameDialog();
+			                		firstTickNotDone = false;
+			                	}
+			                }
 
-		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
-		  	   	    {
-		  	   	    	public void onTick(long millisUntilFinished) {}
-
-		  	   	    	public void onFinish() 
-		  	   	    	{
-		  	   	    		playerTwoTextAnimation = new TranslateAnimation(0, 0, 0, 0);
-		  	   	    		txtAvatarSelection.setAnimation(playerTwoTextAnimation);
-		  	   	    		playerTwoAnimationTimer.cancel();
-		  	   	    	}
-		  	   	    };
-		  	   	    playerTwoAnimationTimer.start();
-		  	   	    playerOneTurn = false;
-		  	   	    
-		  	   	    btnPlayerOne.setEnabled(false);
-	    		
-		    		btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
-		            btnCheckTwo.setVisibility(btnCheckTwo.GONE);
-		            btnCheckThree.setVisibility(btnCheckThree.GONE);
-		            btnCheckFour.setVisibility(btnCheckFour.GONE);
-		            btnCheckFive.setVisibility(btnCheckFive.GONE);
-		            btnCheckSix.setVisibility(btnCheckSix.GONE);
-		            btnCheckSeven.setVisibility(btnCheckSeven.GONE);
-		            btnCheckEight.setVisibility(btnCheckEight.GONE);
-		            btnCheckNine.setVisibility(btnCheckNine.GONE);
-		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+			                public void onFinish() 
+			                {
+			                	Intent nextIntent = new Intent(AvatarSelection.this, GamePlay.class); 
+				    			startActivity(nextIntent);
+				    			delayNextActivityTimer.cancel();
+				    			finish();
+			                }
+			            };
+			            delayNextActivityTimer.start();
+		    		}
 	    		}
-	    		else // player two choice
-	    		{   
-	    			btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
-	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
-		            {
-		                public void onTick(long millisUntilFinished) { }
-
-		                public void onFinish() 
-		                {
-		                	Intent nextIntent = new Intent(AvatarSelection.this, GamePlay.class); 
-			    			startActivity(nextIntent);
-			    			delayNextActivityTimer.cancel();
-			    			finish();
-		                }
-		            };
-		            delayNextActivityTimer.start();
+	    		catch(Exception e)
+	    		{
+	    			System.out.println(e.toString());
 	    		}
 	    		
 	    		break; 
@@ -169,7 +198,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -177,7 +206,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -203,14 +232,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("2");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("2");
+	    			
 	    			btnCheckTwo.setVisibility(btnCheckTwo.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
@@ -232,7 +274,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -240,7 +282,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -266,14 +308,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("3");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("3");
+	    			
 	    			btnCheckThree.setVisibility(btnCheckThree.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
@@ -294,7 +349,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -302,7 +357,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -328,14 +383,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("4");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("4");
+	    			
 	    			btnCheckFour.setVisibility(btnCheckFour.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
@@ -356,7 +424,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -364,7 +432,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -390,14 +458,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("5");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("5");
+	    			
 	    			btnCheckFive.setVisibility(btnCheckFive.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                } 
 
 		                public void onFinish() 
 		                {
@@ -418,7 +499,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -426,7 +507,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -452,14 +533,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("6");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("6");
+	    			
 	    			btnCheckSix.setVisibility(btnCheckSix.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true; 
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
@@ -480,7 +574,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -488,7 +582,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -514,14 +608,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("7");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("7");
+	    			
 	    			btnCheckSeven.setVisibility(btnCheckSeven.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
@@ -542,7 +649,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -550,7 +657,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -576,14 +683,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.VISIBLE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("8");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("8");
+	    			
 	    			btnCheckEight.setVisibility(btnCheckEight.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
@@ -604,7 +724,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -612,7 +732,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -638,14 +758,27 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.VISIBLE);
 		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("9");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("9");
+	    			
 	    			btnCheckNine.setVisibility(btnCheckNine.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
@@ -666,7 +799,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		{
 	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-		    		playerTwoTextAnimation = new TranslateAnimation(-10, 20, 0, 0);
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
 		    		playerTwoTextAnimation.setDuration(1000);
 		    		playerTwoTextAnimation.setFillAfter(true);
 		    		playerTwoTextAnimation.setRepeatCount(-1);
@@ -674,7 +807,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
 		  	   	    // for how long the animation will run
-		  	   	    playerTwoAnimationTimer = new CountDownTimer(3000, 1000) 
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
 		  	   	    {
 		  	   	    	public void onTick(long millisUntilFinished) {}
 
@@ -700,18 +833,31 @@ public class AvatarSelection extends Activity implements OnClickListener
 		            btnCheckEight.setVisibility(btnCheckEight.GONE);
 		            btnCheckNine.setVisibility(btnCheckNine.GONE);
 		            btnCheckTen.setVisibility(btnCheckTen.VISIBLE);
+		            
+		            setPlayerOneAvatarSelection("10");
 	    		}
 	    		else // player two choice
 	    		{
+	    			setPlayerTwoAvatarSelection("10");
+	    			
 	    			btnCheckTen.setVisibility(btnCheckTen.VISIBLE);
 	    			
-		            delayNextActivityTimer = new CountDownTimer(2000 , 1000) 
+	    			delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
 		            {
-		                public void onTick(long millisUntilFinished) { }
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
 
 		                public void onFinish() 
 		                {
-		                	Intent nextIntent = new Intent(AvatarSelection.this, GamePlay.class);  
+		                	Intent nextIntent = new Intent(AvatarSelection.this, GamePlay.class); 
 			    			startActivity(nextIntent);
 			    			delayNextActivityTimer.cancel();
 			    			finish();
@@ -725,5 +871,32 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    	default:
 		    	throw new RuntimeException("Unknow button ID"); 
 	    }
+	}
+	
+	private void showLoadingGameDialog()
+	{
+		ProgressDialog dialog = ProgressDialog.show(AvatarSelection.this, "","Please wait, loading game ...", true);
+	}
+	
+	private void setPlayerOneAvatarSelection(String playerChosen)
+	{
+		dbHelper = new DBHelper();
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		updatePlayerOneAvitarPictureIdByEmailNameValuePairs = new ArrayList<NameValuePair>();
+		
+		updatePlayerOneAvitarPictureIdByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "")));
+		updatePlayerOneAvitarPictureIdByEmailNameValuePairs.add(new BasicNameValuePair("avitar_picture_id", playerChosen));
+		dbHelper.modifyData(updatePlayerOneAvitarPictureIdByEmailNameValuePairs, StaticData.UPDATE_PLAYER_AVATAR_ID_BY_EMAIL);
+	}
+	
+	private void setPlayerTwoAvatarSelection(String playerChosen)
+	{
+		dbHelper = new DBHelper();
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		updatePlayerTwoAvitarPictureIdByEmailNameValuePairs = new ArrayList<NameValuePair>();
+		
+		updatePlayerTwoAvitarPictureIdByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, "")));
+		updatePlayerTwoAvitarPictureIdByEmailNameValuePairs.add(new BasicNameValuePair("avitar_picture_id", playerChosen));
+		dbHelper.modifyData(updatePlayerTwoAvitarPictureIdByEmailNameValuePairs, StaticData.UPDATE_PLAYER_AVATAR_ID_BY_EMAIL);
 	}
 }

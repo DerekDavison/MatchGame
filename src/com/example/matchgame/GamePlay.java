@@ -1,23 +1,178 @@
 package com.example.matchgame;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
+import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.widget.AbsoluteLayout;
+import android.widget.ImageView;
+
+@SuppressWarnings("deprecation")
 public class GamePlay extends Activity 
 {
+	private DBHelper dbHelper;
+	ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail;
+	private ImageView imgPlayerOne, imgPlayerTwo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
-    }
+        
+        imgPlayerOne = (ImageView)findViewById(R.id.imgPlayerOne);
+        imgPlayerTwo = (ImageView)findViewById(R.id.imgPlayerTwo);
+        
+        dbHelper = new DBHelper();
+        playerOneAvatarIdByEmail = new ArrayList<NameValuePair>(); 
+        playerOneAvatarIdByEmail.add(new BasicNameValuePair("email", getPlayerOneEmail()));
+        
+        playerTwoAvatarIdByEmail = new ArrayList<NameValuePair>(); 
+        playerTwoAvatarIdByEmail.add(new BasicNameValuePair("email", getPlayerTwoEmail()));
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
-    {
-        getMenuInflater().inflate(R.menu.game_play, menu);
-        return true;
+        AbsoluteLayout.LayoutParams playerOneParams = new AbsoluteLayout.LayoutParams(80, 80, 30, 100);
+        imgPlayerOne.setLayoutParams(playerOneParams);
+        
+        AbsoluteLayout.LayoutParams playerTwoParams = new AbsoluteLayout.LayoutParams(80, 80, 135, 100);
+        imgPlayerTwo.setLayoutParams(playerTwoParams);
+        
+        switch(Integer.parseInt(dbHelper.readDBData(StaticData.SELECT_PLAYER_AVITAR_ID_BY_EMAIL, playerOneAvatarIdByEmail, "avitar_picture_id").get(0))) 
+    	{  
+	    	case 1: 
+	    		Drawable avatarOne = getResources().getDrawable(R.drawable.player_one);
+	    		imgPlayerOne.setImageDrawable(avatarOne);
+	    		break; 
+	    	
+	    	case 2: 
+	    		Drawable avatarTwo = getResources().getDrawable(R.drawable.player_two);
+	    		imgPlayerOne.setImageDrawable(avatarTwo);
+	    		break;
+	    	
+	    	case 3: 
+	    		Drawable avatarThree = getResources().getDrawable(R.drawable.player_three);
+	    		imgPlayerOne.setImageDrawable(avatarThree);
+		    	break;
+		    	
+	    	case 4: 
+	    		Drawable avatarFour = getResources().getDrawable(R.drawable.player_four);
+	    		imgPlayerOne.setImageDrawable(avatarFour);
+		    	break;
+		    	
+	    	case 5: 
+	    		Drawable avatarFive = getResources().getDrawable(R.drawable.player_five);
+	    		imgPlayerOne.setImageDrawable(avatarFive);
+		    	break;
+		    	
+	    	case 6: 
+	    		Drawable avatarSix = getResources().getDrawable(R.drawable.player_six);
+	    		imgPlayerOne.setImageDrawable(avatarSix);
+		    	break;
+		    	
+	    	case 7: 
+	    		Drawable avatarSeven = getResources().getDrawable(R.drawable.player_seven);
+	    		imgPlayerOne.setImageDrawable(avatarSeven);
+		    	break;
+		    	
+	    	case 8: 
+	    		Drawable avatarEight = getResources().getDrawable(R.drawable.player_eight);
+	    		imgPlayerOne.setImageDrawable(avatarEight);
+		    	break;
+		    	
+	    	case 9: 
+	    		Drawable avatarNine = getResources().getDrawable(R.drawable.player_nine);
+	    		imgPlayerOne.setImageDrawable(avatarNine);
+		    	break;
+		    	
+	    	case 10:
+	    		Drawable avatarTen = getResources().getDrawable(R.drawable.player_ten);
+	    		imgPlayerOne.setImageDrawable(avatarTen);
+		    	break;
+
+	    	default:
+	    	throw new RuntimeException("Unknow button ID"); 
+    	}
+        
+        switch(Integer.parseInt(dbHelper.readDBData(StaticData.SELECT_PLAYER_AVITAR_ID_BY_EMAIL, playerTwoAvatarIdByEmail, "avitar_picture_id").get(0))) 
+    	{  
+	    	case 1: 
+	    		Drawable avatarOne = getResources().getDrawable(R.drawable.player_one);
+	    		imgPlayerTwo.setImageDrawable(avatarOne);
+	    		break; 
+	    	
+	    	case 2: 
+	    		Drawable avatarTwo = getResources().getDrawable(R.drawable.player_two);
+	    		imgPlayerTwo.setImageDrawable(avatarTwo);
+	    		break;
+	    	
+	    	case 3: 
+	    		Drawable avatarThree = getResources().getDrawable(R.drawable.player_three);
+	    		imgPlayerTwo.setImageDrawable(avatarThree);
+		    	break;
+		    	
+	    	case 4: 
+	    		Drawable avatarFour = getResources().getDrawable(R.drawable.player_four);
+	    		imgPlayerTwo.setImageDrawable(avatarFour);
+		    	break;
+		    	
+	    	case 5: 
+	    		Drawable avatarFive = getResources().getDrawable(R.drawable.player_five);
+	    		imgPlayerTwo.setImageDrawable(avatarFive);
+		    	break;
+		    	
+	    	case 6: 
+	    		Drawable avatarSix = getResources().getDrawable(R.drawable.player_six);
+	    		imgPlayerTwo.setImageDrawable(avatarSix);
+		    	break;
+		    	
+	    	case 7: 
+	    		Drawable avatarSeven = getResources().getDrawable(R.drawable.player_seven);
+	    		imgPlayerTwo.setImageDrawable(avatarSeven);
+		    	break;
+		    	
+	    	case 8: 
+	    		Drawable avatarEight = getResources().getDrawable(R.drawable.player_eight);
+	    		imgPlayerTwo.setImageDrawable(avatarEight);
+		    	break;
+		    	
+	    	case 9: 
+	    		Drawable avatarNine = getResources().getDrawable(R.drawable.player_nine);
+	    		imgPlayerTwo.setImageDrawable(avatarNine);
+		    	break;
+		    	
+	    	case 10:
+	    		Drawable avatarTen = getResources().getDrawable(R.drawable.player_ten);
+	    		imgPlayerTwo.setImageDrawable(avatarTen);
+		    	break;
+
+	    	default:
+	    	throw new RuntimeException("Unknow button ID"); 
+    	}
     }
+    
+	private String getPlayerOneEmail()
+	{
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		return shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "");
+	}
+	
+	private String getPlayerTwoEmail()
+	{
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		return shared.getString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, "");
+	}
+	
+//	private void setPlayerOneAvatar()
+//	{
+//		
+//	}
+//	
+//	private void setPlayerTwoAvatar()
+//	{
+//		
+//	}
 }

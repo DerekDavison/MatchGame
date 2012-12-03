@@ -55,7 +55,7 @@ public class GameSetUp extends Activity implements OnClickListener
     			
 	    	break;  
 	    	
-	    	case R.id.btnSignInSecondPlayer:   ///////////////////////////////////////////////////  
+	    	case R.id.btnSignInSecondPlayer:   
 
     			final Dialog signInDialogSecondPlayer = new Dialog(GameSetUp.this);
 	    		signInDialogSecondPlayer.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -225,7 +225,7 @@ public class GameSetUp extends Activity implements OnClickListener
 			
 			// set the value we're going to send the database for user status
 			updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("email", edtLoginEmail.getText().toString()));
-			updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("player_state", StaticData.PLAYER_ONE_STATE));
+			updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("player_state", StaticData.PLAYER_TWO_STATE));
 			
 			updateUserSignInStateByEmail.add(new BasicNameValuePair("email", edtLoginEmail.getText().toString()));
 			updateUserSignInStateByEmail.add(new BasicNameValuePair("signed_in", "1"));
@@ -264,6 +264,7 @@ public class GameSetUp extends Activity implements OnClickListener
 							// update sign in status
 							dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
 							
+							savePlayerTwoEmail(edtLoginEmail);
 							startNewIntent();
 							break;
 						}
@@ -360,8 +361,9 @@ public class GameSetUp extends Activity implements OnClickListener
 			edtName.setText(""); 
 			edtEmail.setText("");
 			edtPasswordFirst.setText("");
-			edtPasswordSecond.setText(""); 
+			edtPasswordSecond.setText("");
 			
+			savePlayerTwoEmail(edtEmail);
 			startNewIntent();
 		}
     }
@@ -371,10 +373,18 @@ public class GameSetUp extends Activity implements OnClickListener
 		dbHelper = new DBHelper();
 		updateUserStateByEmailNameValuePairs = new ArrayList<NameValuePair>();
 		
-		SharedPreferences shared = getSharedPreferences(StaticData.USER_EMAIL_SHARED_PREF, MODE_PRIVATE);
-		updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.USER_EMAIL_SHARED_PREF_KEY, "")));
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "")));
 		updateUserStateByEmailNameValuePairs.add(new BasicNameValuePair("player_state", StaticData.PLAYER_SINGLE_STATE));
 		dbHelper.modifyData(updateUserStateByEmailNameValuePairs, StaticData.UPDATE_PLAYER_STATE_BY_EMAIL);
+	}
+	
+	private void savePlayerTwoEmail(EditText edtEmail)
+	{
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF, MODE_PRIVATE);
+    	SharedPreferences.Editor editor = shared.edit();
+    	editor.putString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, edtEmail.getText().toString());
+    	editor.commit();
 	}
 	
 	private void startNewIntent()

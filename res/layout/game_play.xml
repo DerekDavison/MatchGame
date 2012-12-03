@@ -3,7 +3,7 @@
     android:id="@+id/AbsoluteLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
+
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="55dp"
@@ -11,7 +11,7 @@
         android:layout_x="20dp"
         android:layout_y="90dp"
         android:src="@drawable/chair" />
-
+
     <ImageView
         android:id="@+id/ImageView01"
         android:layout_width="55dp"
@@ -51,7 +51,7 @@
         android:layout_x="400dp"
         android:layout_y="50dp"
         android:src="@drawable/chair" />
-
+
     <ImageView
         android:id="@+id/ImageView06"
         android:layout_width="55dp"
@@ -59,7 +59,7 @@
         android:layout_x="330dp"
         android:layout_y="50dp"
         android:src="@drawable/chair" />
-
+
     <ImageView
         android:id="@+id/ImageView05"
         android:layout_width="55dp"
@@ -67,7 +67,7 @@
         android:layout_x="470dp"
         android:layout_y="50dp"
         android:src="@drawable/chair" />
-
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="508dp"
@@ -76,7 +76,7 @@
         android:layout_y="4dp"
         android:text="@string/question"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
     <ImageView
         android:id="@+id/imvMatchGame"
         android:layout_width="155dp"
@@ -139,7 +139,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imgPlayerOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="23dp"
@@ -147,7 +147,7 @@
         android:src="@drawable/ic_launcher" />
 
     <ImageView
-        android:id="@+id/ImageView08"
+        android:id="@+id/imgPlayerTwo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="94dp"
