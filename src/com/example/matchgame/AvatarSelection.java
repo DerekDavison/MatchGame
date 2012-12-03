@@ -110,83 +110,76 @@ public class AvatarSelection extends Activity implements OnClickListener
     	{   
 	    	case R.id.btnPlayerOne: 
 	    		
-	    		try
+    			// if player one making selection
+	    		if (playerOneTurn)
 	    		{
-	    			// if player one making selection
-		    		if (playerOneTurn)
-		    		{
-		    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
-			    		
-			    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
-			    		playerTwoTextAnimation.setDuration(1000);
-			    		playerTwoTextAnimation.setFillAfter(true);
-			    		playerTwoTextAnimation.setRepeatCount(-1);
-			    		playerTwoTextAnimation.setRepeatMode(Animation.REVERSE);
-			  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
-
-			  	   	    // for how long the animation will run
-			  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
-			  	   	    {
-			  	   	    	public void onTick(long millisUntilFinished) {}
-
-			  	   	    	public void onFinish() 
-			  	   	    	{
-			  	   	    		playerTwoTextAnimation = new TranslateAnimation(0, 0, 0, 0);
-			  	   	    		txtAvatarSelection.setAnimation(playerTwoTextAnimation);
-			  	   	    		playerTwoAnimationTimer.cancel();
-			  	   	    	}
-			  	   	    };
-			  	   	    playerTwoAnimationTimer.start();
-			  	   	    playerOneTurn = false;
-			  	   	    
-			  	   	    btnPlayerOne.setEnabled(false);
+	    			txtAvatarSelection.setText("Player 2 - Choose an Avatar");
 		    		
-			    		btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
-			            btnCheckTwo.setVisibility(btnCheckTwo.GONE);
-			            btnCheckThree.setVisibility(btnCheckThree.GONE);
-			            btnCheckFour.setVisibility(btnCheckFour.GONE);
-			            btnCheckFive.setVisibility(btnCheckFive.GONE);
-			            btnCheckSix.setVisibility(btnCheckSix.GONE);
-			            btnCheckSeven.setVisibility(btnCheckSeven.GONE);
-			            btnCheckEight.setVisibility(btnCheckEight.GONE);
-			            btnCheckNine.setVisibility(btnCheckNine.GONE);
-			            btnCheckTen.setVisibility(btnCheckTen.GONE);
-			            
-			            setPlayerOneAvatarSelection("1");
-		    		}
-		    		else // player two choice
-		    		{  
-		    			setPlayerTwoAvatarSelection("1");
-		    			
-		    			btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
-		    			
-			            delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
-			            {
-			            	Boolean firstTickNotDone = true;
-			            	
-			                public void onTick(long millisUntilFinished) 
-			                { 
-			                	if (firstTickNotDone)
-			                	{
-			                		showLoadingGameDialog();
-			                		firstTickNotDone = false;
-			                	}
-			                }
+		    		playerTwoTextAnimation = new TranslateAnimation(60.0f, -40.0f, 0.0f, 0.0f);
+		    		playerTwoTextAnimation.setDuration(1000);
+		    		playerTwoTextAnimation.setFillAfter(true);
+		    		playerTwoTextAnimation.setRepeatCount(-1);
+		    		playerTwoTextAnimation.setRepeatMode(Animation.REVERSE);
+		  	   	    txtAvatarSelection.setAnimation(playerTwoTextAnimation);
 
-			                public void onFinish() 
-			                {
-			                	Intent nextIntent = new Intent(AvatarSelection.this, GamePlay.class); 
-				    			startActivity(nextIntent);
-				    			delayNextActivityTimer.cancel();
-				    			finish();
-			                }
-			            };
-			            delayNextActivityTimer.start();
-		    		}
+		  	   	    // for how long the animation will run
+		  	   	    playerTwoAnimationTimer = new CountDownTimer(3500, 1000) 
+		  	   	    {
+		  	   	    	public void onTick(long millisUntilFinished) {}
+
+		  	   	    	public void onFinish() 
+		  	   	    	{
+		  	   	    		playerTwoTextAnimation = new TranslateAnimation(0, 0, 0, 0);
+		  	   	    		txtAvatarSelection.setAnimation(playerTwoTextAnimation);
+		  	   	    		playerTwoAnimationTimer.cancel();
+		  	   	    	}
+		  	   	    };
+		  	   	    playerTwoAnimationTimer.start();
+		  	   	    playerOneTurn = false;
+		  	   	    
+		  	   	    btnPlayerOne.setEnabled(false);
+	    		
+		    		btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
+		            btnCheckTwo.setVisibility(btnCheckTwo.GONE);
+		            btnCheckThree.setVisibility(btnCheckThree.GONE);
+		            btnCheckFour.setVisibility(btnCheckFour.GONE);
+		            btnCheckFive.setVisibility(btnCheckFive.GONE);
+		            btnCheckSix.setVisibility(btnCheckSix.GONE);
+		            btnCheckSeven.setVisibility(btnCheckSeven.GONE);
+		            btnCheckEight.setVisibility(btnCheckEight.GONE);
+		            btnCheckNine.setVisibility(btnCheckNine.GONE);
+		            btnCheckTen.setVisibility(btnCheckTen.GONE);
+		            
+		            setPlayerOneAvatarSelection("1");
 	    		}
-	    		catch(Exception e)
-	    		{
-	    			System.out.println(e.toString());
+	    		else // player two choice
+	    		{  
+	    			setPlayerTwoAvatarSelection("1");
+	    			
+	    			btnCheckOne.setVisibility(btnCheckOne.VISIBLE);
+	    			
+		            delayNextActivityTimer = new CountDownTimer(5000 , 1000) 
+		            {
+		            	Boolean firstTickNotDone = true;
+		            	
+		                public void onTick(long millisUntilFinished) 
+		                { 
+		                	if (firstTickNotDone)
+		                	{
+		                		showLoadingGameDialog();
+		                		firstTickNotDone = false;
+		                	}
+		                }
+
+		                public void onFinish() 
+		                {
+		                	Intent nextIntent = new Intent(AvatarSelection.this, GamePlay.class); 
+			    			startActivity(nextIntent);
+			    			delayNextActivityTimer.cancel();
+			    			finish();
+		                }
+		            };
+		            delayNextActivityTimer.start();
 	    		}
 	    		
 	    		break; 
@@ -867,7 +860,7 @@ public class AvatarSelection extends Activity implements OnClickListener
 	    		}
 
 		    	break;
-	    	
+	    	 
 	    	default:
 		    	throw new RuntimeException("Unknow button ID"); 
 	    }

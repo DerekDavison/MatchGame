@@ -358,12 +358,11 @@ public class GameSetUp extends Activity implements OnClickListener
 			
 			dbHelper.modifyData(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
 			
+			savePlayerTwoEmail(edtEmail);
 			edtName.setText(""); 
 			edtEmail.setText("");
 			edtPasswordFirst.setText("");
 			edtPasswordSecond.setText("");
-			
-			savePlayerTwoEmail(edtEmail);
 			startNewIntent();
 		}
     }

@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,21 +55,112 @@ public class Login extends Activity implements OnClickListener
 	            
 	            signUpDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
 	            signUpDialog.setContentView(R.layout.sign_up_dialog);
-	            signUpDialog.setCancelable(true);
+	            signUpDialog.setCancelable(true); 
 
 	            final EditText edtNameSignUp = (EditText) signUpDialog.findViewById(R.id.edtName); 
 	            final EditText edtEmailSignUp = (EditText) signUpDialog.findViewById(R.id.edtEmail);  
 	            final EditText edtPasswordFirstSignUp = (EditText) signUpDialog.findViewById(R.id.edtPasswordFirst);  
 	            final EditText edtPasswordSecondSignUp = (EditText) signUpDialog.findViewById(R.id.edtPasswordSecond);  
+	            
+            	final ProgressBar signUpProgressBar = (ProgressBar) signUpDialog.findViewById(R.id.pgbSignUpStatus);
+            	if (signUpProgressBar != null)
+            	{
+            		signUpProgressBar.setProgress(0);
+		            signUpProgressBar.setMax(100);
+		            signUpProgressBar.setVisibility(v.GONE);
+            	}
 
-	            Button btnEnterSignUp = (Button) signUpDialog.findViewById(R.id.btnEnter);
-	            Button btnCancelSignUp = (Button) signUpDialog.findViewById(R.id.btnCancel);
+	            final Button btnEnterSignUp = (Button) signUpDialog.findViewById(R.id.btnEnter);
+	            final Button btnCancelSignUp = (Button) signUpDialog.findViewById(R.id.btnCancel);
 	            
 	            btnEnterSignUp.setOnClickListener(new OnClickListener() 
 	            {
-		            public void onClick(View v) 
+		            public void onClick(final View v) 
 		            {
-		            	insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, edtPasswordSecondSignUp);
+		            		if (edtNameSignUp.getText().toString().matches(""))
+			        		{
+			        			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_LONG).show();
+			        		}
+			        		else if (edtEmailSignUp.getText().toString().matches(""))
+			        		{
+			        			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show(); 
+			        		}
+			        		else if (edtPasswordFirstSignUp.getText().toString().matches(""))
+			        		{
+			        			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
+			        		}
+			        		else if (edtPasswordSecondSignUp.getText().toString().matches(""))
+			        		{ 
+			        			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
+			        		}
+			        		else
+			        		{
+//			        			progresBartimerThread = new Thread()
+//				            	{
+//			        				int progressBarStatus = 0;
+//			        				Boolean breakLoop = false;
+//				            	    public void run()
+//				            	    { 
+//				            	    	if (signUpProgressBar == null)
+//				        				{
+//				        					System.out.println("signUpProgressBar is null");
+//				        				}
+//				            	    	
+//			            	            while(progressBarStatus < 100)
+//			            	            {
+//			            	                Login.this.runOnUiThread(new Runnable()
+//			            	                {
+//			            	                    public void run()
+//			            	                    {
+//		            	                    		progressBarStatus += 15; 
+//		            	                    		btnEnterSignUp.setVisibility(v.GONE);
+//		            	                    		btnCancelSignUp.setVisibility(v.GONE);
+//		            	                    		signUpProgressBar.setVisibility(1);
+//		            	                    		signUpProgressBar.setProgress(progressBarStatus);
+//
+//			            	                    	if (progressBarIsComplete)
+//			            	                    	{ 
+//			            	                    		signUpProgressBar.setVisibility(v.GONE);
+//			            	                    		progressBarIsComplete = false;
+//			            	                    		breakLoop = true;
+//			            	                    	}
+//			            	                    }
+//			            	                });
+//			            	                 
+//			            	                try 
+//			            	                {
+//												Thread.sleep(900);
+//											} 
+//			            	                catch (InterruptedException e) 
+//			            	                {
+//												e.printStackTrace();
+//											}
+//			            	                
+//			            	                if (breakLoop)
+//			            	                {
+//			            	                	break;
+//			            	                }
+//			            	            }
+//				            	    }
+//				            	};
+//				            	progresBartimerThread.start();
+//				            	progresBartimerThread.stop(); 
+//				            	
+//				            	authenticationThread = new Thread()
+//				            	{
+//				            	    public void run() 
+//				            	    {
+				            	    	if (!insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, edtPasswordSecondSignUp))
+				            	    	{
+				            	    		btnEnterSignUp.setVisibility(1);
+				            	    		btnCancelSignUp.setVisibility(1);
+				            	    		signUpProgressBar.setVisibility(0);
+				            	    	}
+//				            	    }
+//				            	};
+//				            	authenticationThread.start();
+//				            	authenticationThread.stop();
+			        		}
 		            }
 	            });
 	            
@@ -100,9 +192,12 @@ public class Login extends Activity implements OnClickListener
 	            Button btnCancelLogin = (Button) loginDialog.findViewById(R.id.btnCancelLogin);
 	            
 	            final ProgressBar loginProgressBar = (ProgressBar) loginDialog.findViewById(R.id.pgbLoginStatus); 
-	            loginProgressBar.setProgress(0);
-	            loginProgressBar.setMax(100);
-	            loginProgressBar.setVisibility(v.GONE);
+	            if (loginProgressBar != null)
+	            {
+	            	loginProgressBar.setProgress(0);
+		            loginProgressBar.setMax(100);
+		            loginProgressBar.setVisibility(v.GONE);
+	            }
 
 	            btnEnterLogin.setOnClickListener(new OnClickListener() 
 	            {	
@@ -208,44 +303,42 @@ public class Login extends Activity implements OnClickListener
         return true;
     }
     
-    private void insertUser(EditText edtName, EditText edtEmail, EditText edtPasswordFirst, EditText edtPasswordSecond)
+    private Boolean insertUser(final EditText edtName, final EditText edtEmail, final EditText edtPasswordFirst, final EditText edtPasswordSecond)
     {
+    	Boolean isSuccess = false;
+    	
     	dbHelper = new DBHelper();
     	
 		userByEmailNameValuePairs = new ArrayList<NameValuePair>(); 
 		userByEmailNameValuePairs.add(new BasicNameValuePair("email", edtEmail.getText().toString()));
     	
-    	if (edtName.getText().toString().matches(""))
+		if (!edtPasswordFirst.getText().toString().equals(edtPasswordSecond.getText().toString()))
 		{
-			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_LONG).show();
-		}
-		else if (edtEmail.getText().toString().matches(""))
-		{
-			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show();
-		}
-		else if (edtPasswordFirst.getText().toString().matches(""))
-		{
-			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
-		}
-		else if (edtPasswordSecond.getText().toString().matches(""))
-		{ 
-			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
-		}
-		else // if the two passwords don't match
-			if (!edtPasswordFirst.getText().toString().equals(edtPasswordSecond.getText().toString()))
-		{
-			Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_LONG).show();
-			edtPasswordFirst.setText("");
-			edtPasswordSecond.setText("");
+			runOnUiThread(new Runnable() 
+			{
+			    public void run() 
+			    {
+			    	Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_LONG).show();
+					edtPasswordFirst.setText("");
+					edtPasswordSecond.setText("");
+			    }
+			});
 		}
 		else // if the email is already in the database
 			if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
 		{ 
-				Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_LONG).show();
-				edtEmail.setText("");
+				runOnUiThread(new Runnable() 
+				{
+				    public void run() 
+				    {
+				    	Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_LONG).show();
+						edtEmail.setText("");
+				    }
+				});
 		}
 		else
 		{
+			isSuccess = true;
 			newUserNameValuePairs = new ArrayList<NameValuePair>(); 
 			
 			newUserNameValuePairs.add(new BasicNameValuePair("id", "0"));
@@ -262,15 +355,24 @@ public class Login extends Activity implements OnClickListener
 			newUserNameValuePairs.add(new BasicNameValuePair("signed_in", "1"));
 			
 			dbHelper.modifyData(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
-			 
-			edtName.setText(""); 
-			edtEmail.setText("");
-			edtPasswordFirst.setText("");
-			edtPasswordSecond.setText(""); 
 			
 			savePlayerOneEmail(edtEmail);
+			
+			runOnUiThread(new Runnable() 
+			{
+			    public void run() 
+			    {
+			    	edtName.setText(""); 
+					edtEmail.setText("");
+					edtPasswordFirst.setText("");
+					edtPasswordSecond.setText("");
+			    }
+			});
+
 			startNewIntent();
 		}
+		
+		return isSuccess;
     }
     
     private void authenticateUser(final EditText edtLoginEmail, final EditText edtLoginPassword, final ProgressBar loginProgressBar)

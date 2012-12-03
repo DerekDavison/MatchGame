@@ -25,23 +25,41 @@ public class GamePlay extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
         
-        imgPlayerOne = (ImageView)findViewById(R.id.imgPlayerOne);
-        imgPlayerTwo = (ImageView)findViewById(R.id.imgPlayerTwo);
+        try
+        {
+        	setPlayerOneAvatar();
+            setPlayerTwoAvatar();
+        }
+        catch(Exception e)
+        {
+        	System.out.println(e.toString());
+        }
         
-        dbHelper = new DBHelper();
+    }
+    
+	private String getPlayerOneEmail()
+	{
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		return shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "");
+	}
+	
+	private String getPlayerTwoEmail()
+	{
+		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		return shared.getString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, "");
+	}
+	
+	private void setPlayerOneAvatar()
+	{
+		imgPlayerOne = (ImageView)findViewById(R.id.imgPlayerOne);
+		dbHelper = new DBHelper();
         playerOneAvatarIdByEmail = new ArrayList<NameValuePair>(); 
         playerOneAvatarIdByEmail.add(new BasicNameValuePair("email", getPlayerOneEmail()));
-        
-        playerTwoAvatarIdByEmail = new ArrayList<NameValuePair>(); 
-        playerTwoAvatarIdByEmail.add(new BasicNameValuePair("email", getPlayerTwoEmail()));
-
-        AbsoluteLayout.LayoutParams playerOneParams = new AbsoluteLayout.LayoutParams(80, 80, 30, 100);
+		
+		AbsoluteLayout.LayoutParams playerOneParams = new AbsoluteLayout.LayoutParams(80, 80, 30, 100);
         imgPlayerOne.setLayoutParams(playerOneParams);
-        
-        AbsoluteLayout.LayoutParams playerTwoParams = new AbsoluteLayout.LayoutParams(80, 80, 135, 100);
-        imgPlayerTwo.setLayoutParams(playerTwoParams);
-        
-        switch(Integer.parseInt(dbHelper.readDBData(StaticData.SELECT_PLAYER_AVITAR_ID_BY_EMAIL, playerOneAvatarIdByEmail, "avitar_picture_id").get(0))) 
+		
+		switch(Integer.parseInt(dbHelper.readDBData(StaticData.SELECT_PLAYER_AVITAR_ID_BY_EMAIL, playerOneAvatarIdByEmail, "avitar_picture_id").get(0))) 
     	{  
 	    	case 1: 
 	    		Drawable avatarOne = getResources().getDrawable(R.drawable.player_one);
@@ -53,7 +71,7 @@ public class GamePlay extends Activity
 	    		imgPlayerOne.setImageDrawable(avatarTwo);
 	    		break;
 	    	
-	    	case 3: 
+	    	case 3:  
 	    		Drawable avatarThree = getResources().getDrawable(R.drawable.player_three);
 	    		imgPlayerOne.setImageDrawable(avatarThree);
 		    	break;
@@ -96,7 +114,18 @@ public class GamePlay extends Activity
 	    	default:
 	    	throw new RuntimeException("Unknow button ID"); 
     	}
-        
+	}
+	
+	private void setPlayerTwoAvatar()
+	{
+		imgPlayerTwo = (ImageView)findViewById(R.id.imgPlayerTwo);
+        dbHelper = new DBHelper();
+        playerTwoAvatarIdByEmail = new ArrayList<NameValuePair>(); 
+        playerTwoAvatarIdByEmail.add(new BasicNameValuePair("email", getPlayerTwoEmail()));
+       
+        AbsoluteLayout.LayoutParams playerTwoParams = new AbsoluteLayout.LayoutParams(80, 80, 135, 100);
+        imgPlayerTwo.setLayoutParams(playerTwoParams);
+
         switch(Integer.parseInt(dbHelper.readDBData(StaticData.SELECT_PLAYER_AVITAR_ID_BY_EMAIL, playerTwoAvatarIdByEmail, "avitar_picture_id").get(0))) 
     	{  
 	    	case 1: 
@@ -152,27 +181,5 @@ public class GamePlay extends Activity
 	    	default:
 	    	throw new RuntimeException("Unknow button ID"); 
     	}
-    }
-    
-	private String getPlayerOneEmail()
-	{
-		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
-		return shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "");
 	}
-	
-	private String getPlayerTwoEmail()
-	{
-		SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF, MODE_PRIVATE);
-		return shared.getString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, "");
-	}
-	
-//	private void setPlayerOneAvatar()
-//	{
-//		
-//	}
-//	
-//	private void setPlayerTwoAvatar()
-//	{
-//		
-//	}
 }
