@@ -47,6 +47,8 @@ public class RoundTwo extends Activity implements OnClickListener
     	    				hostText.setText("Now let's get this round started!");
     	    				break;
     	    			case 5:
+    	    				//load question
+    	    				imgContinue.setVisibility(0);
     	    				break;
     	    		}
     	    		
