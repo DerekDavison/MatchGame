@@ -21,14 +21,14 @@
         android:layout_y="108dp"
         android:text="@string/c"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
     <TextView
         android:id="@+id/txtQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="0dp"
         android:layout_y="0dp"
-        android:text="@string/question"
+        android:text="@string/questionrtwo"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -117,5 +117,14 @@
         android:layout_y="146dp"
         android:text="@string/b"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+        android:id="@+id/imgContinue"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_x="2dp"
+        android:layout_y="20dp"
+        android:clickable="true"
+        android:src="@drawable/down" />
 
 </AbsoluteLayout>
