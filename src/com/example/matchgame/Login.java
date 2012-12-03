@@ -10,7 +10,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +27,7 @@ public class Login extends Activity implements OnClickListener
 		updateUserSignInStateByEmail;
 	private DBHelper dbHelper;
 	private Thread progresBartimerThread, authenticationThread;
-	private Boolean progressBarIsComplete = false, addSignUpButtonsBack = false;
+	private Boolean progressBarIsComplete = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -153,11 +152,8 @@ public class Login extends Activity implements OnClickListener
 				            	{
 				            	    public void run() 
 				            	    {
-				            	    	if (!insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, 
-				            	    			edtPasswordSecondSignUp, signUpProgressBar))
-				            	    	{
-				            	    		addSignUpButtonsBack = true;
-				            	    	}
+				            	    	insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, 
+				            	    			edtPasswordSecondSignUp, signUpProgressBar);
 				            	    }
 				            	};
 				            	authenticationThread.start();
@@ -305,11 +301,9 @@ public class Login extends Activity implements OnClickListener
         return true;
     }
     
-    private Boolean insertUser(final EditText edtName, final EditText edtEmail, final EditText edtPasswordFirst, 
+    private void insertUser(final EditText edtName, final EditText edtEmail, final EditText edtPasswordFirst, 
     		final EditText edtPasswordSecond, final ProgressBar signUpProgressBar)
     {
-    	Boolean isSuccess = false;
-    	
     	dbHelper = new DBHelper();
     	
 		userByEmailNameValuePairs = new ArrayList<NameValuePair>(); 
@@ -345,7 +339,6 @@ public class Login extends Activity implements OnClickListener
 		}
 		else
 		{
-			isSuccess = true;
 			newUserNameValuePairs = new ArrayList<NameValuePair>(); 
 			
 			newUserNameValuePairs.add(new BasicNameValuePair("id", "0"));
@@ -380,8 +373,6 @@ public class Login extends Activity implements OnClickListener
 
 			startNewIntent();
 		}
-		
-		return isSuccess;
     }
     
     private void authenticateUser(final EditText edtLoginEmail, final EditText edtLoginPassword, final ProgressBar loginProgressBar)

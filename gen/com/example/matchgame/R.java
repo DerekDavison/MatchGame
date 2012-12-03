@@ -111,9 +111,10 @@ public final class R {
         public static final int imgPlayerOne=0x7f080026;
         public static final int imgPlayerTwo=0x7f080027;
         public static final int imvMatchGame=0x7f08001f;
-        public static final int menu_settings=0x7f08006a;
+        public static final int menu_settings=0x7f08006b;
         public static final int pgbLoginSecondPlayer=0x7f080040;
         public static final int pgbLoginStatus=0x7f08003b;
+        public static final int pgbSignUpSecondPlayer=0x7f08006a;
         public static final int pgbSignUpStatus=0x7f080063;
         public static final int radioGroup1=0x7f080056;
         public static final int rdbGuest1=0x7f080057;

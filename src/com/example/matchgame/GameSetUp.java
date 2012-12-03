@@ -180,14 +180,104 @@ public class GameSetUp extends Activity implements OnClickListener
 	            final EditText edtPasswordFirstSecondPlayer = (EditText) signUpDialogSecondPlayer.findViewById(R.id.edtPasswordFirstSecondPlayer);  
 	            final EditText edtPasswordSecondSecondPlayer = (EditText) signUpDialogSecondPlayer.findViewById(R.id.edtPasswordSecondSecondPlayer);  
 
-	            Button btnEnterSecondPlayer = (Button) signUpDialogSecondPlayer.findViewById(R.id.btnEnterSecondPlayer);
-	            Button btnCancelSecondPlayer = (Button) signUpDialogSecondPlayer.findViewById(R.id.btnCancelSecondPlayer);
+	            final ProgressBar signUpProgressBar = (ProgressBar) signUpDialogSecondPlayer.findViewById(R.id.pgbSignUpSecondPlayer);
+            	if (signUpProgressBar != null)
+            	{
+            		signUpProgressBar.setProgress(0);
+		            signUpProgressBar.setMax(100);
+		            signUpProgressBar.setVisibility(v.GONE);
+            	}
+	            
+	            final Button btnEnterSecondPlayer = (Button) signUpDialogSecondPlayer.findViewById(R.id.btnEnterSecondPlayer);
+	            final Button btnCancelSecondPlayer = (Button) signUpDialogSecondPlayer.findViewById(R.id.btnCancelSecondPlayer);
 	            
 	            btnEnterSecondPlayer.setOnClickListener(new OnClickListener() 
 	            {
-		            public void onClick(View v) 
+		            public void onClick(final View v) 
 		            {
-		            	insertUser(edtNameSecondPlayer, edtEmailSecondPlayer, edtPasswordFirstSecondPlayer, edtPasswordSecondSecondPlayer);
+		            	if (edtNameSecondPlayer.getText().toString().matches(""))
+		        		{
+		        			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_LONG).show();
+		        		}
+		        		else if (edtEmailSecondPlayer.getText().toString().matches(""))
+		        		{
+		        			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show(); 
+		        		}
+		        		else if (edtPasswordFirstSecondPlayer.getText().toString().matches(""))
+		        		{
+		        			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
+		        		}
+		        		else if (edtPasswordSecondSecondPlayer.getText().toString().matches(""))
+		        		{ 
+		        			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
+		        		}
+		        		else
+		        		{
+		        			progresBartimerThread = new Thread()
+			            	{
+		        				int progressBarStatus = 0;
+		        				Boolean breakLoop = false;
+			            	    public void run()
+			            	    { 
+			            	    	if (signUpProgressBar == null)
+			        				{
+			        					System.out.println("signUpProgressBar is null");
+			        				}
+			            	    	
+		            	            while(progressBarStatus < 100)
+		            	            {
+		            	                GameSetUp.this.runOnUiThread(new Runnable()
+		            	                {
+		            	                    public void run()
+		            	                    {
+	            	                    		progressBarStatus += 15; 
+	            	                    		btnEnterSecondPlayer.setVisibility(v.GONE);
+	            	                    		btnCancelSecondPlayer.setVisibility(v.GONE);
+	            	                    		signUpProgressBar.setVisibility(1);
+	            	                    		signUpProgressBar.setProgress(progressBarStatus);
+
+		            	                    	if (progressBarIsComplete)
+		            	                    	{ 
+		            	                    		signUpProgressBar.setVisibility(v.GONE);
+		            	                    		btnEnterSecondPlayer.setVisibility(v.VISIBLE);
+		            	                    		btnCancelSecondPlayer.setVisibility(v.VISIBLE);
+
+		            	                    		progressBarIsComplete = false;
+		            	                    		breakLoop = true;
+		            	                    	}
+		            	                    }
+		            	                });
+		            	                 
+		            	                try 
+		            	                {
+											Thread.sleep(900);
+										} 
+		            	                catch (InterruptedException e) 
+		            	                {
+											e.printStackTrace();
+										}
+		            	                
+		            	                if (breakLoop)
+		            	                {
+		            	                	break;
+		            	                }
+		            	            }
+			            	    }
+			            	};
+			            	progresBartimerThread.start();
+			            	progresBartimerThread.stop(); 
+			            	
+			            	authenticationThread = new Thread()
+			            	{
+			            	    public void run() 
+			            	    {
+			            	    	insertUser(edtNameSecondPlayer, edtEmailSecondPlayer, edtPasswordFirstSecondPlayer, 
+			            	    			edtPasswordSecondSecondPlayer, signUpProgressBar);
+			            	    }
+			            	};
+			            	authenticationThread.start();
+			            	authenticationThread.stop();
+		        		}
 		            }
 	            });
 	            
@@ -303,41 +393,41 @@ public class GameSetUp extends Activity implements OnClickListener
 		}
     }
 	
-	private void insertUser(EditText edtName, EditText edtEmail, EditText edtPasswordFirst, EditText edtPasswordSecond)
+	private void insertUser(final EditText edtName, final EditText edtEmail, final EditText edtPasswordFirst, 
+    		final EditText edtPasswordSecond, final ProgressBar signUpProgressBar)
     {
     	dbHelper = new DBHelper();
     	
 		userByEmailNameValuePairs = new ArrayList<NameValuePair>(); 
 		userByEmailNameValuePairs.add(new BasicNameValuePair("email", edtEmail.getText().toString()));
     	
-    	if (edtName.getText().toString().matches(""))
+		if (!edtPasswordFirst.getText().toString().equals(edtPasswordSecond.getText().toString()))
 		{
-			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_LONG).show(); 
-		}
-		else if (edtEmail.getText().toString().matches(""))
-		{
-			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show();
-		}
-		else if (edtPasswordFirst.getText().toString().matches(""))
-		{
-			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
-		}
-		else if (edtPasswordSecond.getText().toString().matches(""))
-		{ 
-			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
-		}
-		else // if the two passwords don't match
-			if (!edtPasswordFirst.getText().toString().equals(edtPasswordSecond.getText().toString()))
-		{
-			Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_LONG).show();
-			edtPasswordFirst.setText("");
-			edtPasswordSecond.setText("");
+			runOnUiThread(new Runnable() 
+			{
+			    public void run() 
+			    {
+			    	signUpProgressBar.setProgress(100);
+			    	progressBarIsComplete = true;
+			    	Toast.makeText(getApplicationContext(), "Passwords don't match. Try again.", Toast.LENGTH_LONG).show();
+					edtPasswordFirst.setText("");
+					edtPasswordSecond.setText("");
+			    }
+			});
 		}
 		else // if the email is already in the database
 			if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, userByEmailNameValuePairs, "email").size() > 0)
 		{ 
-				Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_LONG).show();
-				edtEmail.setText("");
+				runOnUiThread(new Runnable() 
+				{
+				    public void run() 
+				    {
+				    	signUpProgressBar.setProgress(100);
+				    	progressBarIsComplete = true;
+				    	Toast.makeText(getApplicationContext(), "Email already used. Try again.", Toast.LENGTH_LONG).show();
+						edtEmail.setText("");
+				    }
+				});
 		}
 		else
 		{
@@ -351,18 +441,28 @@ public class GameSetUp extends Activity implements OnClickListener
 			newUserNameValuePairs.add(new BasicNameValuePair("score", "0"));
 			// new user, default avatar ID to 1 until user changes from default 
 			newUserNameValuePairs.add(new BasicNameValuePair("avitar_picture_id", "1"));
-			// default second player to sign in as player two
-			newUserNameValuePairs.add(new BasicNameValuePair("player_state", "second"));
+			// default first player to sign in as player one
+			newUserNameValuePairs.add(new BasicNameValuePair("player_state", "first"));
 			// defualt new player to signed in
 			newUserNameValuePairs.add(new BasicNameValuePair("signed_in", "1"));
 			
 			dbHelper.modifyData(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
 			
 			savePlayerTwoEmail(edtEmail);
-			edtName.setText(""); 
-			edtEmail.setText("");
-			edtPasswordFirst.setText("");
-			edtPasswordSecond.setText("");
+			
+			runOnUiThread(new Runnable() 
+			{
+			    public void run() 
+			    {
+			    	signUpProgressBar.setProgress(100);
+			    	progressBarIsComplete = true;
+			    	edtName.setText(""); 
+					edtEmail.setText("");
+					edtPasswordFirst.setText("");
+					edtPasswordSecond.setText("");
+			    }
+			});
+
 			startNewIntent();
 		}
     }
