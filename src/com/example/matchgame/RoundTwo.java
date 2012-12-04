@@ -1,5 +1,12 @@
 package com.example.matchgame;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -10,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RoundTwo extends Activity implements OnClickListener
 {
@@ -20,6 +28,9 @@ public class RoundTwo extends Activity implements OnClickListener
 	Button submit;
 	EditText ownText;
 	RadioButton select;
+	int random;
+	private DBHelper dbHelper;
+	private ArrayList<NameValuePair> questionByIdAndRound;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -58,7 +69,7 @@ public class RoundTwo extends Activity implements OnClickListener
     	    				hostText.setText("Now let's get this round started!");
     	    				break;
     	    			case 6:
-    	    				//load question
+    	    				generateRandomQuestion();
     	    				imgContinue.setVisibility(View.INVISIBLE);
     	    				break;	
     	    			default:
@@ -84,5 +95,23 @@ public class RoundTwo extends Activity implements OnClickListener
     {
         getMenuInflater().inflate(R.menu.round2, menu);
         return true;
+    }
+    
+    private void generateRandomQuestion()
+    {
+    	dbHelper = new DBHelper();
+		
+		questionByIdAndRound = new ArrayList<NameValuePair>();
+		
+		
+		Random r = new Random();
+		random = (r.nextInt(6 - 1 + 1) + 1);
+		
+		questionByIdAndRound.add(new BasicNameValuePair("id", random + ""));
+
+		for (String s : dbHelper.readDBData("SelectQuestionByIdAndRound.php", questionByIdAndRound, "question"))
+		{
+			hostText.setText(s);
+		}
     }
 }
