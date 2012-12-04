@@ -16,8 +16,9 @@ import android.widget.ImageView;
 public class GamePlay extends Activity 
 {
 	private DBHelper dbHelper;
-	ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail;
+	ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail, singlePlayerNameValuePairs;
 	private ImageView imgPlayerOne, imgPlayerTwo;
+	private Boolean singlePlayerMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -25,8 +26,16 @@ public class GamePlay extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
 
-    	setPlayerOneAvatar();
-        setPlayerTwoAvatar();
+        determineGameMode();
+        if(singlePlayerMode)
+        {
+        	setPlayerOneAvatar();
+        }
+        else
+        {
+        	setPlayerOneAvatar();
+            setPlayerTwoAvatar();
+        }
     }
     
 	private String getPlayerOneEmail()
@@ -173,5 +182,22 @@ public class GamePlay extends Activity
 	    	default:
 	    	throw new RuntimeException("Unknow button ID"); 
     	}
+	}
+	
+	private void determineGameMode()
+	{
+		dbHelper = new DBHelper();
+        singlePlayerNameValuePairs = new ArrayList<NameValuePair>();
+        SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
+		singlePlayerNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "")));
+
+		if (dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, singlePlayerNameValuePairs, "player_state").get(0).toString().equals("single"))
+		{
+			singlePlayerMode = true;
+		} 
+		else
+		{
+			singlePlayerMode = false;
+		}
 	}
 }

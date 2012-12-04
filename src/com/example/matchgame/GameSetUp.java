@@ -7,6 +7,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -47,10 +48,10 @@ public class GameSetUp extends Activity implements OnClickListener
 	{ 
 		switch(v.getId()) 
     	{   
-	    	case R.id.btnPlayAlone:     
+	    	case R.id.btnPlayAlone:      
 
+	    		showLoadingGameDialog();
 	    		setSinglePlayerMode();
-
     			startNewIntent();
     			
 	    	break;  
@@ -492,4 +493,10 @@ public class GameSetUp extends Activity implements OnClickListener
 		startActivity(nextIntent);
 		finish();
     }
+	
+	private void showLoadingGameDialog()
+	{
+		@SuppressWarnings("unused")
+		ProgressDialog dialog = ProgressDialog.show(GameSetUp.this, "","Please wait, loading ...", true);
+	}
 }
