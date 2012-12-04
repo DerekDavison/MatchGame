@@ -30,6 +30,11 @@ public class GamePlay extends Activity
         if(singlePlayerMode)
         {
         	setPlayerOneAvatar();
+        	
+        	// need to find a better icon
+//        	Drawable avatarOne = getResources().getDrawable(R.drawable.computer_icon);
+//        	imgPlayerTwo = (ImageView)findViewById(R.id.imgPlayerTwo);
+//        	imgPlayerTwo.setImageDrawable(avatarOne);
         }
         else
         {
