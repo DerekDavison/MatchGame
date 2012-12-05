@@ -27,8 +27,9 @@ public class RoundTwo extends Activity implements OnClickListener
 	TextView hostText;
 	Button submit;
 	EditText ownText;
-	RadioButton select;
-	int random;
+	RadioButton select, guest1, guest2, guest3;
+	String choice, ans1, ans2, ans3;
+	int random, prize, roundPrize, total;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound;
 
@@ -43,6 +44,9 @@ public class RoundTwo extends Activity implements OnClickListener
         submit = (Button)findViewById(R.id.btnSubmit);
         ownText = (EditText)findViewById(R.id.response);
         select = (RadioButton)findViewById(R.id.rdbOther);
+        guest1 = (RadioButton)findViewById(R.id.rdbGuest1);
+        guest2 = (RadioButton)findViewById(R.id.rdbGuest2);
+        guest3 = (RadioButton)findViewById(R.id.rdbGuest3);
     }
         
         public void onClick(View v)
@@ -76,15 +80,46 @@ public class RoundTwo extends Activity implements OnClickListener
     	    				break;
     	    		}
     	    		break;
-    	    	case R.id.rdbOther:
-    	    		ownText.setVisibility(View.VISIBLE);
-    	    		break;
+    	    	
     	    	case R.id.btnSubmit:
+    	    	
+    				if(select.isChecked())
+    	    		{
+    	    			ownText.setVisibility(View.VISIBLE);
+    	    			choice = ownText.getText().toString();
+    	    			
+    	    			determineScore(total);
+    	    			//compare choice to $100 $200 and $500 answers grabbed from database
+    	    		}
+    	    		else if(guest1.isChecked())
+    	    		{
+    	    			ownText.setVisibility(View.INVISIBLE);
+    	    			choice = guest1.getText().toString();
+    	    			
+    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+    	    			
+    	    		}
+    	    		else if(guest2.isChecked())
+    	    		{
+    	    			ownText.setVisibility(View.INVISIBLE);
+    	    			choice = guest2.getText().toString();
+    	    			
+    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+    	    			
+    	    		}
+    	    		else if(guest3.isChecked())
+    	    		{
+    	    			ownText.setVisibility(View.INVISIBLE);
+    	    			choice = guest3.getText().toString();
+    	    			
+    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+    	    			
+    	    		}
+    	    		
     	    		//reveal answers 1 by 1
-    	    		//compare selected option to correct answers
     	    		//add winnings to running total
     	    		//move player to final round
-    	    	
+    	    		
         	}
     	}
     	    			
@@ -114,4 +149,45 @@ public class RoundTwo extends Activity implements OnClickListener
 			hostText.setText(s);
 		}
     }
+    
+    public void determineScore(int total)
+    {
+    
+    	
+		    if(choice == ans1)
+			{
+				roundPrize = 100;
+				total = total + roundPrize;
+				//fade away answer 1 to reveal prize
+				//host announces that is your winnings but lets see other answers.
+				//display others one by one.
+				
+				
+			}
+			if(choice == ans2)
+			{
+				roundPrize = 250;
+				total = total + roundPrize;
+				//fade away answer 1 that is not your answer
+				//reveal answer 2 that is your prize
+				//display final answer with disappointment
+				
+			}
+			if(choice == ans3)
+			{
+				roundPrize = 500;
+				total = total + roundPrize;
+				//reveal first 2 answers with excitement
+				//reveal final answer with anticipation
+				//big celebration
+			}
+			else
+			{
+				roundPrize = 10;
+				total = total + roundPrize;
+				//all answers revealed and no winner
+				//host feels sad and gives the player 10$ and moves him/her to final round
+			
+    	}
+	}
 }
