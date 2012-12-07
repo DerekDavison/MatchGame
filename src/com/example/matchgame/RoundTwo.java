@@ -21,22 +21,20 @@ import android.widget.Toast;
 
 public class RoundTwo extends Activity implements OnClickListener
 {
-	
-	ImageView imgContinue;
-	int count = 0;
-	TextView hostText;
-	Button submit;
-	EditText ownText;
-	RadioButton select, guest1, guest2, guest3;
-	String choice, ans1, ans2, ans3;
-	int random, prize, roundPrize, total;
+	private ImageView imgContinue;
+	private TextView hostText;
+	private Button submit;
+	private EditText ownText;
+	private RadioButton select, guest1, guest2, guest3;
+	private String choice, ans1, ans2, ans3;
+	private int random, prize, roundPrize, total, count = 0;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
     {
-        super.onCreate(savedInstanceState);
+    	super.onCreate(savedInstanceState);
         setContentView(R.layout.round_two);
         
         imgContinue = (ImageView)findViewById(R.id.imgContinue);
@@ -49,89 +47,81 @@ public class RoundTwo extends Activity implements OnClickListener
         guest3 = (RadioButton)findViewById(R.id.rdbGuest3);
     }
         
-        public void onClick(View v)
-    	{
-    		switch(v.getId()) 
-        	{  
-    	    	case R.id.imgContinue:
-    	    		count++;
-    	    		switch(count)
-    	    		{
-    	    			case 1:
-    	    				//Replace "Winner of round 1" once player class created.
-    	    				hostText.setText("Moving on today we have the lovely" + " " + "Winner of round 1" + ".");
-    	    				break;
-    	    			case 2:
-    	    				hostText.setText("In this round, our player will get responses from three of our guests.");
-    	    				break;
-    	    			case 3:
-    	    				hostText.setText("Our player may choose to take one of their answers or select their own.");
-    	    				break;
-    	    			case 4:
-    	    				hostText.setText("If the selected answer matches one of the corresponding prizes, our champion will have that prize added to their total.");
-    	    			case 5:
-    	    				hostText.setText("Now let's get this round started!");
-    	    				break;
-    	    			case 6:
-    	    				generateRandomQuestion();
-    	    				imgContinue.setVisibility(View.INVISIBLE);
-    	    				break;	
-    	    			default:
-    	    				break;
-    	    		}
-    	    		break;
-    	    	
-    	    	case R.id.btnSubmit:
-    	    	
-    				if(select.isChecked())
-    	    		{
-    	    			ownText.setVisibility(View.VISIBLE);
-    	    			choice = ownText.getText().toString();
-    	    			
-    	    			determineScore(total);
-    	    			//compare choice to $100 $200 and $500 answers grabbed from database
-    	    		}
-    	    		else if(guest1.isChecked())
-    	    		{
-    	    			ownText.setVisibility(View.INVISIBLE);
-    	    			choice = guest1.getText().toString();
-    	    			
-    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
-    	    			
-    	    		}
-    	    		else if(guest2.isChecked())
-    	    		{
-    	    			ownText.setVisibility(View.INVISIBLE);
-    	    			choice = guest2.getText().toString();
-    	    			
-    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
-    	    			
-    	    		}
-    	    		else if(guest3.isChecked())
-    	    		{
-    	    			ownText.setVisibility(View.INVISIBLE);
-    	    			choice = guest3.getText().toString();
-    	    			
-    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
-    	    			
-    	    		}
-    	    		
-    	    		//reveal answers 1 by 1
-    	    		//add winnings to running total
-    	    		//move player to final round
-    	    		
-        	}
+    public void onClick(View v)
+	{
+		switch(v.getId()) 
+    	{  
+	    	case R.id.imgContinue:
+	    		
+	    		count++;
+	    		switch(count)
+	    		{
+	    			case 1:
+	    				//Replace "Winner of round 1" once player class created.
+	    				hostText.setText("Moving on today we have the lovely" + " " + "Winner of round 1" + ".");
+	    				break;
+	    			case 2:
+	    				hostText.setText("In this round, our player will get responses from three of our guests.");
+	    				break;
+	    			case 3:
+	    				hostText.setText("Our player may choose to take one of their answers or select their own.");
+	    				break;
+	    			case 4:
+	    				hostText.setText("If the selected answer matches one of the corresponding prizes, our champion will have that prize added to their total.");
+	    			case 5:
+	    				hostText.setText("Now let's get this round started!");
+	    				break;
+	    			case 6:
+	    				generateRandomQuestion();
+	    				imgContinue.setVisibility(View.INVISIBLE);
+	    				break;	
+	    			default:
+	    				break;
+	    		}
+	    		
+	    		break;
+	    	
+	    	case R.id.btnSubmit:
+	    	
+				if(select.isChecked())
+	    		{
+	    			ownText.setVisibility(View.VISIBLE);
+	    			choice = ownText.getText().toString();
+	    			
+	    			determineScore(total);
+	    			//compare choice to $100 $200 and $500 answers grabbed from database
+	    		}
+	    		else if(guest1.isChecked())
+	    		{
+	    			ownText.setVisibility(View.INVISIBLE);
+	    			choice = guest1.getText().toString();
+	    			
+	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+	    			
+	    		}
+	    		else if(guest2.isChecked())
+	    		{
+	    			ownText.setVisibility(View.INVISIBLE);
+	    			choice = guest2.getText().toString();
+	    			
+	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+	    			
+	    		}
+	    		else if(guest3.isChecked())
+	    		{
+	    			ownText.setVisibility(View.INVISIBLE);
+	    			choice = guest3.getText().toString();
+	    			
+	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+	    			
+	    		}
+	    		
+	    		//reveal answers 1 by 1
+	    		//add winnings to running total
+	    		//move player to final round
     	}
-    	    			
-    
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
-    {
-        getMenuInflater().inflate(R.menu.round2, menu);
-        return true;
-    }
-    
+	}
+        
     private void generateRandomQuestion()
     {
     	dbHelper = new DBHelper();
@@ -149,45 +139,42 @@ public class RoundTwo extends Activity implements OnClickListener
 			hostText.setText(s);
 		}
     }
-    
+	    
     public void determineScore(int total)
     {
-    
-    	
-		    if(choice == ans1)
-			{
-				roundPrize = 100;
-				total = total + roundPrize;
-				//fade away answer 1 to reveal prize
-				//host announces that is your winnings but lets see other answers.
-				//display others one by one.
-				
-				
-			}
-			if(choice == ans2)
-			{
-				roundPrize = 250;
-				total = total + roundPrize;
-				//fade away answer 1 that is not your answer
-				//reveal answer 2 that is your prize
-				//display final answer with disappointment
-				
-			}
-			if(choice == ans3)
-			{
-				roundPrize = 500;
-				total = total + roundPrize;
-				//reveal first 2 answers with excitement
-				//reveal final answer with anticipation
-				//big celebration
-			}
-			else
-			{
-				roundPrize = 10;
-				total = total + roundPrize;
-				//all answers revealed and no winner
-				//host feels sad and gives the player 10$ and moves him/her to final round
+	    if(choice == ans1)
+		{
+			roundPrize = 100;
+			total = total + roundPrize;
+			//fade away answer 1 to reveal prize
+			//host announces that is your winnings but lets see other answers.
+			//display others one by one.
 			
+			
+		}
+		if(choice == ans2)
+		{
+			roundPrize = 250;
+			total = total + roundPrize;
+			//fade away answer 1 that is not your answer
+			//reveal answer 2 that is your prize
+			//display final answer with disappointment
+			
+		}
+		if(choice == ans3)
+		{
+			roundPrize = 500;
+			total = total + roundPrize;
+			//reveal first 2 answers with excitement
+			//reveal final answer with anticipation
+			//big celebration
+		}
+		else
+		{
+			roundPrize = 10;
+			total = total + roundPrize;
+			//all answers revealed and no winner
+			//host feels sad and gives the player 10$ and moves him/her to final round
     	}
 	}
 }

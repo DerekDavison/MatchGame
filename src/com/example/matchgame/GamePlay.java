@@ -6,11 +6,16 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
@@ -20,23 +25,21 @@ import android.widget.ImageView;
 public class GamePlay extends Activity implements OnClickListener
 {
 	private DBHelper dbHelper;
-	ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail, singlePlayerNameValuePairs;
+	private ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail, singlePlayerNameValuePairs;
 	private ImageView imgPlayerOne, imgPlayerTwo;
-	private Boolean singlePlayerMode = false;
+	private Boolean singlePlayerMode = false, firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true;
+	private Button btnRoundTwo;
+	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, delayToShowPlayerTurnDialogTimer;
 
-	Button r2;
-	
-	
     @Override
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
 
-        r2 = (Button)findViewById(R.id.btnRoundtwo);
-        r2.setOnClickListener(this);
-        
-        
+        btnRoundTwo = (Button)findViewById(R.id.btnRoundtwo);
+        btnRoundTwo.setOnClickListener(this);
+
         determineGameMode();
         if(singlePlayerMode)
         {
@@ -52,7 +55,32 @@ public class GamePlay extends Activity implements OnClickListener
         	setPlayerOneAvatar();
             setPlayerTwoAvatar();
         }
+        
+        // wait four seconds and then display dialog for four more seconds
+        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) { }
+
+	   		public void onFinish() 
+	   		{
+	   			loadTimeForRoundOneDialog();
+	   			delayToShowRoundOneAnnouncementTimer.cancel();
+	   		}
+	   	};
+	   	delayToShowRoundOneAnnouncementTimer.start();
     }
+    
+    public void onClick(View v)
+	{
+		switch(v.getId()) 
+    	{  
+	    	case R.id.btnRoundtwo:
+	    		startNewIntent();
+	    		break;
+	    	default:
+	    		break;
+    	}
+	}
     
 	private String getPlayerOneEmail()
 	{
@@ -216,24 +244,79 @@ public class GamePlay extends Activity implements OnClickListener
 			singlePlayerMode = false;
 		}
 	}
-	
-	 public void onClick(View v)
-		{
-			switch(v.getId()) 
-	    	{  
-		    	case R.id.btnRoundtwo:
-		    		startNewIntent();
-		    		break;
-		    	default:
-		    		break;
-	    	}
-		}
-	
-	
+
     private void startNewIntent()
     {
     	Intent continueIntent = new Intent(GamePlay.this, RoundTwo.class); 
 		startActivity(continueIntent);
 		finish();
+    }
+    
+    private void loadTimeForRoundOneDialog()
+    {
+    	final Dialog roundOneAnnouncementDialog = new Dialog(GamePlay.this);
+		roundOneAnnouncementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+		roundOneAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+		roundOneAnnouncementDialog.setContentView(R.layout.time_for_round_one_dialog);
+		roundOneAnnouncementDialog.setCancelable(true); 
+        
+        roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForRoundOneAnnouncementTimer)
+	   			{
+	   				roundOneAnnouncementDialog.show();
+		   			firstTimeForRoundOneAnnouncementTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			roundOneAnnouncementDialog.dismiss();
+	   			roundOneAnnouncementTimer.cancel();
+	   			
+	   			try 
+	   			{
+					Thread.sleep(2000);
+				} catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+	   			
+	   			loadPlayerTurnDialog();
+	   		}
+	   	};
+	   	roundOneAnnouncementTimer.start();
+    }
+    
+    private void loadPlayerTurnDialog()
+    {
+    	final Dialog playerTurnDialog = new Dialog(GamePlay.this);
+    	playerTurnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	playerTurnDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	playerTurnDialog.setContentView(R.layout.player_one_its_your_turn);
+    	playerTurnDialog.setCancelable(true); 
+        
+        roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForPlayerTurnDialogTimer)
+	   			{
+	   				playerTurnDialog.show();
+	   				firstTimeForPlayerTurnDialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			playerTurnDialog.dismiss();
+	   			roundOneAnnouncementTimer.cancel();
+	   		}
+	   	};
+	   	roundOneAnnouncementTimer.start();
     }
 }
