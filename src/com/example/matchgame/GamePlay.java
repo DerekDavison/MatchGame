@@ -6,26 +6,37 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AbsoluteLayout;
+import android.widget.Button;
 import android.widget.ImageView;
 
 @SuppressWarnings("deprecation")
-public class GamePlay extends Activity 
+public class GamePlay extends Activity implements OnClickListener
 {
 	private DBHelper dbHelper;
 	ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail, singlePlayerNameValuePairs;
 	private ImageView imgPlayerOne, imgPlayerTwo;
 	private Boolean singlePlayerMode = false;
 
+	Button r2;
+	
+	
     @Override
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
 
+        r2 = (Button)findViewById(R.id.btnRoundtwo);
+        r2.setOnClickListener(this);
+        
+        
         determineGameMode();
         if(singlePlayerMode)
         {
@@ -205,4 +216,24 @@ public class GamePlay extends Activity
 			singlePlayerMode = false;
 		}
 	}
+	
+	 public void onClick(View v)
+		{
+			switch(v.getId()) 
+	    	{  
+		    	case R.id.btnRoundtwo:
+		    		startNewIntent();
+		    		break;
+		    	default:
+		    		break;
+	    	}
+		}
+	
+	
+    private void startNewIntent()
+    {
+    	Intent continueIntent = new Intent(GamePlay.this, RoundTwo.class); 
+		startActivity(continueIntent);
+		finish();
+    }
 }

@@ -228,5 +228,14 @@
         android:layout_x="334dp"
         android:layout_y="134dp"
         android:src="@drawable/ic_launcher" />
+
+    <Button
+        android:id="@+id/btnRoundtwo"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="414dp"
+        android:layout_y="232dp"
+        android:text="Go to round 2" />
 
 </AbsoluteLayout>
