@@ -66,7 +66,7 @@ public class Login extends Activity implements OnClickListener
             	{
             		signUpProgressBar.setProgress(0);
 		            signUpProgressBar.setMax(100);
-		            signUpProgressBar.setVisibility(v.GONE);
+		            signUpProgressBar.setVisibility(v.GONE); 
             	}
 
 	            final Button btnEnterSignUp = (Button) signUpDialog.findViewById(R.id.btnEnter);
@@ -76,89 +76,89 @@ public class Login extends Activity implements OnClickListener
 	            {
 		            public void onClick(final View v) 
 		            {
-		            		if (edtNameSignUp.getText().toString().matches(""))
-			        		{
-			        			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_LONG).show();
-			        		}
-			        		else if (edtEmailSignUp.getText().toString().matches(""))
-			        		{
-			        			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show(); 
-			        		}
-			        		else if (edtPasswordFirstSignUp.getText().toString().matches(""))
-			        		{
-			        			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
-			        		}
-			        		else if (edtPasswordSecondSignUp.getText().toString().matches(""))
-			        		{ 
-			        			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
-			        		}
-			        		else
-			        		{ 
-			        			progresBartimerThread = new Thread()
-				            	{
-			        				int progressBarStatus = 0;
-			        				Boolean breakLoop = false;
-				            	    public void run()
-				            	    { 
-				            	    	if (signUpProgressBar == null)
-				        				{
-				        					System.out.println("signUpProgressBar is null");
-				        				}
-				            	    	
-			            	            while(progressBarStatus < 100)
-			            	            {
-			            	                Login.this.runOnUiThread(new Runnable()
-			            	                {
-			            	                    public void run()
-			            	                    {
-		            	                    		progressBarStatus += 15; 
-		            	                    		btnEnterSignUp.setVisibility(v.GONE);
-		            	                    		btnCancelSignUp.setVisibility(v.GONE);
-		            	                    		signUpProgressBar.setVisibility(1);
-		            	                    		signUpProgressBar.setProgress(progressBarStatus);
+	            		if (edtNameSignUp.getText().toString().matches(""))
+		        		{
+		        			Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_LONG).show();
+		        		}
+		        		else if (edtEmailSignUp.getText().toString().matches(""))
+		        		{
+		        			Toast.makeText(getApplicationContext(), "Enter email.", Toast.LENGTH_LONG).show(); 
+		        		}
+		        		else if (edtPasswordFirstSignUp.getText().toString().matches(""))
+		        		{
+		        			Toast.makeText(getApplicationContext(), "Enter password.", Toast.LENGTH_LONG).show();
+		        		}
+		        		else if (edtPasswordSecondSignUp.getText().toString().matches(""))
+		        		{ 
+		        			Toast.makeText(getApplicationContext(), "Re-enter password.", Toast.LENGTH_LONG).show();
+		        		}
+		        		else
+		        		{ 
+		        			progresBartimerThread = new Thread()
+			            	{
+		        				int progressBarStatus = 0;
+		        				Boolean breakLoop = false;
+			            	    public void run()
+			            	    { 
+			            	    	if (signUpProgressBar == null)
+			        				{
+			        					System.out.println("signUpProgressBar is null");
+			        				}
+			            	    	
+		            	            while(progressBarStatus < 100)
+		            	            {
+		            	                Login.this.runOnUiThread(new Runnable()
+		            	                {
+		            	                    public void run()
+		            	                    {
+	            	                    		progressBarStatus += 15; 
+	            	                    		btnEnterSignUp.setVisibility(v.GONE);
+	            	                    		btnCancelSignUp.setVisibility(v.GONE);
+	            	                    		signUpProgressBar.setVisibility(1);
+	            	                    		signUpProgressBar.setProgress(progressBarStatus);
 
-			            	                    	if (progressBarIsComplete)
-			            	                    	{ 
-			            	                    		signUpProgressBar.setVisibility(v.GONE);
-		            			            			btnEnterSignUp.setVisibility(v.VISIBLE);
-		            	            	    			btnCancelSignUp.setVisibility(v.VISIBLE);
+		            	                    	if (progressBarIsComplete)
+		            	                    	{ 
+		            	                    		signUpProgressBar.setVisibility(v.GONE);
+	            			            			btnEnterSignUp.setVisibility(v.VISIBLE);
+	            	            	    			btnCancelSignUp.setVisibility(v.VISIBLE);
 
-			            	                    		progressBarIsComplete = false;
-			            	                    		breakLoop = true;
-			            	                    	}
-			            	                    }
-			            	                });
-			            	                 
-			            	                try 
-			            	                {
-												Thread.sleep(900);
-											} 
-			            	                catch (InterruptedException e) 
-			            	                {
-												e.printStackTrace();
-											}
-			            	                
-			            	                if (breakLoop)
-			            	                {
-			            	                	break;
-			            	                }
-			            	            }
-				            	    }
-				            	};
-				            	progresBartimerThread.start();
-				            	progresBartimerThread.stop(); 
-				            	
-				            	authenticationThread = new Thread()
-				            	{
-				            	    public void run() 
-				            	    {
-				            	    	insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, 
-				            	    			edtPasswordSecondSignUp, signUpProgressBar);
-				            	    }
-				            	};
-				            	authenticationThread.start();
-				            	authenticationThread.stop();
-			        		}
+		            	                    		progressBarIsComplete = false;
+		            	                    		breakLoop = true;
+		            	                    	}
+		            	                    }
+		            	                });
+		            	                 
+		            	                try 
+		            	                {
+											Thread.sleep(900);
+										} 
+		            	                catch (InterruptedException e) 
+		            	                {
+											e.printStackTrace();
+										}
+		            	                
+		            	                if (breakLoop)
+		            	                {
+		            	                	break;
+		            	                }
+		            	            }
+			            	    }
+			            	};
+			            	progresBartimerThread.start();
+			            	progresBartimerThread.stop(); 
+			            	
+			            	authenticationThread = new Thread()
+			            	{
+			            	    public void run() 
+			            	    {
+			            	    	insertUser(edtNameSignUp, edtEmailSignUp, edtPasswordFirstSignUp, 
+			            	    			edtPasswordSecondSignUp, signUpProgressBar);
+			            	    }
+			            	};
+			            	authenticationThread.start();
+			            	authenticationThread.stop();
+		        		}
 		            }
 	            });
 	            
@@ -351,7 +351,7 @@ public class Login extends Activity implements OnClickListener
 			newUserNameValuePairs.add(new BasicNameValuePair("avitar_picture_id", "1"));
 			// default first player to sign in as player one
 			newUserNameValuePairs.add(new BasicNameValuePair("player_state", "first"));
-			// defualt new player to signed in
+			// defualt new player to signed in 
 			newUserNameValuePairs.add(new BasicNameValuePair("signed_in", "1"));
 			
 			dbHelper.modifyData(newUserNameValuePairs, StaticData.INSERT_NEW_USER_PHP_FILE);
