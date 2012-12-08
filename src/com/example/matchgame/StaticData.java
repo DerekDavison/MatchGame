@@ -8,7 +8,8 @@ public class StaticData
     public final static String UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL = "UpdatePlayerSignInStatusByEmail.php";  
     public final static String UPDATE_PLAYER_AVATAR_ID_BY_EMAIL = "UpdatePlayerAvatarIdByEmail.php";  
     public final static String SELECT_PLAYER_AVITAR_ID_BY_EMAIL = "SelectPlayerAvitarIdByEmail.php";
-    public final static String SELECT_QUESTION_BY_ID_AND_ROUND = "SelectQuestionByIdAndRound.php";
+    public final static String SELECT_QUESTION_BY_ID_AND_ROUND = "SelectQuestionByIdAndRound.php"; 
+    public final static String SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND = "SelectAnswerByIdQuestionIDAndRound.php"; 
     
 	public final static String USER_ID = "userId";
 	public final static String NAME = "name";
