@@ -1,6 +1,8 @@
 package com.example.matchgame;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -14,12 +16,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
 public class GamePlay extends Activity implements OnClickListener
@@ -27,9 +30,17 @@ public class GamePlay extends Activity implements OnClickListener
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail, singlePlayerNameValuePairs;
 	private ImageView imgPlayerOne, imgPlayerTwo;
-	private Boolean singlePlayerMode = false, firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true;
+	private Boolean singlePlayerMode = false, firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
+			firstTimeForloadingQuestionDialogTimer = true, userHasSubmittedAnswer = false;
 	private Button btnRoundTwo;
-	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, delayToShowPlayerTurnDialogTimer;
+	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, loadingQuestionDialogTimer;
+	private ProgressDialog loadingQuestionDialog;
+	private int questionIdCouter = 0;
+	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
+		playerTwoNameByEmailNameValuePairs;
+	private TextView txtRoundOneQuestion, txtGamePlayPlayerOne, txtGamePlayPlayerTwo;
+	private String playeOneName, playeTwoName;
+	private Timer checkIfPlayerSubmittedAnswerTimer; 
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -37,9 +48,9 @@ public class GamePlay extends Activity implements OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
 
-        btnRoundTwo = (Button)findViewById(R.id.btnRoundtwo);
+        btnRoundTwo = (Button)findViewById(R.id.btnRoundtwo);  
         btnRoundTwo.setOnClickListener(this);
-
+        
         determineGameMode();
         if(singlePlayerMode)
         {
@@ -56,7 +67,7 @@ public class GamePlay extends Activity implements OnClickListener
             setPlayerTwoAvatar();
         }
         
-        // wait four seconds and then display dialog for four more seconds
+        // wait four seconds and then call loadTimeForRoundOneDialog()
         delayToShowRoundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) { }
@@ -68,6 +79,18 @@ public class GamePlay extends Activity implements OnClickListener
 	   		}
 	   	};
 	   	delayToShowRoundOneAnnouncementTimer.start();
+	   	
+	   	// this runs on a schedule and check every second if the user has submitted an answer
+	   	checkIfPlayerSubmittedAnswerTimer = new Timer(); 
+	   	checkIfPlayerSubmittedAnswerTimer.schedule(new TimerTask() 
+        { 
+            @Override 
+            public void run() 
+            { 
+                TimerMethod(); 
+            } 
+     
+        }, 0, 1000); 
     }
     
     public void onClick(View v)
@@ -96,6 +119,10 @@ public class GamePlay extends Activity implements OnClickListener
 	
 	private void setPlayerOneAvatar()
 	{
+		txtGamePlayPlayerOne = (TextView)findViewById(R.id.txtGamePlayPlayerOne);
+		playeOneName = getPlayerOneNameByEmail();
+		txtGamePlayPlayerOne.setText(playeOneName);
+
 		imgPlayerOne = (ImageView)findViewById(R.id.imgPlayerOne);
 		dbHelper = new DBHelper();
         playerOneAvatarIdByEmail = new ArrayList<NameValuePair>(); 
@@ -163,6 +190,10 @@ public class GamePlay extends Activity implements OnClickListener
 	
 	private void setPlayerTwoAvatar()
 	{
+		txtGamePlayPlayerTwo = (TextView)findViewById(R.id.txtGamePlayPlayerTwo);
+		playeTwoName = getPlayerTwoNameByEmail();
+		txtGamePlayPlayerTwo.setText(playeTwoName);
+		
 		imgPlayerTwo = (ImageView)findViewById(R.id.imgPlayerTwo);
         dbHelper = new DBHelper();
         playerTwoAvatarIdByEmail = new ArrayList<NameValuePair>(); 
@@ -244,6 +275,24 @@ public class GamePlay extends Activity implements OnClickListener
 			singlePlayerMode = false;
 		}
 	}
+	
+	private String getPlayerOneNameByEmail()
+	{
+		dbHelper = new DBHelper();
+		playerOneNameByEmailNameValuePairs = new ArrayList<NameValuePair>();
+        SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
+        playerOneNameByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "")));
+        return dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, playerOneNameByEmailNameValuePairs, "name").get(0).toString();
+	}
+	
+	private String getPlayerTwoNameByEmail()
+	{
+		dbHelper = new DBHelper();
+		playerTwoNameByEmailNameValuePairs = new ArrayList<NameValuePair>();
+        SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF, MODE_PRIVATE);
+        playerTwoNameByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, "")));
+        return dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, playerTwoNameByEmailNameValuePairs, "name").get(0).toString();
+	}
 
     private void startNewIntent()
     {
@@ -314,9 +363,68 @@ public class GamePlay extends Activity implements OnClickListener
 	   		public void onFinish() 
 	   		{
 	   			playerTurnDialog.dismiss();
+	   			runLoadingQuestionDialog();
 	   			roundOneAnnouncementTimer.cancel();
 	   		}
 	   	};
 	   	roundOneAnnouncementTimer.start();
     }
+    
+    private void runLoadingQuestionDialog()
+    {
+    	loadingQuestionDialogTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForloadingQuestionDialogTimer)
+	   			{
+	   				loadingQuestionDialog = ProgressDialog.show(GamePlay.this, "","Loading your question...", true);
+	   				firstTimeForloadingQuestionDialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			loadingQuestionDialog.dismiss();
+	   			setQuestionForRound();
+	   			loadingQuestionDialogTimer.cancel();
+	   		}
+	   	};
+	   	loadingQuestionDialogTimer.start();
+    }
+    
+    private void setQuestionForRound()
+    {
+    	questionIdCouter++;
+    	
+    	dbHelper = new DBHelper();
+    	questionByIdAndRoundNameValuePairs = new ArrayList<NameValuePair>(); 
+    	questionByIdAndRoundNameValuePairs.add(new BasicNameValuePair("id", questionIdCouter + ""));
+    	questionByIdAndRoundNameValuePairs.add(new BasicNameValuePair("round", StaticData.ROUND_ONE));
+    	
+    	txtRoundOneQuestion = (TextView)findViewById(R.id.txtRoundOneQuestion);
+    	txtRoundOneQuestion.setText(dbHelper.readDBData(StaticData.SELECT_QUESTION_BY_ID_AND_ROUND, questionByIdAndRoundNameValuePairs, "question").get(0).toString());
+    }
+    
+    private void TimerMethod() 
+    { 
+        this.runOnUiThread(Timer_Tick); 
+    } 
+     
+    private Runnable Timer_Tick = new Runnable() 
+    { 
+        public void run() 
+        {
+    		try
+    		{
+    			if (userHasSubmittedAnswer)
+    			{
+    				// add logic for dealing with if user has submitted an answer
+    				
+    				// also, need to give user dialog to enter answer
+    			}
+    		}
+    		catch(Exception e) { }
+        } 
+    };
 }

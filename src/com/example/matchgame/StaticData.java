@@ -17,6 +17,9 @@ public class StaticData
 	public final static String PLAYER_ONE_STATE = "first";
 	public final static String PLAYER_TWO_STATE = "second";
 	public final static String PLAYER_SINGLE_STATE = "single";
+	public final static String ROUND_ONE = "1";
+	public final static String ROUND_TWO = "2";
+	public final static String ROUND_THREE = "3";
 	
 	public final static String PLAYER_ONE_EMAIL_SHARED_PREF = "PLAYER_ONE_EMAIL_PREF";
 	public final static String PLAYER_TWO_EMAIL_SHARED_PREF = "PLAYER_TWO_EMAIL_PREF";

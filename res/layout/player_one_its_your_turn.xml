@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp"
-        android:text="Player 1, It's your turn!"
+        android:text="Player 1, it's your turn!"
         android:textSize="20dp" />
 
 </RelativeLayout>
