@@ -68,6 +68,7 @@ public class RoundTwo extends Activity implements OnClickListener
 	    				break;
 	    			case 4:
 	    				hostText.setText("If the selected answer matches one of the corresponding prizes, our champion will have that prize added to their total.");
+	    				break;
 	    			case 5:
 	    				hostText.setText("Now let's get this round started!");
 	    				break;
