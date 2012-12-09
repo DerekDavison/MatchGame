@@ -6,13 +6,22 @@
     android:paddingRight="25dp" >
 
     <TextView
-        android:id="@+id/txtPlayerAnswer"
-        android:layout_width="200dp"
+        android:id="@+id/txtRoundOneQuestion"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="18dp"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/txtPlayerAnswer"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtRoundOneQuestion"
+        android:layout_below="@+id/txtRoundOneQuestion"
+        android:layout_marginTop="10dp"
         android:text="What is your answer?"
         android:textSize="20dp" />
 
@@ -21,7 +30,6 @@
         android:layout_width="170dp"
         android:layout_height="40dp"
         android:layout_alignLeft="@+id/txtPlayerAnswer"
-        android:layout_alignRight="@+id/txtPlayerAnswer"
         android:layout_below="@+id/txtPlayerAnswer"
         android:layout_marginTop="14dp"
         android:ems="10" >
@@ -35,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/edtRoundOneAnswer"
         android:layout_below="@+id/edtRoundOneAnswer"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="14dp"
         android:text="Submit your Answer!" />
 
 </RelativeLayout>

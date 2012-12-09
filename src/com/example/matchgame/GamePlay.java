@@ -36,11 +36,12 @@ public class GamePlay extends Activity implements OnClickListener
 	private ImageView imgPlayerOne, imgPlayerTwo;
 	private Boolean singlePlayerMode = false, firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
 			firstTimeForloadingQuestionDialogTimer = true, userHasSubmittedAnswer = false, 
-			firstTimeForLoadingCelebrityAnswersDialogTimer = true;
+			firstTimeForLoadingCelebrityAnswersDialogTimer = true, firstTimeForloadingCheckingAnswerDialogTimer = true;
 	private Button btnGoToRoundTwo;
 	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, loadingQuestionDialogTimer, 
-		loadingCelebrityAnswersDialogTimer, loadingQuestionAnswerDialogTimer;
-	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog;
+		loadingCelebrityAnswersDialogTimer, loadingQuestionAnswerDialogTimer, loadingCheckingAnswerDialogTimer, 
+		genericDelayForNSecondsTimer;
+	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog, loadingCheckingAnswerDialog;
 	private int questionIdCouter = 0;
 	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
 		playerTwoNameByEmailNameValuePairs;
@@ -49,6 +50,7 @@ public class GamePlay extends Activity implements OnClickListener
 		txtPlayerOneAnswer, txtPlayerTwoAnswer;
 	private String playeOneName, playeTwoName;
 	private Timer checkIfPlayerSubmittedAnswerTimer;
+	private String currentQuestion = "";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -423,8 +425,10 @@ public class GamePlay extends Activity implements OnClickListener
     	questionByIdAndRoundNameValuePairs.add(new BasicNameValuePair("id", questionIdCouter + ""));
     	questionByIdAndRoundNameValuePairs.add(new BasicNameValuePair("round", StaticData.ROUND_ONE));
     	
+    	currentQuestion = dbHelper.readDBData(StaticData.SELECT_QUESTION_BY_ID_AND_ROUND, questionByIdAndRoundNameValuePairs, "question").get(0).toString();
+    	
     	txtRoundOneQuestion = (TextView)findViewById(R.id.txtRoundOneQuestion);
-    	txtRoundOneQuestion.setText(dbHelper.readDBData(StaticData.SELECT_QUESTION_BY_ID_AND_ROUND, questionByIdAndRoundNameValuePairs, "question").get(0).toString());
+    	txtRoundOneQuestion.setText(currentQuestion);
     }
     
     private void timerMethod() 
@@ -464,16 +468,45 @@ public class GamePlay extends Activity implements OnClickListener
     			   			txtGuestFourAnswer.setText(getRandomAnswer(5, 3, 1));
     			   			txtGuestFiveAnswer.setText(getRandomAnswer(5, 3, 1));
     			   			txtGuestSixAnswer.setText(getRandomAnswer(5, 3, 1));
+
+    			   			genericDelayForNSecondsTimer = new CountDownTimer(3000, 1000) 
+    	    			   	{
+    	    			   		public void onTick(long millisUntilFinished) { }
+
+    	    			   		public void onFinish() 
+    	    			   		{
+    	    			   		// load checking answer dialog box
+    	    	    			   	loadingCheckingAnswerDialogTimer = new CountDownTimer(3000, 1000) 
+    	    	    			   	{
+    	    	    			   		public void onTick(long millisUntilFinished) 
+    	    	    			   		{ 
+    	    	    			   			if (firstTimeForloadingCheckingAnswerDialogTimer)
+    	    	    			   			{
+    	    	    			   				loadingCheckingAnswerDialog = ProgressDialog.show(GamePlay.this, "","Checking your answers...", true);
+    	    	    			   				firstTimeForloadingCheckingAnswerDialogTimer = false;
+    	    	    			   			}
+    	    	    			   		}
+
+    	    	    			   		public void onFinish() 
+    	    	    			   		{
+    	    	    			   			loadingCheckingAnswerDialog.dismiss();
+    	    	    			   			
+    	    	    			   			// compare results
+    	    	    	    			   	// display results
+    	    	    	    			   	// update score
+    	    	    	    			   	// move to player two
+    	    	    			   			
+    	    	    			   			loadingCheckingAnswerDialogTimer.cancel();
+    	    	    			   		}
+    	    	    			   	};
+    	    	    			   	loadingCheckingAnswerDialogTimer.start();
+    	    			   		}
+    	    			   	};
+    	    			   	genericDelayForNSecondsTimer.start();
     			   		}
     			   	};
     			   	loadingCelebrityAnswersDialogTimer.start();	
     			   	userHasSubmittedAnswer = false;
-    			   	
-    			   	// load checking answer dialog box
-    			   	// compare results
-    			   	// display results
-    			   	// update score
-    			   	// move to player two
     			}
     		}
     		catch(Exception e) { }
@@ -494,7 +527,12 @@ public class GamePlay extends Activity implements OnClickListener
 	   	    	answerQuestionDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
 	   	    	answerQuestionDialog.setContentView(R.layout.submit_round_one_player_answer_dialog);
 	   	    	answerQuestionDialog.setCancelable(true); 
+	   	    	
 	   	    	final EditText edtRoundOneAnswer = (EditText) answerQuestionDialog.findViewById(R.id.edtRoundOneAnswer); 
+	   	    	TextView txtRoundOneQuestion = (TextView) answerQuestionDialog.findViewById(R.id.txtRoundOneQuestion); 
+	   	    	
+	   	    	txtRoundOneQuestion.setText(currentQuestion);
+	   	    	
 	   	    	Button btnSubmitAnswerRoundOne = (Button) answerQuestionDialog.findViewById(R.id.btnSubmitAnswerRoundOne); 
 	   	    	btnSubmitAnswerRoundOne.setOnClickListener(new OnClickListener() 
 	   	        {
