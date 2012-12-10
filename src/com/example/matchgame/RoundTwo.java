@@ -8,9 +8,14 @@ import org.apache.http.message.BasicNameValuePair;
 
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +37,9 @@ public class RoundTwo extends Activity implements OnClickListener
 	private RadioGroup selection;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound;
+	private CountDownTimer roundOneAnnouncementTimer, loadingQuestionDialogTimer;
+	private Boolean firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
+			firstTimeForloadingQuestionDialogTimer = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -156,6 +164,105 @@ public class RoundTwo extends Activity implements OnClickListener
 	    		//move player to final round
     	}
 	}
+    
+    private void loadTimeForRoundOneDialog()
+    {
+    	final Dialog roundOneAnnouncementDialog = new Dialog(RoundTwo.this);
+		roundOneAnnouncementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+		roundOneAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+		roundOneAnnouncementDialog.setContentView(R.layout.time_for_round_one_dialog);
+		roundOneAnnouncementDialog.setCancelable(true); 
+        
+        roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForRoundOneAnnouncementTimer)
+	   			{
+	   				roundOneAnnouncementDialog.show();
+		   			firstTimeForRoundOneAnnouncementTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			firstTimeForRoundOneAnnouncementTimer = true;
+	   		
+	   			roundOneAnnouncementDialog.dismiss();
+	   			roundOneAnnouncementTimer.cancel();
+	   			
+	   			try 
+	   			{
+					Thread.sleep(2000);
+				} catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+	   			
+	   			loadPlayerTurnDialog();
+	   		}
+	   	};
+	   	roundOneAnnouncementTimer.start();
+    }
+    
+    private void loadPlayerTurnDialog()
+    {
+    	final Dialog playerTurnDialog = new Dialog(RoundTwo.this);
+    	playerTurnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	playerTurnDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	playerTurnDialog.setContentView(R.layout.player_one_its_your_turn);
+    	playerTurnDialog.setCancelable(true); 
+        
+        roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForPlayerTurnDialogTimer)
+	   			{
+	   				playerTurnDialog.show();
+	   				firstTimeForPlayerTurnDialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			firstTimeForPlayerTurnDialogTimer = true;
+	   			playerTurnDialog.dismiss();
+	   			//runLoadingQuestionDialog();
+	   			roundOneAnnouncementTimer.cancel();
+	   		}
+	   	};
+	   	roundOneAnnouncementTimer.start();
+    }
+    
+   /* private void runLoadingQuestionDialog()
+    {
+    	loadingQuestionDialogTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForloadingQuestionDialogTimer)
+	   			{
+	   				loadingQuestionDialog = ProgressDialog.show(RoundTwo.this, "","Loading your question...", true);
+	   				firstTimeForloadingQuestionDialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			firstTimeForloadingQuestionDialogTimer = true;
+	   			loadingQuestionDialog.dismiss();
+	   			setQuestionForRound();
+	   			
+	   			loadAnswerQuestionDialog();	   			
+	   			
+	   			loadingQuestionDialogTimer.cancel();
+	   		}
+	   	};
+	   	loadingQuestionDialogTimer.start();
+    }*/
         
     private void generateRandomQuestion()
     {

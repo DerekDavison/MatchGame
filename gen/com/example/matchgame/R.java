@@ -187,12 +187,13 @@ public final class R {
         public static final int round_one=0x7f030009;
         public static final int round_three=0x7f03000a;
         public static final int round_two=0x7f03000b;
-        public static final int sign_up_dialog=0x7f03000c;
-        public static final int sign_up_dialog_second_player=0x7f03000d;
-        public static final int sorry_on_turn_round_one_dialog=0x7f03000e;
-        public static final int splash_screen=0x7f03000f;
-        public static final int submit_round_one_player_answer_dialog=0x7f030010;
-        public static final int time_for_round_one_dialog=0x7f030011;
+        public static final int round_two_intro=0x7f03000c;
+        public static final int sign_up_dialog=0x7f03000d;
+        public static final int sign_up_dialog_second_player=0x7f03000e;
+        public static final int sorry_on_turn_round_one_dialog=0x7f03000f;
+        public static final int splash_screen=0x7f030010;
+        public static final int submit_round_one_player_answer_dialog=0x7f030011;
+        public static final int time_for_round_one_dialog=0x7f030012;
     }
     public static final class menu {
         public static final int game_over=0x7f070000;
