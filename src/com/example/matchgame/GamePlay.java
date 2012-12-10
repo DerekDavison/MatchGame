@@ -42,18 +42,18 @@ public class GamePlay extends Activity implements OnClickListener
 	private Button btnGoToRoundTwo;
 	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, loadingQuestionDialogTimer, 
 		loadingCelebrityAnswersDialogTimer, loadingQuestionAnswerDialogTimer, loadingCheckingAnswerDialogTimer, 
-		genericDelayForNSecondsTimer, test;
+		genericDelayForNSecondsTimer, mainCountDownTimer;
 	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog, loadingCheckingAnswerDialog;
-	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0, countTurns = 0;
+	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0, countTurns = 0, 
+			seedForAnswers = 0;
 	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
 		playerTwoNameByEmailNameValuePairs;
 	private TextView txtRoundOneQuestion, txtGamePlayPlayerOne, txtGamePlayPlayerTwo, 
 		txtGuestOneAnswer, txtGuestTwoAnswer, txtGuestThreeAnswer, txtGuestFourAnswer, txtGuestFiveAnswer, txtGuestSixAnswer, 
 		txtPlayerOneAnswer, txtPlayerTwoAnswer, txtPlayerOneScore, txtPlayerTwoScore;
-	private String playeOneName, playeTwoName;
 	private Timer checkIfPlayerSubmittedAnswerTimer;
 	private String currentQuestion = "", playerOneAnswer = "", guestAnswerOne = "", guestAnswerTwo = "", guestAnswerThree = "", 
-			guestAnswerFour = "", guestAnswerFive = "", guestAnswerSix = "";
+			guestAnswerFour = "", guestAnswerFive = "", guestAnswerSix = "", playeOneName, playeTwoName, playerTwoAnswer = "";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -94,7 +94,7 @@ public class GamePlay extends Activity implements OnClickListener
         }
         
         // 900000000 second is 15000000 minutes
-        test = new CountDownTimer(900000000, 1000) 
+        mainCountDownTimer = new CountDownTimer(900000000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{
@@ -103,44 +103,60 @@ public class GamePlay extends Activity implements OnClickListener
 	   				playerOneTurn = false;
 	   				countTurns++;
 
-	   				// wait four seconds and then call loadTimeForRoundOneDialog()
-	   		        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
-	   			   	{
-	   			   		public void onTick(long millisUntilFinished) { }
+	   				if (countTurns <= 4)
+	   				{
+	   					// wait four seconds and then call loadTimeForRoundOneDialog()
+		   		        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
+		   			   	{
+		   			   		public void onTick(long millisUntilFinished) { }
 
-	   			   		public void onFinish() 
-	   			   		{
-	   			   			loadTimeForRoundOneDialog();
-	   			   			delayToShowRoundOneAnnouncementTimer.cancel();
-	   			   		}
-	   			   	}; 
-	   			   	delayToShowRoundOneAnnouncementTimer.start();
+		   			   		public void onFinish() 
+		   			   		{
+		   			   			loadTimeForRoundOneDialog();
+		   			   			delayToShowRoundOneAnnouncementTimer.cancel();
+		   			   		}
+		   			   	}; 
+		   			   	delayToShowRoundOneAnnouncementTimer.start();
+	   				}
+	   				else
+	   				{
+	   					Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+	   					mainCountDownTimer.cancel();
+	   				}
 	   			}
 	   			else if (playerTwoTurn)
 	   			{
 	   				playerTwoTurn = false;
 	   				countTurns++;
 	   				
-	   		        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
-	   			   	{
-	   			   		public void onTick(long millisUntilFinished) { }
+	   				if (countTurns <= 4)
+	   				{
+	   					delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
+		   			   	{
+		   			   		public void onTick(long millisUntilFinished) { }
 
-	   			   		public void onFinish() 
-	   			   		{
-	   			   			loadTimeForRoundOneDialog();
-	   			   			delayToShowRoundOneAnnouncementTimer.cancel();
-	   			   		}
-	   			   	};
-	   			   	delayToShowRoundOneAnnouncementTimer.start();
+		   			   		public void onFinish() 
+		   			   		{
+		   			   			loadTimeForRoundOneDialog();
+		   			   			delayToShowRoundOneAnnouncementTimer.cancel();
+		   			   		}
+		   			   	};
+		   			   	delayToShowRoundOneAnnouncementTimer.start();
+	   				}
+	   				else
+	   				{
+	   					Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+	   					mainCountDownTimer.cancel();
+	   				}
 	   			}
 	   		}
 
 	   		public void onFinish() 
 	   		{
-	   			test.cancel();
+	   			mainCountDownTimer.cancel();
 	   		}
 	   	};
-	   	test.start();
+	   	mainCountDownTimer.start();
 	   	
 	   	// this runs on a schedule and checks every second if the user has submitted an answer
 	   	checkIfPlayerSubmittedAnswerTimer = new Timer(); 
@@ -153,6 +169,16 @@ public class GamePlay extends Activity implements OnClickListener
             } 
      
         }, 0, 1000); 
+	   	
+	   	/////////////////////////////////////////////
+	   	//
+	   	//
+	   	// IMPORTANT: DON'T FORGET TO TURN OFF 
+	   	// THE checkIfPlayerSubmittedAnswerTimer
+	   	// TIMER WHEN THIS ACTIVITY FINISHES
+	   	// OTHERWISE THE THREAD WILL KEEP RUNNING
+	   	//
+	   	/////////////////////////////////////////////
 		
     }
     
@@ -421,16 +447,7 @@ public class GamePlay extends Activity implements OnClickListener
     	playerTurnDialog.setCancelable(true);
 
     	TextView txtPlayerTurnMessage = (TextView) playerTurnDialog.findViewById(R.id.txtPlayerTurnMessage); 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    	
     	if(countTurns == 1 || countTurns == 3) 
     	{
     		txtPlayerTurnMessage.setText("Player 1, it's your turn!");
@@ -533,17 +550,48 @@ public class GamePlay extends Activity implements OnClickListener
 
     			   		public void onFinish() 
     			   		{ 
+    			   			seedForAnswers++;
     			   			firstTimeForLoadingCelebrityAnswersDialogTimer = true;
     			   			
     			   			loadingCelebrityAnswersDialog.dismiss();
     			   			loadingCelebrityAnswersDialogTimer.cancel();
     			   			
-    			   			guestAnswerOne = getRandomAnswer(5, 3, 1);
-    			   			guestAnswerTwo = getRandomAnswer(5, 3, 1);
-    			   			guestAnswerThree = getRandomAnswer(5, 3, 1);
-    			   			guestAnswerFour = getRandomAnswer(5, 3, 1);
-    			   			guestAnswerFive = getRandomAnswer(5, 3, 1);
-    			   			guestAnswerSix = getRandomAnswer(5, 3, 1);
+    			   			if (seedForAnswers == 1)
+    			   			{
+    			   				guestAnswerOne = getRandomAnswer(5, 3, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(5, 3, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(5, 3, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(5, 3, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(5, 3, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(5, 3, seedForAnswers);
+    			   			}
+    			   			else if (seedForAnswers == 2)
+    			   			{
+    			   				guestAnswerOne = getRandomAnswer(8, 6, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(8, 6, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(8, 6, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(8, 6, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(8, 6, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(8, 6, seedForAnswers);
+    			   			}
+    			   			else if (seedForAnswers == 3)
+    			   			{
+    			   				guestAnswerOne = getRandomAnswer(11, 9, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(11, 9, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(11, 9, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(11, 9, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(11, 9, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(11, 9, seedForAnswers);
+    			   			}
+    			   			else if (seedForAnswers == 4)
+    			   			{
+    			   				guestAnswerOne = getRandomAnswer(13, 12, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(13, 12, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(13, 12, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(13, 12, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(13, 12, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(13, 12, seedForAnswers);
+    			   			}
     			   			
     			   			txtGuestOneAnswer.setText(guestAnswerOne); 
     			   			txtGuestTwoAnswer.setText(guestAnswerTwo);
@@ -581,7 +629,15 @@ public class GamePlay extends Activity implements OnClickListener
     	    	    			   			calculatePlayerOneScore();
     	    	    			   			 
     	    	    			   			// display results 
-    	    	    			   			txtPlayerOneScore.setText(playerOneScore + "");
+    	    	    			   			if(countTurns == 1 || countTurns == 3)
+	    	    				            {
+    	    	    			   				txtPlayerOneScore.setText(playerOneScore + ""); 
+	    	    				            }
+	    	    				            
+	    	    				            if(countTurns == 2 || countTurns == 4)
+	    	    				            {
+	    	    				            	txtPlayerTwoScore.setText(playerTwoScore + ""); 
+	    	    				            }
     	    	    			   			
     	    	    			   			if (numberOfCorrectMatches > 0)
     	    	    			   			{
@@ -751,10 +807,23 @@ public class GamePlay extends Activity implements OnClickListener
 	   	        		}
 	   	        		else
 	   	        		{
-	   	        			answerQuestionDialog.dismiss();
-	   	        			userHasSubmittedAnswer = true;
-	   	        			playerOneAnswer = edtRoundOneAnswer.getText().toString();
-	   	        			txtPlayerOneAnswer.setText(playerOneAnswer);
+	   	        			////////////////////////////////////////////////////////////////////////////////////////////
+	   	        			
+	   	        			if(countTurns == 1 || countTurns == 3)
+				            {
+	   	        				answerQuestionDialog.dismiss();
+		   	        			userHasSubmittedAnswer = true;
+		   	        			playerOneAnswer = edtRoundOneAnswer.getText().toString();
+		   	        			txtPlayerOneAnswer.setText(playerOneAnswer);
+				            }
+				            
+				            if(countTurns == 2 || countTurns == 4)
+				            {
+				            	answerQuestionDialog.dismiss();
+		   	        			userHasSubmittedAnswer = true;
+		   	        			playerTwoAnswer = edtRoundOneAnswer.getText().toString();
+		   	        			txtPlayerTwoAnswer.setText(playerOneAnswer);
+				            }
 	   	        		}
 	   	            }
 	   	        });
@@ -783,40 +852,82 @@ public class GamePlay extends Activity implements OnClickListener
 	
 	private void calculatePlayerOneScore()
 	{
-		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerOne.toUpperCase().trim()))
-		{
-			playerOneScore += 50;
-			numberOfCorrectMatches++;
-		}
-		
-		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerTwo.toUpperCase().trim()))
-		{
-			playerOneScore += 50;
-			numberOfCorrectMatches++;
-		}
-		
-		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerThree.toUpperCase().trim()))
-		{
-			playerOneScore += 50;
-			numberOfCorrectMatches++;
-		}
-		
-		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFour.toUpperCase().trim()))
-		{
-			playerOneScore += 50;
-			numberOfCorrectMatches++;
-		}
-		
-		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFive.toUpperCase().trim()))
-		{
-			playerOneScore += 50;
-			numberOfCorrectMatches++;
-		}
-		
-		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerSix.toUpperCase().trim()))
-		{
-			playerOneScore += 50;
-			numberOfCorrectMatches++;
-		}
+		if(countTurns == 1 || countTurns == 3)
+        {
+			if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerOne.toUpperCase().trim()))
+			{
+				playerOneScore += 50;
+				numberOfCorrectMatches++;
+			}
+			
+			if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerTwo.toUpperCase().trim()))
+			{
+				playerOneScore += 50;
+				numberOfCorrectMatches++;
+			}
+			
+			if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerThree.toUpperCase().trim()))
+			{
+				playerOneScore += 50;
+				numberOfCorrectMatches++;
+			}
+			
+			if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFour.toUpperCase().trim()))
+			{
+				playerOneScore += 50;
+				numberOfCorrectMatches++;
+			}
+			
+			if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFive.toUpperCase().trim()))
+			{
+				playerOneScore += 50;
+				numberOfCorrectMatches++;
+			}
+			
+			if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerSix.toUpperCase().trim()))
+			{
+				playerOneScore += 50;
+				numberOfCorrectMatches++;
+			}
+        }
+        
+        if(countTurns == 2 || countTurns == 4)
+        {
+        	if (playerTwoAnswer.toUpperCase().trim().equals(guestAnswerOne.toUpperCase().trim()))
+    		{
+    			playerTwoScore += 50;
+    			numberOfCorrectMatches++;
+    		}
+    		
+    		if (playerTwoAnswer.toUpperCase().trim().equals(guestAnswerTwo.toUpperCase().trim()))
+    		{
+    			playerTwoScore += 50;
+    			numberOfCorrectMatches++;
+    		}
+    		
+    		if (playerTwoAnswer.toUpperCase().trim().equals(guestAnswerThree.toUpperCase().trim()))
+    		{
+    			playerTwoScore += 50;
+    			numberOfCorrectMatches++;
+    		}
+    		
+    		if (playerTwoAnswer.toUpperCase().trim().equals(guestAnswerFour.toUpperCase().trim()))
+    		{
+    			playerTwoScore += 50;
+    			numberOfCorrectMatches++;
+    		}
+    		
+    		if (playerTwoAnswer.toUpperCase().trim().equals(guestAnswerFive.toUpperCase().trim()))
+    		{
+    			playerTwoScore += 50;
+    			numberOfCorrectMatches++;
+    		}
+    		
+    		if (playerTwoAnswer.toUpperCase().trim().equals(guestAnswerSix.toUpperCase().trim()))
+    		{
+    			playerTwoScore += 50;
+    			numberOfCorrectMatches++;
+    		}
+        }
 	}
 }
