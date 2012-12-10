@@ -186,7 +186,7 @@ public class RoundTwo extends Activity implements OnClickListener
 		roundTwoAnnouncementDialog.setContentView(R.layout.round_two_intro);
 		roundTwoAnnouncementDialog.setCancelable(true); 
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(5000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
