@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingRight="25dp"
+    android:paddingBottom="20dp" >
+
+    <TextView
+        android:id="@+id/TextView"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="17dp"
+        android:text="Sorry"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/txtRoundOneNumberOfMatchesSorryDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView"
+        android:layout_below="@+id/TextView"
+        android:layout_marginTop="10dp"
+        android:text="You have no matches"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/btnPlayerTwoTurnSorryDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtRoundOneNumberOfMatchesSorryDialog"
+        android:layout_below="@+id/txtRoundOneNumberOfMatchesSorryDialog"
+        android:layout_marginTop="15dp"
+        android:text="Start player two turn"
+        android:textSize="15dp" />
+
+</RelativeLayout>

@@ -24,6 +24,7 @@ import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,21 +37,23 @@ public class GamePlay extends Activity implements OnClickListener
 	private ImageView imgPlayerOne, imgPlayerTwo;
 	private Boolean singlePlayerMode = false, firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
 			firstTimeForloadingQuestionDialogTimer = true, userHasSubmittedAnswer = false, 
-			firstTimeForLoadingCelebrityAnswersDialogTimer = true, firstTimeForloadingCheckingAnswerDialogTimer = true;
+			firstTimeForLoadingCelebrityAnswersDialogTimer = true, firstTimeForloadingCheckingAnswerDialogTimer = true, 
+			playerOneTurn = true, playerTwoTurn = false;
 	private Button btnGoToRoundTwo;
 	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, loadingQuestionDialogTimer, 
 		loadingCelebrityAnswersDialogTimer, loadingQuestionAnswerDialogTimer, loadingCheckingAnswerDialogTimer, 
-		genericDelayForNSecondsTimer;
+		genericDelayForNSecondsTimer, test;
 	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog, loadingCheckingAnswerDialog;
-	private int questionIdCouter = 0;
+	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0;
 	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
 		playerTwoNameByEmailNameValuePairs;
 	private TextView txtRoundOneQuestion, txtGamePlayPlayerOne, txtGamePlayPlayerTwo, 
 		txtGuestOneAnswer, txtGuestTwoAnswer, txtGuestThreeAnswer, txtGuestFourAnswer, txtGuestFiveAnswer, txtGuestSixAnswer, 
-		txtPlayerOneAnswer, txtPlayerTwoAnswer;
+		txtPlayerOneAnswer, txtPlayerTwoAnswer, txtPlayerOneScore, txtPlayerTwoScore;
 	private String playeOneName, playeTwoName;
 	private Timer checkIfPlayerSubmittedAnswerTimer;
-	private String currentQuestion = "";
+	private String currentQuestion = "", playerOneAnswer = "", guestAnswerOne = "", guestAnswerTwo = "", guestAnswerThree = "", 
+			guestAnswerFour = "", guestAnswerFive = "", guestAnswerSix = "";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -69,7 +72,10 @@ public class GamePlay extends Activity implements OnClickListener
         txtGuestSixAnswer = (TextView)findViewById(R.id.txtGuestSixAnswer); 
         
         txtPlayerOneAnswer = (TextView)findViewById(R.id.txtPlayerOneAnswer); 
-        txtPlayerTwoAnswer = (TextView)findViewById(R.id.txtPlayerTwoAnswer); 
+        txtPlayerTwoAnswer = (TextView)findViewById(R.id.txtPlayerTwoAnswer);  
+        
+        txtPlayerOneScore = (TextView)findViewById(R.id.txtPlayerOneScore);
+        txtPlayerTwoScore = (TextView)findViewById(R.id.txtPlayerTwoScore);  
         
         determineGameMode();
         if(singlePlayerMode)
@@ -87,20 +93,59 @@ public class GamePlay extends Activity implements OnClickListener
             setPlayerTwoAvatar();
         }
         
-        // wait four seconds and then call loadTimeForRoundOneDialog()
-        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+        // have schedule that checks if a flag is set to true
+        // have it true at first
+        // then switch it to false right away
+        // then when player two done, switch it to true, and then back to false right away
+        
+        // 900000000 second is 15000000 minutes
+        test = new CountDownTimer(900000000, 1000) 
 	   	{
-	   		public void onTick(long millisUntilFinished) { }
+	   		public void onTick(long millisUntilFinished) 
+	   		{
+	   			if(playerOneTurn)
+	   			{
+	   				playerOneTurn = false;
+	   				
+	   				// wait four seconds and then call loadTimeForRoundOneDialog()
+	   		        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
+	   			   	{
+	   			   		public void onTick(long millisUntilFinished) { }
+
+	   			   		public void onFinish() 
+	   			   		{
+	   			   			loadTimeForRoundOneDialog();
+	   			   			delayToShowRoundOneAnnouncementTimer.cancel();
+	   			   		}
+	   			   	};
+	   			   	delayToShowRoundOneAnnouncementTimer.start();
+	   			}
+	   			else if (playerTwoTurn)
+	   			{
+	   				playerTwoTurn = false;
+	   				
+	   		        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
+	   			   	{
+	   			   		public void onTick(long millisUntilFinished) { }
+
+	   			   		public void onFinish() 
+	   			   		{
+	   			   			loadTimeForRoundOneDialog();
+	   			   			delayToShowRoundOneAnnouncementTimer.cancel();
+	   			   		}
+	   			   	};
+	   			   	delayToShowRoundOneAnnouncementTimer.start();
+	   			}
+	   		}
 
 	   		public void onFinish() 
 	   		{
-	   			loadTimeForRoundOneDialog();
-	   			delayToShowRoundOneAnnouncementTimer.cancel();
+	   			test.cancel();
 	   		}
 	   	};
-	   	delayToShowRoundOneAnnouncementTimer.start();
+	   	test.start();
 	   	
-	   	// this runs on a schedule and check every second if the user has submitted an answer
+	   	// this runs on a schedule and checks every second if the user has submitted an answer
 	   	checkIfPlayerSubmittedAnswerTimer = new Timer(); 
 	   	checkIfPlayerSubmittedAnswerTimer.schedule(new TimerTask() 
         { 
@@ -111,6 +156,7 @@ public class GamePlay extends Activity implements OnClickListener
             } 
      
         }, 0, 1000); 
+		
     }
     
     public void onClick(View v)
@@ -343,6 +389,8 @@ public class GamePlay extends Activity implements OnClickListener
 
 	   		public void onFinish() 
 	   		{
+	   			firstTimeForRoundOneAnnouncementTimer = true;
+	   		
 	   			roundOneAnnouncementDialog.dismiss();
 	   			roundOneAnnouncementTimer.cancel();
 	   			
@@ -382,6 +430,7 @@ public class GamePlay extends Activity implements OnClickListener
 
 	   		public void onFinish() 
 	   		{
+	   			firstTimeForPlayerTurnDialogTimer = true;
 	   			playerTurnDialog.dismiss();
 	   			runLoadingQuestionDialog();
 	   			roundOneAnnouncementTimer.cancel();
@@ -405,6 +454,7 @@ public class GamePlay extends Activity implements OnClickListener
 
 	   		public void onFinish() 
 	   		{
+	   			firstTimeForloadingQuestionDialogTimer = true;
 	   			loadingQuestionDialog.dismiss();
 	   			setQuestionForRound();
 	   			
@@ -459,15 +509,24 @@ public class GamePlay extends Activity implements OnClickListener
 
     			   		public void onFinish() 
     			   		{ 
+    			   			firstTimeForLoadingCelebrityAnswersDialogTimer = true;
+    			   			
     			   			loadingCelebrityAnswersDialog.dismiss();
     			   			loadingCelebrityAnswersDialogTimer.cancel();
     			   			
-    			   			txtGuestOneAnswer.setText(getRandomAnswer(5, 3, 1));
-    			   			txtGuestTwoAnswer.setText(getRandomAnswer(5, 3, 1));
-    			   			txtGuestThreeAnswer.setText(getRandomAnswer(5, 3, 1));
-    			   			txtGuestFourAnswer.setText(getRandomAnswer(5, 3, 1));
-    			   			txtGuestFiveAnswer.setText(getRandomAnswer(5, 3, 1));
-    			   			txtGuestSixAnswer.setText(getRandomAnswer(5, 3, 1));
+    			   			guestAnswerOne = getRandomAnswer(5, 3, 1);
+    			   			guestAnswerTwo = getRandomAnswer(5, 3, 1);
+    			   			guestAnswerThree = getRandomAnswer(5, 3, 1);
+    			   			guestAnswerFour = getRandomAnswer(5, 3, 1);
+    			   			guestAnswerFive = getRandomAnswer(5, 3, 1);
+    			   			guestAnswerSix = getRandomAnswer(5, 3, 1);
+    			   			
+    			   			txtGuestOneAnswer.setText(guestAnswerOne); 
+    			   			txtGuestTwoAnswer.setText(guestAnswerTwo);
+    			   			txtGuestThreeAnswer.setText(guestAnswerThree);
+    			   			txtGuestFourAnswer.setText(guestAnswerFour);
+    			   			txtGuestFiveAnswer.setText(guestAnswerFive);
+    			   			txtGuestSixAnswer.setText(guestAnswerSix);
 
     			   			genericDelayForNSecondsTimer = new CountDownTimer(3000, 1000) 
     	    			   	{
@@ -475,7 +534,7 @@ public class GamePlay extends Activity implements OnClickListener
 
     	    			   		public void onFinish() 
     	    			   		{
-    	    			   		// load checking answer dialog box
+    	    			   			// load checking answer progress dialog
     	    	    			   	loadingCheckingAnswerDialogTimer = new CountDownTimer(3000, 1000) 
     	    	    			   	{
     	    	    			   		public void onTick(long millisUntilFinished) 
@@ -487,15 +546,99 @@ public class GamePlay extends Activity implements OnClickListener
     	    	    			   			}
     	    	    			   		}
 
+    	    	    			   		// after checking answer progress dialog
     	    	    			   		public void onFinish() 
     	    	    			   		{
-    	    	    			   			loadingCheckingAnswerDialog.dismiss();
+    	    	    			   			firstTimeForloadingCheckingAnswerDialogTimer = true;
+    	    	    			   			
+    	    	    			   			loadingCheckingAnswerDialog.dismiss(); 
     	    	    			   			
     	    	    			   			// compare results
-    	    	    	    			   	// display results
-    	    	    	    			   	// update score
-    	    	    	    			   	// move to player two
+    	    	    			   			calculatePlayerOneScore();
+    	    	    			   			 
+    	    	    			   			// display results 
+    	    	    			   			txtPlayerOneScore.setText(playerOneScore + "");
     	    	    			   			
+    	    	    			   			if (numberOfCorrectMatches > 0)
+    	    	    			   			{
+    	    	    			   				// display congratulations message 
+    	    	    			   				final Dialog congratulationsDialog = new Dialog(GamePlay.this);
+    	    	    			   				congratulationsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	    	    				            
+    	    	    			   				congratulationsDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	    	    			   				congratulationsDialog.setContentView(R.layout.congratulations_on_turn_round_one_dialog);
+    	    	    			   				congratulationsDialog.setCancelable(true);
+
+    	    	    				            final TextView txtRoundOneNumberOfMatches = (TextView) congratulationsDialog.findViewById(R.id.txtRoundOneNumberOfMatches); 
+    	    	    				            final TextView txtRoundOnePlayerTurnScore = (TextView) congratulationsDialog.findViewById(R.id.txtRoundOnePlayerTurnScore);  
+
+    	    	    				            txtRoundOneNumberOfMatches.setText("You got " + numberOfCorrectMatches  + " matches.");
+    	    	    				            txtRoundOnePlayerTurnScore.setText("Your score is " + playerOneScore);
+    	    	    				            
+    	    	    				            Button btnPlayerTwoTurn = (Button) congratulationsDialog.findViewById(R.id.btnPlayerTwoTurn);
+
+    	    	    				            btnPlayerTwoTurn.setOnClickListener(new OnClickListener() 
+    	    	    				            {	
+    	    	    					            public void onClick(final View v) 
+    	    	    					            {
+    	    	    					            	congratulationsDialog.dismiss();
+    	    	    					            	// set flag to trigger player 2 turn
+    	    	    					            	playerTwoTurn = true;
+    	    	    					            } 
+    	    	    				            });
+    	    	    				              
+    	    	    				            congratulationsDialog.show();
+    	    	    			   				
+    	    	    			   				// clear answers and question
+    	    	    				            txtPlayerOneAnswer.setText("");
+    	    	    				            txtGuestOneAnswer.setText("");
+    	    	    				            txtGuestTwoAnswer.setText("");
+    	    	    				            txtGuestThreeAnswer.setText("");
+    	    	    				            txtGuestFourAnswer.setText("");
+    	    	    				            txtGuestFiveAnswer.setText("");
+    	    	    				            txtGuestSixAnswer.setText("");
+    	    	    				            txtRoundOneQuestion.setText("");
+    	    	    				            
+    	    	    			   				// move to player two
+    	    	    			   			}
+    	    	    			   			else
+    	    	    			   			{
+    	    	    			   				// display sorry message 
+    	    	    			   				final Dialog sorryDialog = new Dialog(GamePlay.this);
+    	    	    			   				sorryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	    	    				            
+    	    	    			   				sorryDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	    	    			   				sorryDialog.setContentView(R.layout.sorry_on_turn_round_one_dialog);
+    	    	    			   				sorryDialog.setCancelable(true);
+    	    	    				            
+    	    	    				            Button btnPlayerTwoTurnSorryDialog = (Button) sorryDialog.findViewById(R.id.btnPlayerTwoTurnSorryDialog);
+
+    	    	    				            btnPlayerTwoTurnSorryDialog.setOnClickListener(new OnClickListener() 
+    	    	    				            {	
+    	    	    					            public void onClick(final View v) 
+    	    	    					            {
+    	    	    					            	sorryDialog.dismiss();
+    	    	    					            	// set flag to trigger player 2 turn
+    	    	    					            	playerTwoTurn = true;
+    	    	    					            } 
+    	    	    				            });
+    	    	    				            
+    	    	    				            sorryDialog.show();
+    	    	    			   				
+	    	    	    			   			// clear answers
+    	    	    				            txtPlayerOneAnswer.setText("");
+    	    	    				            txtGuestOneAnswer.setText("");
+    	    	    				            txtGuestTwoAnswer.setText("");
+    	    	    				            txtGuestThreeAnswer.setText("");
+    	    	    				            txtGuestFourAnswer.setText("");
+    	    	    				            txtGuestFiveAnswer.setText("");
+    	    	    				            txtGuestSixAnswer.setText("");
+    	    	    				            txtRoundOneQuestion.setText("");
+    	    	    				            
+    	    	    			   				// move to player two
+    	    	    			   			}
+    	    	    			   			
+    	    	    			   			numberOfCorrectMatches = 0;
     	    	    			   			loadingCheckingAnswerDialogTimer.cancel();
     	    	    			   		}
     	    	    			   	};
@@ -514,7 +657,7 @@ public class GamePlay extends Activity implements OnClickListener
     };
     
     private void loadAnswerQuestionDialog() 
-    {
+    { 
     	loadingQuestionAnswerDialogTimer = new CountDownTimer(2000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) { }
@@ -546,8 +689,8 @@ public class GamePlay extends Activity implements OnClickListener
 	   	        		{
 	   	        			answerQuestionDialog.dismiss();
 	   	        			userHasSubmittedAnswer = true;
-	   	        			
-	   	        			txtPlayerOneAnswer.setText(edtRoundOneAnswer.getText().toString());
+	   	        			playerOneAnswer = edtRoundOneAnswer.getText().toString();
+	   	        			txtPlayerOneAnswer.setText(playerOneAnswer);
 	   	        		}
 	   	            }
 	   	        });
@@ -572,5 +715,44 @@ public class GamePlay extends Activity implements OnClickListener
         answerByIdRoundAndQuestionIdNameValuePair.add(new BasicNameValuePair("round", StaticData.ROUND_ONE));
         
         return dbHelper.readDBData(StaticData.SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND, answerByIdRoundAndQuestionIdNameValuePair, "answer").get(0).toString();
+	}
+	
+	private void calculatePlayerOneScore()
+	{
+		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerOne.toUpperCase().trim()))
+		{
+			playerOneScore += 50;
+			numberOfCorrectMatches++;
+		}
+		
+		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerTwo.toUpperCase().trim()))
+		{
+			playerOneScore += 50;
+			numberOfCorrectMatches++;
+		}
+		
+		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerThree.toUpperCase().trim()))
+		{
+			playerOneScore += 50;
+			numberOfCorrectMatches++;
+		}
+		
+		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFour.toUpperCase().trim()))
+		{
+			playerOneScore += 50;
+			numberOfCorrectMatches++;
+		}
+		
+		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFive.toUpperCase().trim()))
+		{
+			playerOneScore += 50;
+			numberOfCorrectMatches++;
+		}
+		
+		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerSix.toUpperCase().trim()))
+		{
+			playerOneScore += 50;
+			numberOfCorrectMatches++;
+		}
 	}
 }

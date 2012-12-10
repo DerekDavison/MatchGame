@@ -44,6 +44,6 @@
         android:layout_alignLeft="@+id/edtRoundOneAnswer"
         android:layout_below="@+id/edtRoundOneAnswer"
         android:layout_marginTop="14dp"
-        android:text="Submit your Answer!" />
+        android:text="Submit your Answer" />
 
 </RelativeLayout>
