@@ -37,8 +37,8 @@ public class RoundTwo extends Activity implements OnClickListener
 	private RadioGroup selection;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound;
-	private CountDownTimer roundOneAnnouncementTimer, loadingQuestionDialogTimer;
-	private Boolean firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
+	private CountDownTimer roundTwoAnnouncementTimer, loadingQuestionDialogTimer, delayToShowRoundTwoAnnouncementTimer;
+	private Boolean firstTimeForRoundTwoAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
 			firstTimeForloadingQuestionDialogTimer = true;
 
     @Override
@@ -56,6 +56,18 @@ public class RoundTwo extends Activity implements OnClickListener
         guest2 = (RadioButton)findViewById(R.id.rdbGuest2);
         guest3 = (RadioButton)findViewById(R.id.rdbGuest3);
         selection = (RadioGroup)findViewById(R.id.radioGroup1);
+        
+        delayToShowRoundTwoAnnouncementTimer = new CountDownTimer(2000, 1000) 
+		   	{
+		   		public void onTick(long millisUntilFinished) { }
+
+		   		public void onFinish() 
+		   		{
+		   			loadRoundTwoIntroDialog();
+		   			delayToShowRoundTwoAnnouncementTimer.cancel();
+		   		}
+		   	};
+		   	delayToShowRoundTwoAnnouncementTimer.start();
         
          selection.setOnCheckedChangeListener(
             new RadioGroup.OnCheckedChangeListener() {
@@ -165,32 +177,32 @@ public class RoundTwo extends Activity implements OnClickListener
     	}
 	}
     
-    private void loadTimeForRoundOneDialog()
+    private void loadRoundTwoIntroDialog()
     {
-    	final Dialog roundOneAnnouncementDialog = new Dialog(RoundTwo.this);
-		roundOneAnnouncementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	final Dialog roundTwoAnnouncementDialog = new Dialog(RoundTwo.this);
+		roundTwoAnnouncementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         
-		roundOneAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
-		roundOneAnnouncementDialog.setContentView(R.layout.time_for_round_one_dialog);
-		roundOneAnnouncementDialog.setCancelable(true); 
+		roundTwoAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+		roundTwoAnnouncementDialog.setContentView(R.layout.round_two_intro);
+		roundTwoAnnouncementDialog.setCancelable(true); 
         
-        roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
-	   			if (firstTimeForRoundOneAnnouncementTimer)
+	   			if (firstTimeForRoundTwoAnnouncementTimer)
 	   			{
-	   				roundOneAnnouncementDialog.show();
-		   			firstTimeForRoundOneAnnouncementTimer = false;
+	   				roundTwoAnnouncementDialog.show();
+		   			firstTimeForRoundTwoAnnouncementTimer = false;
 	   			}
 	   		}
 
 	   		public void onFinish() 
 	   		{
-	   			firstTimeForRoundOneAnnouncementTimer = true;
+	   			firstTimeForRoundTwoAnnouncementTimer = true;
 	   		
-	   			roundOneAnnouncementDialog.dismiss();
-	   			roundOneAnnouncementTimer.cancel();
+	   			roundTwoAnnouncementDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
 	   			
 	   			try 
 	   			{
@@ -200,22 +212,22 @@ public class RoundTwo extends Activity implements OnClickListener
 					e.printStackTrace();
 				}
 	   			
-	   			loadPlayerTurnDialog();
+	   			loadRulesDialog();
 	   		}
 	   	};
-	   	roundOneAnnouncementTimer.start();
+	   	roundTwoAnnouncementTimer.start();
     }
     
-    private void loadPlayerTurnDialog()
+    private void loadRulesDialog()
     {
     	final Dialog playerTurnDialog = new Dialog(RoundTwo.this);
     	playerTurnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         
     	playerTurnDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
-    	playerTurnDialog.setContentView(R.layout.player_one_its_your_turn);
+    	playerTurnDialog.setContentView(R.layout.round_two_rules);
     	playerTurnDialog.setCancelable(true); 
         
-        roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -231,10 +243,10 @@ public class RoundTwo extends Activity implements OnClickListener
 	   			firstTimeForPlayerTurnDialogTimer = true;
 	   			playerTurnDialog.dismiss();
 	   			//runLoadingQuestionDialog();
-	   			roundOneAnnouncementTimer.cancel();
+	   			roundTwoAnnouncementTimer.cancel();
 	   		}
 	   	};
-	   	roundOneAnnouncementTimer.start();
+	   	roundTwoAnnouncementTimer.start();
     }
     
    /* private void runLoadingQuestionDialog()
