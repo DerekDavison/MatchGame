@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingRight="25dp"
+    android:paddingBottom="20dp" >
+
+    <TextView
+        android:id="@+id/txtRoundOneFinalResultMessage"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="17dp"
+        android:text="Congratulations player x. You are the Winner!"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtRoundOneFinalResultMessage"
+        android:layout_below="@+id/txtRoundOneFinalResultMessage"
+        android:layout_marginTop="10dp"
+        android:text="You are moving on to round 2!"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/txtThanksPlayerWhoLostMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="15dp"
+        android:text="We thank player x for playing"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/btnContinueToRoundTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtThanksPlayerWhoLostMessage"
+        android:layout_below="@+id/txtThanksPlayerWhoLostMessage"
+        android:layout_marginTop="15dp"
+        android:text="Continue to round 2!" />
+
+</RelativeLayout>
