@@ -38,13 +38,13 @@ public class GamePlay extends Activity implements OnClickListener
 	private Boolean singlePlayerMode = false, firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
 			firstTimeForloadingQuestionDialogTimer = true, userHasSubmittedAnswer = false, 
 			firstTimeForLoadingCelebrityAnswersDialogTimer = true, firstTimeForloadingCheckingAnswerDialogTimer = true, 
-			playerOneTurn = true, playerTwoTurn = false;
+			playerOneTurn = true, playerTwoTurn = false, changeTurnAnouncment = false;
 	private Button btnGoToRoundTwo;
 	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, loadingQuestionDialogTimer, 
 		loadingCelebrityAnswersDialogTimer, loadingQuestionAnswerDialogTimer, loadingCheckingAnswerDialogTimer, 
 		genericDelayForNSecondsTimer, test;
 	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog, loadingCheckingAnswerDialog;
-	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0;
+	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0, countTurns = 0;
 	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
 		playerTwoNameByEmailNameValuePairs;
 	private TextView txtRoundOneQuestion, txtGamePlayPlayerOne, txtGamePlayPlayerTwo, 
@@ -75,7 +75,7 @@ public class GamePlay extends Activity implements OnClickListener
         txtPlayerTwoAnswer = (TextView)findViewById(R.id.txtPlayerTwoAnswer);  
         
         txtPlayerOneScore = (TextView)findViewById(R.id.txtPlayerOneScore);
-        txtPlayerTwoScore = (TextView)findViewById(R.id.txtPlayerTwoScore);  
+        txtPlayerTwoScore = (TextView)findViewById(R.id.txtPlayerTwoScore);   
         
         determineGameMode();
         if(singlePlayerMode)
@@ -93,11 +93,6 @@ public class GamePlay extends Activity implements OnClickListener
             setPlayerTwoAvatar();
         }
         
-        // have schedule that checks if a flag is set to true
-        // have it true at first
-        // then switch it to false right away
-        // then when player two done, switch it to true, and then back to false right away
-        
         // 900000000 second is 15000000 minutes
         test = new CountDownTimer(900000000, 1000) 
 	   	{
@@ -106,7 +101,8 @@ public class GamePlay extends Activity implements OnClickListener
 	   			if(playerOneTurn)
 	   			{
 	   				playerOneTurn = false;
-	   				
+	   				countTurns++;
+
 	   				// wait four seconds and then call loadTimeForRoundOneDialog()
 	   		        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
 	   			   	{
@@ -117,12 +113,13 @@ public class GamePlay extends Activity implements OnClickListener
 	   			   			loadTimeForRoundOneDialog();
 	   			   			delayToShowRoundOneAnnouncementTimer.cancel();
 	   			   		}
-	   			   	};
+	   			   	}; 
 	   			   	delayToShowRoundOneAnnouncementTimer.start();
 	   			}
 	   			else if (playerTwoTurn)
 	   			{
 	   				playerTwoTurn = false;
+	   				countTurns++;
 	   				
 	   		        delayToShowRoundOneAnnouncementTimer = new CountDownTimer(3000, 1000) 
 	   			   	{
@@ -375,6 +372,12 @@ public class GamePlay extends Activity implements OnClickListener
 		roundOneAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
 		roundOneAnnouncementDialog.setContentView(R.layout.time_for_round_one_dialog);
 		roundOneAnnouncementDialog.setCancelable(true); 
+		
+		if (changeTurnAnouncment)
+		{
+			TextView txtTimeForRoundOneMessage = (TextView) roundOneAnnouncementDialog.findViewById(R.id.txtTimeForRoundOneMessage);
+			txtTimeForRoundOneMessage.setText("And now it's time for our next player.");
+		}
         
         roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
 	   	{
@@ -415,8 +418,29 @@ public class GamePlay extends Activity implements OnClickListener
         
     	playerTurnDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
     	playerTurnDialog.setContentView(R.layout.player_one_its_your_turn);
-    	playerTurnDialog.setCancelable(true); 
-        
+    	playerTurnDialog.setCancelable(true);
+
+    	TextView txtPlayerTurnMessage = (TextView) playerTurnDialog.findViewById(R.id.txtPlayerTurnMessage); 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    	if(countTurns == 1 || countTurns == 3) 
+    	{
+    		txtPlayerTurnMessage.setText("Player 1, it's your turn!");
+    	}
+
+    	if(countTurns == 2 || countTurns == 4) 
+    	{
+    		txtPlayerTurnMessage.setText("Player 2, it's your turn!");
+    	}
+    	
         roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
@@ -575,15 +599,35 @@ public class GamePlay extends Activity implements OnClickListener
     	    	    				            txtRoundOneNumberOfMatches.setText("You got " + numberOfCorrectMatches  + " matches.");
     	    	    				            txtRoundOnePlayerTurnScore.setText("Your score is " + playerOneScore);
     	    	    				            
-    	    	    				            Button btnPlayerTwoTurn = (Button) congratulationsDialog.findViewById(R.id.btnPlayerTwoTurn);
+    	    	    				            Button btnNextPlayerTurn = (Button) congratulationsDialog.findViewById(R.id.btnNextPlayerTurn);
 
-    	    	    				            btnPlayerTwoTurn.setOnClickListener(new OnClickListener() 
+    	    	    				            if(countTurns == 1 || countTurns == 3)
+    	    	    				            {
+    	    	    				            	btnNextPlayerTurn.setText("Start player two turn");
+    	    	    				            }
+    	    	    				            
+    	    	    				            if(countTurns == 2 || countTurns == 4)
+    	    	    				            {
+    	    	    				            	btnNextPlayerTurn.setText("Start player one turn");
+    	    	    				            }
+
+    	    	    				            btnNextPlayerTurn.setOnClickListener(new OnClickListener() 
     	    	    				            {	
     	    	    					            public void onClick(final View v) 
     	    	    					            {
     	    	    					            	congratulationsDialog.dismiss();
-    	    	    					            	// set flag to trigger player 2 turn
-    	    	    					            	playerTwoTurn = true;
+
+    	    	    					            	if (countTurns == 1 || countTurns == 3)
+    	    	    					            	{
+    	    	    					            		playerOneTurn = false;
+    	    	    					            		playerTwoTurn = true;
+    	    	    					            	}
+
+    	    	    					            	if (countTurns == 2 || countTurns == 4)
+    	    	    					            	{
+    	    	    					            		playerTwoTurn = false;
+    	    	    					            		playerOneTurn = true;
+    	    	    					            	}
     	    	    					            } 
     	    	    				            });
     	    	    				              
@@ -599,7 +643,7 @@ public class GamePlay extends Activity implements OnClickListener
     	    	    				            txtGuestSixAnswer.setText("");
     	    	    				            txtRoundOneQuestion.setText("");
     	    	    				            
-    	    	    			   				// move to player two
+    	    	    				            changeTurnAnouncment = true;
     	    	    			   			}
     	    	    			   			else
     	    	    			   			{
@@ -611,15 +655,35 @@ public class GamePlay extends Activity implements OnClickListener
     	    	    			   				sorryDialog.setContentView(R.layout.sorry_on_turn_round_one_dialog);
     	    	    			   				sorryDialog.setCancelable(true);
     	    	    				            
-    	    	    				            Button btnPlayerTwoTurnSorryDialog = (Button) sorryDialog.findViewById(R.id.btnPlayerTwoTurnSorryDialog);
+    	    	    				            Button btnNextPlayerTurnSorryDialog = (Button) sorryDialog.findViewById(R.id.btnNextPlayerTurnSorryDialog);
 
-    	    	    				            btnPlayerTwoTurnSorryDialog.setOnClickListener(new OnClickListener() 
+    	    	    				            if(countTurns == 1 || countTurns == 3)
+    	    	    				            {
+    	    	    				            	btnNextPlayerTurnSorryDialog.setText("Start player two turn");
+    	    	    				            }
+    	    	    				            
+    	    	    				            if(countTurns == 2 || countTurns == 4) 
+    	    	    				            {
+    	    	    				            	btnNextPlayerTurnSorryDialog.setText("Start player one turn");
+    	    	    				            }
+    	    	    				            
+    	    	    				            btnNextPlayerTurnSorryDialog.setOnClickListener(new OnClickListener() 
     	    	    				            {	
     	    	    					            public void onClick(final View v) 
     	    	    					            {
     	    	    					            	sorryDialog.dismiss();
-    	    	    					            	// set flag to trigger player 2 turn
-    	    	    					            	playerTwoTurn = true;
+    	    	    					            	
+    	    	    					            	if (countTurns == 1 || countTurns == 3)
+    	    	    					            	{
+    	    	    					            		playerOneTurn = false;
+    	    	    					            		playerTwoTurn = true;
+    	    	    					            	}
+
+    	    	    					            	if (countTurns == 2 || countTurns == 4)
+    	    	    					            	{
+    	    	    					            		playerTwoTurn = false;
+    	    	    					            		playerOneTurn = true;
+    	    	    					            	}
     	    	    					            } 
     	    	    				            });
     	    	    				            
@@ -627,7 +691,7 @@ public class GamePlay extends Activity implements OnClickListener
     	    	    			   				
 	    	    	    			   			// clear answers
     	    	    				            txtPlayerOneAnswer.setText("");
-    	    	    				            txtGuestOneAnswer.setText("");
+    	    	    				            txtGuestOneAnswer.setText(""); 
     	    	    				            txtGuestTwoAnswer.setText("");
     	    	    				            txtGuestThreeAnswer.setText("");
     	    	    				            txtGuestFourAnswer.setText("");
@@ -635,7 +699,7 @@ public class GamePlay extends Activity implements OnClickListener
     	    	    				            txtGuestSixAnswer.setText("");
     	    	    				            txtRoundOneQuestion.setText("");
     	    	    				            
-    	    	    			   				// move to player two
+    	    	    				            changeTurnAnouncment = true;
     	    	    			   			}
     	    	    			   			
     	    	    			   			numberOfCorrectMatches = 0;
