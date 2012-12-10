@@ -10,7 +10,6 @@
     <string name="title_activity_game_over">GameOver</string>
     <string name="title_activity_game_play">GamePlay</string>
     <string name="question">Question/phrase</string>
-    <string name="questionrtwo">Hello and Welcome Back!</string>
     <string name="player1">Player 1</string>
     <string name="player2">Player 2</string>
     <string name="guest1">Guest 1</string>

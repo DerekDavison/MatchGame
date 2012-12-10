@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class RoundTwo extends Activity implements OnClickListener
 	private RadioButton select, guest1, guest2, guest3;
 	private String choice, ans1, ans2, ans3;
 	private int random, prize, roundPrize, total, count = 0;
+	private RadioGroup selection;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound;
 
@@ -45,10 +47,37 @@ public class RoundTwo extends Activity implements OnClickListener
         guest1 = (RadioButton)findViewById(R.id.rdbGuest1);
         guest2 = (RadioButton)findViewById(R.id.rdbGuest2);
         guest3 = (RadioButton)findViewById(R.id.rdbGuest3);
+        selection = (RadioGroup)findViewById(R.id.radioGroup1);
+        
+         selection.setOnCheckedChangeListener(
+            new RadioGroup.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId) {
+                    case R.id.rdbOther:
+                        ownText.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.rdbGuest1:
+                        ownText.setVisibility(View.GONE);                    
+                        break;
+                    case R.id.rdbGuest2:
+                        ownText.setVisibility(View.GONE);                    
+                        break;
+                    case R.id.rdbGuest3:
+                        ownText.setVisibility(View.GONE);                    
+                        break;
+                }
+            }
+            });
+        
     }
+    
+   
         
     public void onClick(View v)
 	{
+    	
+    	
 		switch(v.getId()) 
     	{  
 	    	case R.id.imgContinue:
@@ -86,33 +115,38 @@ public class RoundTwo extends Activity implements OnClickListener
 	    	
 				if(select.isChecked())
 	    		{
-	    			ownText.setVisibility(View.VISIBLE);
+	    			
 	    			choice = ownText.getText().toString();
+	    			ownText.setText(choice);
+	    			System.out.println(choice);
 	    			
 	    			determineScore(total);
 	    			//compare choice to $100 $200 and $500 answers grabbed from database
 	    		}
 	    		else if(guest1.isChecked())
 	    		{
-	    			ownText.setVisibility(View.INVISIBLE);
-	    			choice = guest1.getText().toString();
 	    			
+	    			choice = guest1.getText().toString();
+	    			ownText.setText(choice);
+	    			System.out.println(choice);
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
 	    			
 	    		}
 	    		else if(guest2.isChecked())
 	    		{
-	    			ownText.setVisibility(View.INVISIBLE);
-	    			choice = guest2.getText().toString();
 	    			
+	    			choice = guest2.getText().toString();
+	    			ownText.setText(choice);
+	    			System.out.println(choice);
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
 	    			
 	    		}
 	    		else if(guest3.isChecked())
 	    		{
-	    			ownText.setVisibility(View.INVISIBLE);
-	    			choice = guest3.getText().toString();
 	    			
+	    			choice = guest3.getText().toString();
+	    			ownText.setText(choice);
+	    			System.out.println(choice);
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
 	    			
 	    		}
