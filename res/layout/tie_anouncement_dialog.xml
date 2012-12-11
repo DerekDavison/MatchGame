@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingRight="25dp"
+    android:paddingBottom="20dp" >
+
+    <TextView
+        android:id="@+id/txtTimeForRoundOneMessage"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:text="There's been a tie! In this case we will have a sudden death round. Player 1 will go and if he/she gets 3 or more matches then player 1 wins. Otherwise player 2 wins."
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtTimeForRoundOneMessage"
+        android:layout_below="@+id/txtTimeForRoundOneMessage"
+        android:layout_marginTop="16dp"
+        android:text="Player 1, get ready!"
+        android:textSize="20dp" />
+
+</RelativeLayout>

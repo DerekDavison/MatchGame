@@ -38,23 +38,26 @@ public class GamePlay extends Activity implements OnClickListener
 			firstTimeForloadingQuestionDialogTimer = true, userHasSubmittedAnswer = false, 
 			firstTimeForLoadingCelebrityAnswersDialogTimer = true, firstTimeForloadingCheckingAnswerDialogTimer = true, 
 			playerOneTurn = true, playerTwoTurn = false, changeTurnAnouncment = false, 
-			firstTimeForloadingCheckingFinalResultsDialogTimer = true;
+			firstTimeForloadingCheckingFinalResultsDialogTimer = true, firstTimeFortieAnnouncementDialogTimer = true,
+			tieBreakerAnswerWasSubmitted = false;
 	private Button btnGoToRoundTwo;
 	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, loadingQuestionDialogTimer, 
 		loadingCelebrityAnswersDialogTimer, loadingQuestionAnswerDialogTimer, loadingCheckingAnswerDialogTimer, 
-		genericDelayForNSecondsTimer, mainCountDownTimer, loadingCheckingFinalResultsDialogTimer;
+		genericDelayForNSecondsTimer, mainCountDownTimer, loadingCheckingFinalResultsDialogTimer, 
+		tieAnnouncementDialogTimer;
 	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog, loadingCheckingAnswerDialog, 
 		loadingCheckingFinalResultsDialog;
 	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0, countTurns = 0, 
-			seedForAnswers = 0;
+			seedForAnswers = 0, winner = 0;
 	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
-		playerTwoNameByEmailNameValuePairs;
+		playerTwoNameByEmailNameValuePairs, updatePlayerScoreByEmailNameValuePairs;
 	private TextView txtRoundOneQuestion, txtGamePlayPlayerOne, txtGamePlayPlayerTwo, 
 		txtGuestOneAnswer, txtGuestTwoAnswer, txtGuestThreeAnswer, txtGuestFourAnswer, txtGuestFiveAnswer, txtGuestSixAnswer, 
 		txtPlayerOneAnswer, txtPlayerTwoAnswer, txtPlayerOneScore, txtPlayerTwoScore;
-	private Timer checkIfPlayerSubmittedAnswerTimer;
+	private Timer checkIfPlayerSubmittedAnswerTimer, checkIfPlayerSubmittedTieBreakerAnswerTimer;
 	private String currentQuestion = "", playerOneAnswer = "", guestAnswerOne = "", guestAnswerTwo = "", guestAnswerThree = "", 
-			guestAnswerFour = "", guestAnswerFive = "", guestAnswerSix = "", playerOneName, playerTwoName, playerTwoAnswer = "";
+			guestAnswerFour = "", guestAnswerFive = "", guestAnswerSix = "", playerOneName, playerTwoName, playerTwoAnswer = "", 
+			playerOneEmail = "", playerTwoEmail = "", tieBreakerAnswer = "";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -93,7 +96,7 @@ public class GamePlay extends Activity implements OnClickListener
         	setPlayerOneAvatar();
             setPlayerTwoAvatar();
         }
-        
+
         // 900000000 second is 15000000 minutes
         mainCountDownTimer = new CountDownTimer(900000000, 1000) 
 	   	{
@@ -121,7 +124,12 @@ public class GamePlay extends Activity implements OnClickListener
 	   				}
 	   				else
 	   				{
-	   					///////////////////////////////////////////////////////////////////////////////////////////////////
+	   					final Dialog tieAnnouncementDialog = new Dialog(GamePlay.this);
+	   					tieAnnouncementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	   		        
+	   					tieAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+	   					tieAnnouncementDialog.setContentView(R.layout.tie_anouncement_dialog);
+	   					tieAnnouncementDialog.setCancelable(true);
 	   					
 	   					genericDelayForNSecondsTimer = new CountDownTimer(2000, 1000) 
 	   	 			   	{
@@ -150,7 +158,41 @@ public class GamePlay extends Activity implements OnClickListener
 	    	    			   			// if there is a tie
 	    	    			   			if (Integer.parseInt(txtPlayerOneScore.getText().toString()) == Integer.parseInt(txtPlayerTwoScore.getText().toString()))
 	    	    			   			{
-	    	    			   				
+	    	    			   				genericDelayForNSecondsTimer = new CountDownTimer(1000, 1000) 
+	    	    		   	 			   	{
+	    	    		   	 			   		public void onTick(long millisUntilFinished) { }
+	    	    	
+	    	    		   	 			   		public void onFinish() 
+	    	    		   	 			   		{
+	    	    		   	 			   			tieAnnouncementDialogTimer = new CountDownTimer(15000, 1000) 
+		    	    	    	    			   	{
+		    	    	    	    			   		public void onTick(long millisUntilFinished) 
+		    	    	    	    			   		{ 
+		    	    	    	    			   			if (firstTimeFortieAnnouncementDialogTimer)
+		    	    	    	    			   			{
+		    	    	    	    			   				// show dialog
+		    	    	    	    			   				tieAnnouncementDialog.show();
+		    	    	    	    			   				firstTimeFortieAnnouncementDialogTimer = false;
+		    	    	    	    			   			}
+		    	    	    	    			   		}
+	
+		    	    	    	    			   		// after checking answer progress dialog
+		    	    	    	    			   		public void onFinish() 
+		    	    	    	    			   		{
+		    	    	    	    			   			firstTimeFortieAnnouncementDialogTimer = true;
+		    	    	    	    			   			// dismiss dialog
+		    	    	    	    			   			tieAnnouncementDialog.dismiss();
+		    	    	    	    			   			tieAnnouncementDialogTimer.cancel();
+		    	    	    	    			   			
+		    	    	    	    			   			runTieBreakerRound();
+		    	    	    	    			   		}
+		    	    	    	    			   	};
+		    	    	    	    			   	tieAnnouncementDialogTimer.start();
+	    	    		   	 			   			
+	    	    		   	 		   				genericDelayForNSecondsTimer.cancel();
+	    	    		   	 			   		}
+	    	    		   	 			   	};
+	    	    		   	 			   	genericDelayForNSecondsTimer.start();
 	    	    			   			}
 	    	    			   			else
 	    	    			   			{
@@ -169,12 +211,14 @@ public class GamePlay extends Activity implements OnClickListener
 		    	    			   			{
 		    	    			   				txtRoundOneFinalResultMessage.setText("Congratulations " + playerOneName + ". You are the Winner!");
 		    	    				            txtThanksPlayerWhoLostMessage.setText("We thank " + playerTwoName + " for playing");
+		    	    				            winner = 1;
 		    	    			   			}
 		    	    			   			else // if player 2 wins
 		    	    			   				if (Integer.parseInt(txtPlayerOneScore.getText().toString()) < Integer.parseInt(txtPlayerTwoScore.getText().toString()))
 		    	    			   			{
 		    	    			   					txtRoundOneFinalResultMessage.setText("Congratulations " + playerTwoName + ". You are the Winner!");
 			    	    				            txtThanksPlayerWhoLostMessage.setText("We thank " + playerOneName + " for playing");
+			    	    				            winner = 2;
 		    	    			   			}
 
 	    	    				            final Button btnContinueToRoundTwo = (Button) playerWinnerDialog.findViewById(R.id.btnContinueToRoundTwo);
@@ -186,8 +230,21 @@ public class GamePlay extends Activity implements OnClickListener
 	    	    					            	playerWinnerDialog.dismiss();
 	    	    					            	mainCountDownTimer.cancel();
 	    	    					            	checkIfPlayerSubmittedAnswerTimer.cancel();
+	    	    					            	checkIfPlayerSubmittedTieBreakerAnswerTimer.cancel();
 	    	    					            	
-	    	    					            	// update db and start round 2 intent 
+	    	    					            	// update database  
+	    	    					            	if (winner == 1)
+	    	    					            	{
+	    	    					            		updatePlayerScoreByEmail(playerOneEmail, playerOneScore + "");
+	    	    					            	}
+	    	    					            	
+	    	    					            	if (winner == 2)
+	    	    					            	{
+	    	    					            		updatePlayerScoreByEmail(playerTwoEmail, playerTwoScore + "");
+	    	    					            	}
+	    	    					            	
+	    	    					            	//start round 2 intent
+	    	    					            	startRoundTwoIntent();
 	    	    					            } 
 	    	    				            });
 	    	    				              
@@ -200,10 +257,6 @@ public class GamePlay extends Activity implements OnClickListener
 	   	 			   		}
 	   	 			   	};
 	   	 			   	genericDelayForNSecondsTimer.start();
-	   					
-	   					///////////////////////////////////////////////////////////////////////////////////////////////////
-
-	   					
 	   					mainCountDownTimer.cancel(); 
 	   				}
 	   			}
@@ -251,18 +304,18 @@ public class GamePlay extends Activity implements OnClickListener
                 timerMethod(); 
             } 
      
-        }, 0, 1000); 
+        }, 0, 1000);  
 	   	
-	   	/////////////////////////////////////////////
-	   	//
-	   	//
-	   	// IMPORTANT: DON'T FORGET TO TURN OFF 
-	   	// THE checkIfPlayerSubmittedAnswerTimer
-	   	// TIMER WHEN THIS ACTIVITY FINISHES
-	   	// OTHERWISE THE THREAD WILL KEEP RUNNING
-	   	//
-	   	/////////////////////////////////////////////
-		
+	   	checkIfPlayerSubmittedTieBreakerAnswerTimer = new Timer(); 
+	   	checkIfPlayerSubmittedTieBreakerAnswerTimer.schedule(new TimerTask() 
+        { 
+            @Override 
+            public void run() 
+            { 
+                timerForTiebreakerMethod(); 
+            } 
+     
+        }, 0, 1000);  
     }
     
     public void onClick(View v)
@@ -270,7 +323,7 @@ public class GamePlay extends Activity implements OnClickListener
 		switch(v.getId()) 
     	{  
 	    	case R.id.btnGoToRoundTwo:
-	    		startNewIntent();
+	    		startRoundTwoIntent();
 	    		break;
 	    	default:
 		    	throw new RuntimeException("Unknow button ID"); 
@@ -453,7 +506,8 @@ public class GamePlay extends Activity implements OnClickListener
 		dbHelper = new DBHelper();
 		playerOneNameByEmailNameValuePairs = new ArrayList<NameValuePair>();
         SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF, MODE_PRIVATE);
-        playerOneNameByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "")));
+        playerOneEmail = shared.getString(StaticData.PLAYER_ONE_EMAIL_SHARED_PREF_KEY, "");
+        playerOneNameByEmailNameValuePairs.add(new BasicNameValuePair("email", playerOneEmail));
         return dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, playerOneNameByEmailNameValuePairs, "name").get(0).toString();
 	}
 	
@@ -462,11 +516,23 @@ public class GamePlay extends Activity implements OnClickListener
 		dbHelper = new DBHelper();
 		playerTwoNameByEmailNameValuePairs = new ArrayList<NameValuePair>();
         SharedPreferences shared = getSharedPreferences(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF, MODE_PRIVATE);
-        playerTwoNameByEmailNameValuePairs.add(new BasicNameValuePair("email", shared.getString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, "")));
+        playerTwoEmail = shared.getString(StaticData.PLAYER_TWO_EMAIL_SHARED_PREF_KEY, "");
+        playerTwoNameByEmailNameValuePairs.add(new BasicNameValuePair("email", playerTwoEmail));
         return dbHelper.readDBData(StaticData.SELECT_USER_BY_EMAIL_ADDRESS_PHP_FILE, playerTwoNameByEmailNameValuePairs, "name").get(0).toString();
 	}
+	
+	private void updatePlayerScoreByEmail(String playerEmail, String playerScore)
+	{
+		dbHelper = new DBHelper();
+		
+		updatePlayerScoreByEmailNameValuePairs = new ArrayList<NameValuePair>();
+		updatePlayerScoreByEmailNameValuePairs.add(new BasicNameValuePair("email", playerEmail));
+		updatePlayerScoreByEmailNameValuePairs.add(new BasicNameValuePair("score", playerScore));
+		
+		dbHelper.modifyData(updatePlayerScoreByEmailNameValuePairs, StaticData.UPDATE_PLAYER_SCORE_BY_EMAIL);
+	}
 
-    private void startNewIntent()
+    private void startRoundTwoIntent()
     {
     	Intent continueIntent = new Intent(GamePlay.this, RoundTwo.class); 
 		startActivity(continueIntent);
@@ -487,20 +553,20 @@ public class GamePlay extends Activity implements OnClickListener
 			if(countTurns == 1 || countTurns == 3) 
 	    	{
 				TextView txtTimeForRoundOneMessage = (TextView) roundOneAnnouncementDialog.findViewById(R.id.txtTimeForRoundOneMessage);
-				txtTimeForRoundOneMessage.setText("And now it's time for our next player, " + playerOneName + ".");
+				txtTimeForRoundOneMessage.setText("And now it's time for our other player, " + playerOneName + ".");
 	    	}
 
 	    	if(countTurns == 2 || countTurns == 4) 
 	    	{
 	    		TextView txtTimeForRoundOneMessage = (TextView) roundOneAnnouncementDialog.findViewById(R.id.txtTimeForRoundOneMessage);
-				txtTimeForRoundOneMessage.setText("And now it's time for our next player, " + playerTwoName + ".");
+				txtTimeForRoundOneMessage.setText("And now it's time for our other player, " + playerTwoName + ".");
 	    	}
 		}
         
         roundOneAnnouncementTimer = new CountDownTimer(4000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
-	   		{ 
+	   		{  
 	   			if (firstTimeForRoundOneAnnouncementTimer)
 	   			{
 	   				roundOneAnnouncementDialog.show();
@@ -1055,4 +1121,266 @@ public class GamePlay extends Activity implements OnClickListener
     		}
         }
 	}
+	
+	private void runTieBreakerRound()
+	{
+		loadingQuestionDialogTimer = new CountDownTimer(3000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForloadingQuestionDialogTimer)
+	   			{
+	   				loadingQuestionDialog = ProgressDialog.show(GamePlay.this, "","Loading your tiebreaker question ...", true);
+	   				firstTimeForloadingQuestionDialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			firstTimeForloadingQuestionDialogTimer = true;
+	   			loadingQuestionDialog.dismiss();
+	   			setQuestionForRound();
+	   			
+	   			runTiebreakerAnswerQuestionDialog();	   			
+	   			
+	   			loadingQuestionDialogTimer.cancel();
+	   		}
+	   	};
+	   	loadingQuestionDialogTimer.start();
+	}
+	
+	private void runTiebreakerAnswerQuestionDialog()
+	{
+		final Dialog answerQuestionDialog = new Dialog(GamePlay.this);
+    	answerQuestionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	
+    	answerQuestionDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	answerQuestionDialog.setContentView(R.layout.submit_round_one_player_answer_dialog);
+    	answerQuestionDialog.setCancelable(true); 
+    	
+    	final EditText edtRoundOneAnswer = (EditText) answerQuestionDialog.findViewById(R.id.edtRoundOneAnswer); 
+    	TextView txtRoundOneQuestion = (TextView) answerQuestionDialog.findViewById(R.id.txtRoundOneQuestion); 
+    	
+    	txtRoundOneQuestion.setText(currentQuestion);
+    	 
+    	Button btnSubmitAnswerRoundOne = (Button) answerQuestionDialog.findViewById(R.id.btnSubmitAnswerRoundOne); 
+    	btnSubmitAnswerRoundOne.setOnClickListener(new OnClickListener() 
+        {
+            public void onClick(final View v) 
+            {
+            	/////////////////////////////////////////////////////////
+            	//
+            	// THE PROGRAM CRASHES AT THIS POINT
+            	//
+            	///////////////////////////////////////////////////////// 
+            	
+            	if(!edtRoundOneAnswer.toString().matches(""))
+            	{
+            		tieBreakerAnswerWasSubmitted = true;
+            		tieBreakerAnswer = edtRoundOneAnswer.getText().toString();
+            	}
+            	else
+            	{
+            		Toast.makeText(getApplicationContext(), "Enter an answer", Toast.LENGTH_LONG).show();
+            	}
+            }
+        });
+    	answerQuestionDialog.show();
+	}
+	
+	private void timerForTiebreakerMethod() 
+    { 
+        this.runOnUiThread(tiebreakerTimerTick); 
+    } 
+     
+    private Runnable tiebreakerTimerTick = new Runnable() 
+    { 
+        public void run() 
+        {
+    		try
+    		{
+    			if (tieBreakerAnswerWasSubmitted)
+    			{
+    				tieBreakerAnswerWasSubmitted = false;
+
+    				loadingCelebrityAnswersDialogTimer = new CountDownTimer(2000, 1000) 
+    			   	{
+    			   		public void onTick(long millisUntilFinished) 
+    			   		{ 
+    			   			if (firstTimeForLoadingCelebrityAnswersDialogTimer)
+    			   			{
+    			   				genericDelayForNSecondsTimer = new CountDownTimer(2000, 1000) 
+        	    			   	{
+        	    			   		public void onTick(long millisUntilFinished) { }
+
+        	    			   		public void onFinish() 
+        	    			   		{
+        	    			   			loadingCelebrityAnswersDialog = ProgressDialog.show(GamePlay.this, "","Loading celebrity answers ...", true);
+            			   				firstTimeForLoadingCelebrityAnswersDialogTimer = false;
+            			   				genericDelayForNSecondsTimer.cancel();
+        	    			   		}
+        	    			   	};
+        	    			   	genericDelayForNSecondsTimer.start();
+    			   			}
+    			   		}
+
+    			   		public void onFinish() 
+    			   		{ 
+    			   			seedForAnswers++;
+    			   			firstTimeForLoadingCelebrityAnswersDialogTimer = true;
+    			   			
+    			   			loadingCelebrityAnswersDialog.dismiss();
+    			   			loadingCelebrityAnswersDialogTimer.cancel();
+    			   			
+    			   			if (seedForAnswers == 5)
+    			   			{
+    			   				guestAnswerOne = getRandomAnswer(10, 1, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(10, 1, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(10, 1, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(10, 1, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(10, 1, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(10, 1, seedForAnswers);
+    			   			}
+    			   			
+    			   			txtGuestOneAnswer.setText(guestAnswerOne); 
+    			   			txtGuestTwoAnswer.setText(guestAnswerTwo);
+    			   			txtGuestThreeAnswer.setText(guestAnswerThree);
+    			   			txtGuestFourAnswer.setText(guestAnswerFour);
+    			   			txtGuestFiveAnswer.setText(guestAnswerFive);
+    			   			txtGuestSixAnswer.setText(guestAnswerSix);
+
+    			   			genericDelayForNSecondsTimer = new CountDownTimer(2000, 1000) 
+    	    			   	{
+    	    			   		public void onTick(long millisUntilFinished) { }
+
+    	    			   		public void onFinish() 
+    	    			   		{
+    	    			   			// load checking answer progress dialog
+    	    	    			   	loadingCheckingAnswerDialogTimer = new CountDownTimer(2000, 1000) 
+    	    	    			   	{
+    	    	    			   		public void onTick(long millisUntilFinished) 
+    	    	    			   		{ 
+    	    	    			   			if (firstTimeForloadingCheckingAnswerDialogTimer)
+    	    	    			   			{
+    	    	    			   				loadingCheckingAnswerDialog = ProgressDialog.show(GamePlay.this, "","Checking your answers ...", true);
+    	    	    			   				firstTimeForloadingCheckingAnswerDialogTimer = false;
+    	    	    			   			}
+    	    	    			   		}
+
+    	    	    			   		// after checking answer progress dialog
+    	    	    			   		public void onFinish() 
+    	    	    			   		{
+    	    	    			   			firstTimeForloadingCheckingAnswerDialogTimer = true;
+    	    	    			   			
+    	    	    			   			loadingCheckingAnswerDialog.dismiss();
+    	    	    			   			numberOfCorrectMatches = 0;
+    	    	    			   			
+    	    	    			   			// check number of matches
+	    	    			   	        	if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerOne.toUpperCase().trim()))
+	    	    			   	    		{
+	    	    			   	    			numberOfCorrectMatches++;
+	    	    			   	    		}
+	    	    			   	    		
+	    	    			   	    		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerTwo.toUpperCase().trim()))
+	    	    			   	    		{
+	    	    			   	    			numberOfCorrectMatches++;
+	    	    			   	    		}
+	    	    			   	    		
+	    	    			   	    		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerThree.toUpperCase().trim()))
+	    	    			   	    		{
+	    	    			   	    			numberOfCorrectMatches++;
+	    	    			   	    		}
+	    	    			   	    		
+	    	    			   	    		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFour.toUpperCase().trim()))
+	    	    			   	    		{
+	    	    			   	    			numberOfCorrectMatches++;
+	    	    			   	    		}
+	    	    			   	    		
+	    	    			   	    		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerFive.toUpperCase().trim()))
+	    	    			   	    		{
+	    	    			   	    			numberOfCorrectMatches++;
+	    	    			   	    		}
+	    	    			   	    		
+	    	    			   	    		if (playerOneAnswer.toUpperCase().trim().equals(guestAnswerSix.toUpperCase().trim()))
+	    	    			   	    		{
+	    	    			   	    			numberOfCorrectMatches++;
+	    	    			   	    		}
+    	    	    			   			
+	    	    			   	    		final Dialog tieBreakerWinnerDialog = new Dialog(GamePlay.this);
+	    	    			   	    		tieBreakerWinnerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    	    				            
+	    	    			   	    		tieBreakerWinnerDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+	    	    			   	    		tieBreakerWinnerDialog.setContentView(R.layout.generic_tiebreaker_dialog);
+	    	    			   	    		tieBreakerWinnerDialog.setCancelable(true);
+
+	    	    				            final TextView txtTiebreakerCongratsMessage = (TextView) tieBreakerWinnerDialog.findViewById(R.id.txtTiebreakerCongratsMessage); 
+	    	    				            final TextView txtTieBreakerNumberOfMatches = (TextView) tieBreakerWinnerDialog.findViewById(R.id.txtTieBreakerNumberOfMatches);  
+
+	    	    				            if (numberOfCorrectMatches >= 3)
+    	    	    			   			{
+	    	    				            	txtTiebreakerCongratsMessage.setText("Congratulations " + playerOneName + ". You are the Winner!");
+    	    	    			   			}
+	    	    				            else
+	    	    				            {
+	    	    				            	txtTiebreakerCongratsMessage.setText("Congratulations " + playerTwoName + ". You are the Winner!");
+	    	    				            }
+
+	    	    				            txtTieBreakerNumberOfMatches.setText("You got " + numberOfCorrectMatches + " matches.");
+	    	    				            
+	    	    				            final Button btnTieBreakerStartNextRound = (Button) tieBreakerWinnerDialog.findViewById(R.id.btnTieBreakerStartNextRound);
+
+	    	    				            btnTieBreakerStartNextRound.setOnClickListener(new OnClickListener() 
+	    	    				            {	
+	    	    					            public void onClick(final View v) 
+	    	    					            {
+	    	    					            	// update db and start round 2 intent
+	    	    					            	checkIfPlayerSubmittedAnswerTimer.cancel();
+	    	    					            	checkIfPlayerSubmittedTieBreakerAnswerTimer.cancel();
+	    	    					            	
+	    	    					            	// player 1 wins
+	        	    	    			   			if (numberOfCorrectMatches >= 3)
+	        	    	    			   			{
+	        	    	    			   				updatePlayerScoreByEmail(playerOneEmail, playerOneScore + "");
+	        	    	    			   			}
+	        	    	    			   			else // player 2 wins
+	        	    	    			   			{
+	        	    	    			   				updatePlayerScoreByEmail(playerTwoEmail, playerTwoScore + "");
+	        	    	    			   			}
+	    	    					            	
+	    	    					            	tieBreakerWinnerDialog.dismiss();
+	    	    					            	mainCountDownTimer.cancel();
+	    	    					            } 
+	    	    				            });
+	    	    				              
+	    	    				            tieBreakerWinnerDialog.show();
+    	    	    			   			
+    	    	    			   			// clear answers and question
+	    	    				            txtPlayerOneAnswer.setText("");
+	    	    				            txtPlayerTwoAnswer.setText("");
+	    	    				            txtGuestOneAnswer.setText("");
+	    	    				            txtGuestTwoAnswer.setText("");
+	    	    				            txtGuestThreeAnswer.setText("");
+	    	    				            txtGuestFourAnswer.setText("");
+	    	    				            txtGuestFiveAnswer.setText("");
+	    	    				            txtGuestSixAnswer.setText("");
+	    	    				            txtRoundOneQuestion.setText("");
+	    	    				            
+	    	    				            changeTurnAnouncment = true;
+    	    	    			   			
+    	    	    			   			loadingCheckingAnswerDialogTimer.cancel();
+    	    	    			   		}
+    	    	    			   	};
+    	    	    			   	loadingCheckingAnswerDialogTimer.start();
+    	    			   		}
+    	    			   	};
+    	    			   	genericDelayForNSecondsTimer.start();
+    			   		}
+    			   	};
+    			   	loadingCelebrityAnswersDialogTimer.start();	
+    			   	userHasSubmittedAnswer = false;
+    			}
+    		}
+    		catch(Exception e) { }
+        } 
+    };
 }

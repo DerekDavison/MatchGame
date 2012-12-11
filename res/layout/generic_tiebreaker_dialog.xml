@@ -6,43 +6,44 @@
     android:paddingBottom="20dp" >
 
     <TextView
-        android:id="@+id/txtRoundOneFinalResultMessage"
+        android:id="@+id/txtTiebreakerCongratsMessage"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="19dp"
         android:layout_marginTop="17dp"
-        android:text="Congratulations player x. You are the Winner!"
+        android:text="Congratulations!"
         android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/txtTieBreakerNumberOfMatches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtRoundOneFinalResultMessage"
-        android:layout_below="@+id/txtRoundOneFinalResultMessage"
+        android:layout_alignLeft="@+id/txtTiebreakerCongratsMessage"
+        android:layout_below="@+id/txtTiebreakerCongratsMessage"
         android:layout_marginTop="10dp"
-        android:text="You are moving on to round 2!"
+        android:text="You got x matches."
         android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/txtThanksPlayerWhoLostMessage"
+        android:id="@+id/txtRoundOnePlayerTurnScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="15dp"
-        android:text="We thank player x for playing"
+        android:layout_alignLeft="@+id/txtTieBreakerNumberOfMatches"
+        android:layout_below="@+id/txtTieBreakerNumberOfMatches"
+        android:layout_marginTop="11dp"
+        android:text="You move on to the next round"
         android:textSize="20dp" />
 
     <Button
-        android:id="@+id/btnContinueToRoundTwo"
+        android:id="@+id/btnTieBreakerStartNextRound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtThanksPlayerWhoLostMessage"
-        android:layout_below="@+id/txtThanksPlayerWhoLostMessage"
-        android:layout_marginTop="15dp"
-        android:text="Continue to round 2" />
+        android:layout_alignLeft="@+id/txtRoundOnePlayerTurnScore"
+        android:layout_below="@+id/txtRoundOnePlayerTurnScore"
+        android:layout_marginTop="14dp"
+        android:text="Go to round Two" 
+        android:textSize="15dp"/>
 
 </RelativeLayout>

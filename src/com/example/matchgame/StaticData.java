@@ -10,6 +10,7 @@ public class StaticData
     public final static String SELECT_PLAYER_AVITAR_ID_BY_EMAIL = "SelectPlayerAvitarIdByEmail.php";
     public final static String SELECT_QUESTION_BY_ID_AND_ROUND = "SelectQuestionByIdAndRound.php"; 
     public final static String SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND = "SelectAnswerByIdQuestionIDAndRound.php"; 
+    public final static String UPDATE_PLAYER_SCORE_BY_EMAIL = "UpdatePlayerScoreByEmail.php"; 
     
 	public final static String USER_ID = "userId";
 	public final static String NAME = "name";
