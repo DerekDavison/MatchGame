@@ -14,6 +14,7 @@
     <string name="rtworules">In this round, our player will get responses from three of our guests. Our player may 
         choose to take one of their answers or select their own. If the selected answer matches one of the corresponding 
         prizes, our champion will have the corresponding amount added to their prize money.</string>
+    <string name="rtwostart">Now, let\'s get this round started!</string>
     <string name="player1">Player 1</string>
     <string name="player2">Player 2</string>
     <string name="guest1">Guest 1</string>

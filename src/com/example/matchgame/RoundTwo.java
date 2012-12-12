@@ -12,6 +12,7 @@ import android.os.CountDownTimer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -27,8 +28,8 @@ import android.widget.Toast;
 
 public class RoundTwo extends Activity implements OnClickListener
 {
-	private ImageView imgContinue;
-	private TextView hostText;
+
+	private TextView qText;
 	private Button submit;
 	private EditText ownText;
 	private RadioButton select, guest1, guest2, guest3;
@@ -47,8 +48,8 @@ public class RoundTwo extends Activity implements OnClickListener
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.round_two);
         
-        imgContinue = (ImageView)findViewById(R.id.imgContinue);
-        hostText = (TextView)findViewById(R.id.txtQuestion);
+       
+        qText = (TextView)findViewById(R.id.txtQuestion);
         submit = (Button)findViewById(R.id.btnSubmit);
         ownText = (EditText)findViewById(R.id.response);
         select = (RadioButton)findViewById(R.id.rdbOther);
@@ -100,36 +101,7 @@ public class RoundTwo extends Activity implements OnClickListener
     	
 		switch(v.getId()) 
     	{  
-	    	case R.id.imgContinue:
-	    		
-	    		count++;
-	    		switch(count)
-	    		{
-	    			case 1:
-	    				//Replace "Winner of round 1" once player class created.
-	    				hostText.setText("Moving on today we have the lovely" + " " + "Winner of round 1" + ".");
-	    				break;
-	    			case 2:
-	    				hostText.setText("In this round, our player will get responses from three of our guests.");
-	    				break;
-	    			case 3:
-	    				hostText.setText("Our player may choose to take one of their answers or select their own.");
-	    				break;
-	    			case 4:
-	    				hostText.setText("If the selected answer matches one of the corresponding prizes, our champion will have that prize added to their total.");
-	    				break;
-	    			case 5:
-	    				hostText.setText("Now let's get this round started!");
-	    				break;
-	    			case 6:
-	    				generateRandomQuestion();
-	    				imgContinue.setVisibility(View.INVISIBLE);
-	    				break;	
-	    			default:
-	    				break;
-	    		}
-	    		
-	    		break;
+	    	
 	    	
 	    	case R.id.btnSubmit:
 	    	
@@ -138,7 +110,7 @@ public class RoundTwo extends Activity implements OnClickListener
 	    			
 	    			choice = ownText.getText().toString();
 	    			ownText.setText(choice);
-	    			System.out.println(choice);
+	    			
 	    			
 	    			determineScore(total);
 	    			//compare choice to $100 $200 and $500 answers grabbed from database
@@ -148,7 +120,7 @@ public class RoundTwo extends Activity implements OnClickListener
 	    			
 	    			choice = guest1.getText().toString();
 	    			ownText.setText(choice);
-	    			System.out.println(choice);
+	    			
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
 	    			
 	    		}
@@ -157,7 +129,7 @@ public class RoundTwo extends Activity implements OnClickListener
 	    			
 	    			choice = guest2.getText().toString();
 	    			ownText.setText(choice);
-	    			System.out.println(choice);
+	    			
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
 	    			
 	    		}
@@ -166,7 +138,7 @@ public class RoundTwo extends Activity implements OnClickListener
 	    			
 	    			choice = guest3.getText().toString();
 	    			ownText.setText(choice);
-	    			System.out.println(choice);
+	    			
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
 	    			
 	    		}
@@ -220,20 +192,20 @@ public class RoundTwo extends Activity implements OnClickListener
     
     private void loadRulesDialog()
     {
-    	final Dialog playerTurnDialog = new Dialog(RoundTwo.this);
-    	playerTurnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	final Dialog roundTwoDialog = new Dialog(RoundTwo.this);
+    	roundTwoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         
-    	playerTurnDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
-    	playerTurnDialog.setContentView(R.layout.round_two_rules);
-    	playerTurnDialog.setCancelable(true); 
+    	roundTwoDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoDialog.setContentView(R.layout.round_two_rules);
+    	roundTwoDialog.setCancelable(true); 
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
 	   			if (firstTimeForPlayerTurnDialogTimer)
 	   			{
-	   				playerTurnDialog.show();
+	   				roundTwoDialog.show();
 	   				firstTimeForPlayerTurnDialogTimer = false;
 	   			}
 	   		}
@@ -241,8 +213,38 @@ public class RoundTwo extends Activity implements OnClickListener
 	   		public void onFinish() 
 	   		{
 	   			firstTimeForPlayerTurnDialogTimer = true;
-	   			playerTurnDialog.dismiss();
-	   			//runLoadingQuestionDialog();
+	   			roundTwoDialog.dismiss();
+	   			loadStartDialog();
+	   			roundTwoAnnouncementTimer.cancel();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadStartDialog()
+    {
+    	final Dialog roundTwoDialog = new Dialog(RoundTwo.this);
+    	roundTwoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoDialog.setContentView(R.layout.round_two_start);
+    	roundTwoDialog.setCancelable(true); 
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (firstTimeForPlayerTurnDialogTimer)
+	   			{
+	   				roundTwoDialog.show();
+	   				firstTimeForPlayerTurnDialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			firstTimeForPlayerTurnDialogTimer = true;
+	   			roundTwoDialog.dismiss();
 	   			roundTwoAnnouncementTimer.cancel();
 	   		}
 	   	};
@@ -290,7 +292,7 @@ public class RoundTwo extends Activity implements OnClickListener
 
 		for (String s : dbHelper.readDBData("SelectQuestionByIdAndRound.php", questionByIdAndRound, "question"))
 		{
-			hostText.setText(s);
+			qText.setText(s);
 		}
     }
 	    
