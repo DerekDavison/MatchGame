@@ -211,6 +211,17 @@ public class GamePlay extends Activity implements OnClickListener
 		    	    			   			{
 		    	    			   				txtRoundOneFinalResultMessage.setText("Congratulations " + playerOneName + ". You are the Winner!");
 		    	    				            txtThanksPlayerWhoLostMessage.setText("We thank " + playerTwoName + " for playing");
+		    	    				            
+		    	    				            SharedPreferences winnerEmail = getSharedPreferences(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, MODE_PRIVATE); 
+		    	    				            SharedPreferences.Editor editor = winnerEmail.edit();
+		    	    				            editor.putString(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, playerOneEmail);
+		    	    				            editor.commit();
+		    	    				            
+		    	    				            SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
+		    	    				            SharedPreferences.Editor e = winnerName.edit();
+		    	    				            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerOneName);
+		    	    				            e.commit();
+		    	    				            
 		    	    				            winner = 1;
 		    	    			   			}
 		    	    			   			else // if player 2 wins
@@ -218,6 +229,17 @@ public class GamePlay extends Activity implements OnClickListener
 		    	    			   			{
 		    	    			   					txtRoundOneFinalResultMessage.setText("Congratulations " + playerTwoName + ". You are the Winner!");
 			    	    				            txtThanksPlayerWhoLostMessage.setText("We thank " + playerOneName + " for playing");
+			    	    				            
+			    	    				            SharedPreferences winnerEmail = getSharedPreferences(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, MODE_PRIVATE); 
+			    	    				            SharedPreferences.Editor editor = winnerEmail.edit();
+			    	    				            editor.putString(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, playerTwoEmail);
+			    	    				            editor.commit();
+			    	    				            
+			    	    				            SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
+			    	    				            SharedPreferences.Editor e = winnerName.edit();
+			    	    				            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerTwoName);
+			    	    				            e.commit();
+			    	    				            
 			    	    				            winner = 2;
 		    	    			   			}
 

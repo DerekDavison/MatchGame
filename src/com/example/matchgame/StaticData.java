@@ -27,6 +27,9 @@ public class StaticData
 	public final static String PLAYER_TWO_EMAIL_SHARED_PREF = "PLAYER_TWO_EMAIL_PREF";
 	public final static String SINGLE_PLAYER_SHARED_PREF_KEY = "SINGLE_PLAYER_PREF";
 	
+	public final static String WINNING_PLAYER_SHARED_PREF = "WINNING_PLAYER";
+	public final static String WINNING_PLAYER_EMAIL_SHARED_PREF = "WINNING_PLAYER_EMAIL";
+	
 	public final static String PLAYER_ONE_EMAIL_SHARED_PREF_KEY = "player_one_email";
 	public final static String PLAYER_TWO_EMAIL_SHARED_PREF_KEY = "player_two_email";
 }
