@@ -34,13 +34,13 @@ public class RoundTwo extends Activity implements OnClickListener
 	private Button submit;
 	private EditText ownText;
 	private RadioButton select, guest1, guest2, guest3;
-	private String choice, ans1, ans2, ans3, playerName;
+	private String choice, ans1, ans2, ans3, playerName, question;
 	private int random, prize, roundPrize, total, count = 0;
 	private RadioGroup selection;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound;
 	private CountDownTimer roundTwoAnnouncementTimer, loadingQuestionDialogTimer, delayToShowRoundTwoAnnouncementTimer;
-	private Boolean firstTimeForRoundTwoAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
+	private Boolean firstTimeForRoundTwoAnnouncementTimer = true, dialogTimer = true, 
 			firstTimeForloadingQuestionDialogTimer = true;
 
     @Override
@@ -187,14 +187,6 @@ public class RoundTwo extends Activity implements OnClickListener
 	   			roundTwoAnnouncementDialog.dismiss();
 	   			roundTwoAnnouncementTimer.cancel();
 	   			
-	   			try 
-	   			{
-					Thread.sleep(2000);
-				} catch (InterruptedException e) 
-				{
-					e.printStackTrace();
-				}
-	   			
 	   			loadRulesDialog();
 	   		}
 	   	};
@@ -214,19 +206,19 @@ public class RoundTwo extends Activity implements OnClickListener
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
-	   			if (firstTimeForPlayerTurnDialogTimer)
+	   			if (dialogTimer)
 	   			{
 	   				roundTwoDialog.show();
-	   				firstTimeForPlayerTurnDialogTimer = false;
+	   				dialogTimer = false;
 	   			}
 	   		}
 
 	   		public void onFinish() 
 	   		{
-	   			firstTimeForPlayerTurnDialogTimer = true;
+	   			dialogTimer = true;
 	   			roundTwoDialog.dismiss();
-	   			loadStartDialog();
 	   			roundTwoAnnouncementTimer.cancel();
+	   			loadStartDialog();
 	   		}
 	   	};
 	   	roundTwoAnnouncementTimer.start();
@@ -245,17 +237,18 @@ public class RoundTwo extends Activity implements OnClickListener
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
-	   			if (firstTimeForPlayerTurnDialogTimer)
+	   			if (dialogTimer)
 	   			{
 	   				roundTwoStartDialog.show();
-	   				firstTimeForPlayerTurnDialogTimer = false;
+	   				dialogTimer = false;
 	   			}
 	   		}
 
 	   		public void onFinish() 
 	   		{
-	   			firstTimeForPlayerTurnDialogTimer = true;
+	   			dialogTimer = true;
 	   			roundTwoStartDialog.dismiss();
+	   			generateRandomQuestion();
 	   			roundTwoAnnouncementTimer.cancel();
 	   		}
 	   	};
@@ -289,7 +282,6 @@ public class RoundTwo extends Activity implements OnClickListener
 	   	loadingQuestionDialogTimer.start();
     }*/
     
-
         
     private void generateRandomQuestion()
     {
@@ -299,14 +291,17 @@ public class RoundTwo extends Activity implements OnClickListener
 		
 		
 		Random r = new Random();
-		random = (r.nextInt(6 - 1 + 1) + 1);
+		random = (r.nextInt(5 - 1 + 1) + 1);
 		
 		questionByIdAndRound.add(new BasicNameValuePair("id", random + ""));
-
-		for (String s : dbHelper.readDBData("SelectQuestionByIdAndRound.php", questionByIdAndRound, "question"))
-		{
-			qText.setText(s);
-		}
+    	questionByIdAndRound.add(new BasicNameValuePair("round", StaticData.ROUND_TWO));
+    	
+    	question = dbHelper.readDBData(StaticData.SELECT_QUESTION_BY_ID_AND_ROUND, questionByIdAndRound, "question").get(0).toString();
+    	
+    	qText = (TextView)findViewById(R.id.txtRoundOneQuestion);
+    	qText.setText(question);
+    	
+		
     }
 	    
     public void determineScore(int total)
