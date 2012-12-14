@@ -326,7 +326,7 @@ public class RoundTwo extends Activity implements OnClickListener
 		
 		questionByIdAndRound = new ArrayList<NameValuePair>();
 		questionByIdAndRound.add(new BasicNameValuePair("id", random + ""));
-    	questionByIdAndRound.add(new BasicNameValuePair("round", StaticData.ROUND_TWO));
+    	questionByIdAndRound.add(new BasicNameValuePair("round", StaticData.ROUND_ONE));
     	
     	question = dbHelper.readDBData(StaticData.SELECT_QUESTION_BY_ID_AND_ROUND, questionByIdAndRound, "question").get(0).toString();
     	qId = random;
