@@ -11,6 +11,7 @@ public class StaticData
     public final static String SELECT_QUESTION_BY_ID_AND_ROUND = "SelectQuestionByIdAndRound.php"; 
     public final static String SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND = "SelectAnswerByIdQuestionIDAndRound.php"; 
     public final static String UPDATE_PLAYER_SCORE_BY_EMAIL = "UpdatePlayerScoreByEmail.php"; 
+    public final static String SELECT_ROUND_TWO_QUESTION_BY_ID_AND_ROUND = "SelectRoundTwoQuestionByIdAndRound.php"; 
     
 	public final static String USER_ID = "userId";
 	public final static String NAME = "name";
@@ -22,6 +23,7 @@ public class StaticData
 	public final static String ROUND_ONE = "1";
 	public final static String ROUND_TWO = "2";
 	public final static String ROUND_THREE = "3";
+	public final static String SCORE = "0";
 	
 	public final static String PLAYER_ONE_EMAIL_SHARED_PREF = "PLAYER_ONE_EMAIL_PREF";
 	public final static String PLAYER_TWO_EMAIL_SHARED_PREF = "PLAYER_TWO_EMAIL_PREF";

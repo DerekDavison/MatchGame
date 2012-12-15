@@ -62,6 +62,9 @@ public class RoundTwo extends Activity implements OnClickListener
         
         SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
         playerName = winnerName.getString(StaticData.WINNING_PLAYER_SHARED_PREF, "");
+        
+        SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
+        total = winnerScore.getInt(StaticData.SCORE, 0);
        
         
         delayToShowRoundTwoAnnouncementTimer = new CountDownTimer(2000, 1000) 
@@ -326,9 +329,9 @@ public class RoundTwo extends Activity implements OnClickListener
 		
 		questionByIdAndRound = new ArrayList<NameValuePair>();
 		questionByIdAndRound.add(new BasicNameValuePair("id", random + ""));
-    	questionByIdAndRound.add(new BasicNameValuePair("round", StaticData.ROUND_ONE));
+    	questionByIdAndRound.add(new BasicNameValuePair("round", StaticData.ROUND_TWO));
     	
-    	question = dbHelper.readDBData(StaticData.SELECT_QUESTION_BY_ID_AND_ROUND, questionByIdAndRound, "question").get(0).toString();
+    	question = dbHelper.readDBData(StaticData.SELECT_ROUND_TWO_QUESTION_BY_ID_AND_ROUND, questionByIdAndRound, "question").get(0).toString();
     	qId = random;
    
     	qText.setText(question);

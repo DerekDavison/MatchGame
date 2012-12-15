@@ -258,11 +258,19 @@ public class GamePlay extends Activity implements OnClickListener
 	    	    					            	if (winner == 1)
 	    	    					            	{
 	    	    					            		updatePlayerScoreByEmail(playerOneEmail, playerOneScore + "");
+	    	    					            		SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
+				    	    				            SharedPreferences.Editor editor = winnerScore.edit();
+				    	    				            editor.putInt(StaticData.SCORE, playerOneScore);
+				    	    				            editor.commit();
 	    	    					            	}
 	    	    					            	
 	    	    					            	if (winner == 2)
 	    	    					            	{
 	    	    					            		updatePlayerScoreByEmail(playerTwoEmail, playerTwoScore + "");
+	    	    					            		SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
+				    	    				            SharedPreferences.Editor editor = winnerScore.edit();
+				    	    				            editor.putInt(StaticData.SCORE, playerTwoScore);
+				    	    				            editor.commit();
 	    	    					            	}
 	    	    					            	
 	    	    					            	//start round 2 intent
