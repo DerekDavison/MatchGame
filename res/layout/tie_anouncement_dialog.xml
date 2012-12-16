@@ -22,7 +22,7 @@
         android:layout_alignLeft="@+id/txtTimeForRoundOneMessage"
         android:layout_below="@+id/txtTimeForRoundOneMessage"
         android:layout_marginTop="16dp"
-        android:text="Player 1, get ready!"
+        android:text=" Player 1, get ready!"
         android:textSize="20dp" />
 
 </RelativeLayout>

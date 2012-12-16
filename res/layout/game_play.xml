@@ -118,7 +118,8 @@
         android:layout_x="330dp"
         android:layout_y="105dp"
         android:text="@string/guest1"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:gravity="center"  />
 
     <TextView
         android:id="@+id/txtGuestTwo"
@@ -127,7 +128,8 @@
         android:layout_x="400dp"
         android:layout_y="105dp"
         android:text="@string/guest2"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/txtGuestThree"
@@ -136,7 +138,8 @@
         android:layout_x="472dp"
         android:layout_y="104dp"
         android:text="@string/guest3"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/imgPlayerOne"
@@ -155,7 +158,7 @@
         android:src="@drawable/ic_launcher" />
 
     <ImageView
-        android:id="@+id/ImageView09"
+        android:id="@+id/imgPanelistOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="334dp"
@@ -163,7 +166,7 @@
         android:src="@drawable/ic_launcher" />
 
     <ImageView
-        android:id="@+id/ImageView10"
+        android:id="@+id/imgPanelistTwo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="404dp"
@@ -171,7 +174,7 @@
         android:src="@drawable/ic_launcher" />
 
     <ImageView
-        android:id="@+id/ImageView11"
+        android:id="@+id/imgPanelistThree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="474dp"
@@ -185,7 +188,8 @@
         android:layout_x="470dp"
         android:layout_y="215dp"
         android:text="@string/guest6"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/txtGuestFive"
@@ -194,7 +198,8 @@
         android:layout_x="400dp"
         android:layout_y="215dp"
         android:text="@string/guest5"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/txtGuestFour"
@@ -203,10 +208,11 @@
         android:layout_x="330dp"
         android:layout_y="215dp"
         android:text="@string/guest4"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:gravity="center" />
 
     <ImageView
-        android:id="@+id/ImageView14"
+        android:id="@+id/imgPanelistSix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="473dp"
@@ -214,7 +220,7 @@
         android:src="@drawable/ic_launcher" />
 
     <ImageView
-        android:id="@+id/ImageView13"
+        android:id="@+id/imgPanelistFive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="403dp"
@@ -222,7 +228,7 @@
         android:src="@drawable/ic_launcher" />
 
     <ImageView
-        android:id="@+id/ImageView12"
+        android:id="@+id/imgPanelistFour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="334dp"
@@ -284,15 +290,6 @@
         android:layout_height="wrap_content"
         android:layout_x="90dp"
         android:layout_y="170dp" />
-
-    <Button
-        android:id="@+id/btnGoToRoundTwo"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="223dp"
-        android:layout_y="24dp"
-        android:text="Go to round 2" />
 
     <TextView
         android:id="@+id/textView1"

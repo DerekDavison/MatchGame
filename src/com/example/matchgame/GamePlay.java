@@ -33,14 +33,14 @@ public class GamePlay extends Activity implements OnClickListener
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> playerOneAvatarIdByEmail, playerTwoAvatarIdByEmail, singlePlayerNameValuePairs, 
 		answerByIdRoundAndQuestionIdNameValuePair;
-	private ImageView imgPlayerOne, imgPlayerTwo;
+	private ImageView imgPlayerOne, imgPlayerTwo, imgPanelistOne, imgPanelistTwo, imgPanelistThree, imgPanelistFour,
+		imgPanelistFive, imgPanelistSix;
 	private Boolean singlePlayerMode = false, firstTimeForRoundOneAnnouncementTimer = true, firstTimeForPlayerTurnDialogTimer = true, 
 			firstTimeForloadingQuestionDialogTimer = true, userHasSubmittedAnswer = false, 
 			firstTimeForLoadingCelebrityAnswersDialogTimer = true, firstTimeForloadingCheckingAnswerDialogTimer = true, 
 			playerOneTurn = true, playerTwoTurn = false, changeTurnAnouncment = false, 
 			firstTimeForloadingCheckingFinalResultsDialogTimer = true, firstTimeFortieAnnouncementDialogTimer = true,
 			tieBreakerAnswerWasSubmitted = false;
-	private Button btnGoToRoundTwo;
 	private CountDownTimer roundOneAnnouncementTimer, delayToShowRoundOneAnnouncementTimer, loadingQuestionDialogTimer, 
 		loadingCelebrityAnswersDialogTimer, loadingQuestionAnswerDialogTimer, loadingCheckingAnswerDialogTimer, 
 		genericDelayForNSecondsTimer, mainCountDownTimer, loadingCheckingFinalResultsDialogTimer, 
@@ -48,12 +48,13 @@ public class GamePlay extends Activity implements OnClickListener
 	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog, loadingCheckingAnswerDialog, 
 		loadingCheckingFinalResultsDialog;
 	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0, countTurns = 0, 
-			seedForAnswers = 0, winner = 0;
+			seedForAnswers = 0, winner = 0, drwableID = 0;
 	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
 		playerTwoNameByEmailNameValuePairs, updatePlayerScoreByEmailNameValuePairs;
 	private TextView txtRoundOneQuestion, txtGamePlayPlayerOne, txtGamePlayPlayerTwo, 
 		txtGuestOneAnswer, txtGuestTwoAnswer, txtGuestThreeAnswer, txtGuestFourAnswer, txtGuestFiveAnswer, txtGuestSixAnswer, 
-		txtPlayerOneAnswer, txtPlayerTwoAnswer, txtPlayerOneScore, txtPlayerTwoScore;
+		txtPlayerOneAnswer, txtPlayerTwoAnswer, txtPlayerOneScore, txtPlayerTwoScore, 
+		txtGuestOne, txtGuestTwo, txtGuestThree, txtGuestFour, txtGuestFive, txtGuestSix;
 	private Timer checkIfPlayerSubmittedAnswerTimer, checkIfPlayerSubmittedTieBreakerAnswerTimer;
 	private String currentQuestion = "", playerOneAnswer = "", guestAnswerOne = "", guestAnswerTwo = "", guestAnswerThree = "", 
 			guestAnswerFour = "", guestAnswerFive = "", guestAnswerSix = "", playerOneName, playerTwoName, playerTwoAnswer = "", 
@@ -64,9 +65,6 @@ public class GamePlay extends Activity implements OnClickListener
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_play);
-
-        btnGoToRoundTwo = (Button)findViewById(R.id.btnGoToRoundTwo);  
-        btnGoToRoundTwo.setOnClickListener(this);
         
         txtGuestOneAnswer = (TextView)findViewById(R.id.txtGuestOneAnswer); 
         txtGuestTwoAnswer = (TextView)findViewById(R.id.txtGuestTwoAnswer); 
@@ -79,7 +77,16 @@ public class GamePlay extends Activity implements OnClickListener
         txtPlayerTwoAnswer = (TextView)findViewById(R.id.txtPlayerTwoAnswer);  
         
         txtPlayerOneScore = (TextView)findViewById(R.id.txtPlayerOneScore);
-        txtPlayerTwoScore = (TextView)findViewById(R.id.txtPlayerTwoScore);   
+        txtPlayerTwoScore = (TextView)findViewById(R.id.txtPlayerTwoScore); 
+        
+        txtGuestOne = (TextView)findViewById(R.id.txtGuestOne);
+        txtGuestTwo = (TextView)findViewById(R.id.txtGuestTwo);
+        txtGuestThree = (TextView)findViewById(R.id.txtGuestThree);
+        txtGuestFour = (TextView)findViewById(R.id.txtGuestFour);
+        txtGuestFive = (TextView)findViewById(R.id.txtGuestFive);
+        txtGuestSix = (TextView)findViewById(R.id.txtGuestSix);
+        
+        setPanelists();
         
         determineGameMode();
         if(singlePlayerMode)
@@ -212,15 +219,7 @@ public class GamePlay extends Activity implements OnClickListener
 		    	    			   				txtRoundOneFinalResultMessage.setText("Congratulations " + playerOneName + ". You are the Winner!");
 		    	    				            txtThanksPlayerWhoLostMessage.setText("We thank " + playerTwoName + " for playing");
 		    	    				            
-		    	    				            SharedPreferences winnerEmail = getSharedPreferences(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, MODE_PRIVATE); 
-		    	    				            SharedPreferences.Editor editor = winnerEmail.edit();
-		    	    				            editor.putString(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, playerOneEmail);
-		    	    				            editor.commit();
-		    	    				            
-		    	    				            SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
-		    	    				            SharedPreferences.Editor e = winnerName.edit();
-		    	    				            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerOneName);
-		    	    				            e.commit();
+		    	    				            storeSharedPreference(1);
 		    	    				            
 		    	    				            winner = 1;
 		    	    			   			}
@@ -230,15 +229,7 @@ public class GamePlay extends Activity implements OnClickListener
 		    	    			   					txtRoundOneFinalResultMessage.setText("Congratulations " + playerTwoName + ". You are the Winner!");
 			    	    				            txtThanksPlayerWhoLostMessage.setText("We thank " + playerOneName + " for playing");
 			    	    				            
-			    	    				            SharedPreferences winnerEmail = getSharedPreferences(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, MODE_PRIVATE); 
-			    	    				            SharedPreferences.Editor editor = winnerEmail.edit();
-			    	    				            editor.putString(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, playerTwoEmail);
-			    	    				            editor.commit();
-			    	    				            
-			    	    				            SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
-			    	    				            SharedPreferences.Editor e = winnerName.edit();
-			    	    				            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerTwoName);
-			    	    				            e.commit();
+			    	    				            storeSharedPreference(2);
 			    	    				            
 			    	    				            winner = 2;
 		    	    			   			}
@@ -258,19 +249,11 @@ public class GamePlay extends Activity implements OnClickListener
 	    	    					            	if (winner == 1)
 	    	    					            	{
 	    	    					            		updatePlayerScoreByEmail(playerOneEmail, playerOneScore + "");
-	    	    					            		SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
-				    	    				            SharedPreferences.Editor editor = winnerScore.edit();
-				    	    				            editor.putInt(StaticData.SCORE, playerOneScore);
-				    	    				            editor.commit();
 	    	    					            	}
 	    	    					            	
 	    	    					            	if (winner == 2)
 	    	    					            	{
 	    	    					            		updatePlayerScoreByEmail(playerTwoEmail, playerTwoScore + "");
-	    	    					            		SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
-				    	    				            SharedPreferences.Editor editor = winnerScore.edit();
-				    	    				            editor.putInt(StaticData.SCORE, playerTwoScore);
-				    	    				            editor.commit();
 	    	    					            	}
 	    	    					            	
 	    	    					            	//start round 2 intent
@@ -350,14 +333,14 @@ public class GamePlay extends Activity implements OnClickListener
     
     public void onClick(View v)
 	{
-		switch(v.getId()) 
-    	{  
-	    	case R.id.btnGoToRoundTwo:
-	    		startRoundTwoIntent();
-	    		break;
-	    	default:
-		    	throw new RuntimeException("Unknow button ID"); 
-    	}
+//		switch(v.getId()) 
+//    	{  
+//	    	case R.id.btnGoToRoundTwo:
+//	    		startRoundTwoIntent();
+//	    		break;
+//	    	default:
+//		    	throw new RuntimeException("Unknow button ID"); 
+//    	}
 	}
     
 	private String getPlayerOneEmail()
@@ -1198,16 +1181,11 @@ public class GamePlay extends Activity implements OnClickListener
         {
             public void onClick(final View v) 
             {
-            	/////////////////////////////////////////////////////////
-            	//
-            	// THE PROGRAM CRASHES AT THIS POINT
-            	//
-            	///////////////////////////////////////////////////////// 
-            	
             	if(!edtRoundOneAnswer.toString().matches(""))
             	{
             		tieBreakerAnswerWasSubmitted = true;
             		tieBreakerAnswer = edtRoundOneAnswer.getText().toString();
+            		answerQuestionDialog.dismiss();
             	}
             	else
             	{
@@ -1239,18 +1217,8 @@ public class GamePlay extends Activity implements OnClickListener
     			   		{ 
     			   			if (firstTimeForLoadingCelebrityAnswersDialogTimer)
     			   			{
-    			   				genericDelayForNSecondsTimer = new CountDownTimer(2000, 1000) 
-        	    			   	{
-        	    			   		public void onTick(long millisUntilFinished) { }
-
-        	    			   		public void onFinish() 
-        	    			   		{
-        	    			   			loadingCelebrityAnswersDialog = ProgressDialog.show(GamePlay.this, "","Loading celebrity answers ...", true);
-            			   				firstTimeForLoadingCelebrityAnswersDialogTimer = false;
-            			   				genericDelayForNSecondsTimer.cancel();
-        	    			   		}
-        	    			   	};
-        	    			   	genericDelayForNSecondsTimer.start();
+    			   				loadingCelebrityAnswersDialog = ProgressDialog.show(GamePlay.this, "","Loading celebrity answers ...", true);
+    			   				firstTimeForLoadingCelebrityAnswersDialogTimer = false;
     			   			}
     			   		}
 
@@ -1264,12 +1232,12 @@ public class GamePlay extends Activity implements OnClickListener
     			   			
     			   			if (seedForAnswers == 5)
     			   			{
-    			   				guestAnswerOne = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerTwo = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerThree = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerFour = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerFive = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerSix = getRandomAnswer(10, 1, seedForAnswers);
+    			   				guestAnswerOne = getRandomAnswer(89, 83, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(89, 83, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(89, 83, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(89, 83, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(89, 83, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(89, 83, seedForAnswers);
     			   			}
     			   			
     			   			txtGuestOneAnswer.setText(guestAnswerOne); 
@@ -1343,9 +1311,11 @@ public class GamePlay extends Activity implements OnClickListener
 	    	    			   	    		tieBreakerWinnerDialog.setContentView(R.layout.generic_tiebreaker_dialog);
 	    	    			   	    		tieBreakerWinnerDialog.setCancelable(true);
 
-	    	    				            final TextView txtTiebreakerCongratsMessage = (TextView) tieBreakerWinnerDialog.findViewById(R.id.txtTiebreakerCongratsMessage); 
-	    	    				            final TextView txtTieBreakerNumberOfMatches = (TextView) tieBreakerWinnerDialog.findViewById(R.id.txtTieBreakerNumberOfMatches);  
+	    	    				            final TextView txtTiebreakerCongratsMessage = (TextView) tieBreakerWinnerDialog.findViewById(R.id.txtTieBreakerNumberOfMatches); 
+	    	    				            final TextView txtTieBreakerNumberOfMatches = (TextView) tieBreakerWinnerDialog.findViewById(R.id.txtTiebreakerCongratsMessage);  
 
+	    	    				            txtTieBreakerNumberOfMatches.setText("There were " + numberOfCorrectMatches + " matches.");
+	    	    				            
 	    	    				            if (numberOfCorrectMatches >= 3)
     	    	    			   			{
 	    	    				            	txtTiebreakerCongratsMessage.setText("Congratulations " + playerOneName + ". You are the Winner!");
@@ -1355,8 +1325,6 @@ public class GamePlay extends Activity implements OnClickListener
 	    	    				            	txtTiebreakerCongratsMessage.setText("Congratulations " + playerTwoName + ". You are the Winner!");
 	    	    				            }
 
-	    	    				            txtTieBreakerNumberOfMatches.setText("You got " + numberOfCorrectMatches + " matches.");
-	    	    				            
 	    	    				            final Button btnTieBreakerStartNextRound = (Button) tieBreakerWinnerDialog.findViewById(R.id.btnTieBreakerStartNextRound);
 
 	    	    				            btnTieBreakerStartNextRound.setOnClickListener(new OnClickListener() 
@@ -1371,10 +1339,16 @@ public class GamePlay extends Activity implements OnClickListener
 	        	    	    			   			if (numberOfCorrectMatches >= 3)
 	        	    	    			   			{
 	        	    	    			   				updatePlayerScoreByEmail(playerOneEmail, playerOneScore + "");
+	        	    	    			   				
+	        	    	    			   				storeSharedPreference(1);
+	        	    	    			   				startRoundTwoIntent();
 	        	    	    			   			}
 	        	    	    			   			else // player 2 wins
 	        	    	    			   			{
 	        	    	    			   				updatePlayerScoreByEmail(playerTwoEmail, playerTwoScore + "");
+	        	    	    			   				
+	        	    	    			   				storeSharedPreference(2);
+	        	    	    			   				startRoundTwoIntent();
 	        	    	    			   			}
 	    	    					            	
 	    	    					            	tieBreakerWinnerDialog.dismiss();
@@ -1413,4 +1387,371 @@ public class GamePlay extends Activity implements OnClickListener
     		catch(Exception e) { }
         } 
     };
+    
+    private void storeSharedPreference(int player)
+    {
+    	if (player == 1)
+    	{
+    		SharedPreferences winnerEmail = getSharedPreferences(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, MODE_PRIVATE); 
+            SharedPreferences.Editor editor = winnerEmail.edit();
+            editor.putString(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, playerOneEmail);
+            editor.commit();
+            
+            SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
+            SharedPreferences.Editor e = winnerName.edit();
+            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerOneName);
+            e.commit();
+    	}
+    	 
+    	if (player == 2)
+    	{
+    		SharedPreferences winnerEmail = getSharedPreferences(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, MODE_PRIVATE); 
+            SharedPreferences.Editor editor = winnerEmail.edit();
+            editor.putString(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, playerTwoEmail);
+            editor.commit();
+            
+            SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
+            SharedPreferences.Editor e = winnerName.edit();
+            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerOneName);
+            e.commit();
+    	}
+    }
+    
+    private void setPanelists()
+    {
+    	Drawable panelistOne = null;
+    	Drawable panelistTwo = null;
+    	Drawable panelistThree = null;
+    	Drawable panelistFour = null;
+    	Drawable panelistFive = null;
+    	Drawable panelistSix = null;
+    	
+    	imgPanelistOne = (ImageView)findViewById(R.id.imgPanelistOne);
+    	imgPanelistTwo = (ImageView)findViewById(R.id.imgPanelistTwo);
+    	imgPanelistThree = (ImageView)findViewById(R.id.imgPanelistThree);
+    	imgPanelistFour = (ImageView)findViewById(R.id.imgPanelistFour); 
+    	imgPanelistFive = (ImageView)findViewById(R.id.imgPanelistFive);
+    	imgPanelistSix = (ImageView)findViewById(R.id.imgPanelistSix);
+
+    	AbsoluteLayout.LayoutParams panelistOneLayout = new AbsoluteLayout.LayoutParams(80, 80, 495, 45);
+    	AbsoluteLayout.LayoutParams panelistTwoLayout = new AbsoluteLayout.LayoutParams(80, 80, 597, 45);
+    	AbsoluteLayout.LayoutParams panelistThreeLayout = new AbsoluteLayout.LayoutParams(80, 80, 708, 45);
+    	AbsoluteLayout.LayoutParams panelistFourLayout = new AbsoluteLayout.LayoutParams(80, 80, 495, 208);
+    	AbsoluteLayout.LayoutParams panelistFiveLayout = new AbsoluteLayout.LayoutParams(80, 80, 597, 208);
+    	AbsoluteLayout.LayoutParams panelistSixLayout = new AbsoluteLayout.LayoutParams(80, 80, 708, 208);
+    	
+    	imgPanelistOne.setLayoutParams(panelistOneLayout);
+    	imgPanelistTwo.setLayoutParams(panelistTwoLayout);
+    	imgPanelistThree.setLayoutParams(panelistThreeLayout);
+    	imgPanelistFour.setLayoutParams(panelistFourLayout);
+    	imgPanelistFive.setLayoutParams(panelistFiveLayout);
+    	imgPanelistSix.setLayoutParams(panelistSixLayout);
+
+    	int panelistLoopCouter = 0;
+    	ArrayList<Integer> previousRandomNumList = new ArrayList<Integer>();
+    	Boolean firstTime = true;
+    	
+    	while (panelistLoopCouter <= 6)
+    	{
+    		panelistLoopCouter++;
+    		
+    		Random rand = new Random();
+        	int randomNum = rand.nextInt(9 - 1 + 1) + 1;
+        	
+        	if (firstTime)
+        	{
+        		firstTime = false;
+        	}
+        	else 
+        	{
+        		while (previousRandomNumList.contains(randomNum))
+        		{
+        			randomNum = rand.nextInt(9 - 1 + 1) + 1; 
+        		}
+        	} 
+        	
+        	if (panelistLoopCouter == 1)
+        	{
+        		panelistOne = getPanelistDrawableObject(randomNum, panelistOne, panelistLoopCouter); 
+
+        	}
+        	else if (panelistLoopCouter == 2)
+        	{
+        		panelistTwo = getPanelistDrawableObject(randomNum, panelistTwo, panelistLoopCouter);
+        	}
+        	else if (panelistLoopCouter == 3)
+        	{
+        		panelistThree = getPanelistDrawableObject(randomNum, panelistThree, panelistLoopCouter);
+        	}
+        	else if (panelistLoopCouter == 4)
+        	{
+        		panelistFour = getPanelistDrawableObject(randomNum, panelistFour, panelistLoopCouter);
+        	}
+        	else if (panelistLoopCouter == 5)
+        	{
+        		panelistFive = getPanelistDrawableObject(randomNum, panelistFive, panelistLoopCouter);
+        	}
+        	else if (panelistLoopCouter == 6)
+        	{
+        		panelistSix = getPanelistDrawableObject(randomNum, panelistSix, panelistLoopCouter);
+        	}
+        	
+        	previousRandomNumList.add(randomNum);
+    	}
+    	
+    	imgPanelistOne.setImageDrawable(panelistOne);
+    	imgPanelistTwo.setImageDrawable(panelistTwo); 
+    	imgPanelistThree.setImageDrawable(panelistThree);
+    	imgPanelistFour.setImageDrawable(panelistFour);
+    	imgPanelistFive.setImageDrawable(panelistFive);
+    	imgPanelistSix.setImageDrawable(panelistSix);
+    }
+    
+    private Drawable getPanelistDrawableObject(int randomNum, Drawable panelist, int panelistNumber)
+    {
+    	if (randomNum == 1)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_one_joe);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Joe");
+				break;
+			case 2:
+				txtGuestTwo.setText("Joe");
+				break;
+			case 3:
+				txtGuestThree.setText("Joe");
+				break;
+			case 4:
+				txtGuestFour.setText("Joe");
+				break;
+			case 5:
+				txtGuestFive.setText("Joe");
+				break;
+			case 6:
+				txtGuestSix.setText("Joe");
+				break;
+			}	
+    	}
+    	
+    	if (randomNum == 2)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_two_mark);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Mark");
+				break;
+			case 2:
+				txtGuestTwo.setText("Mark");
+				break;
+			case 3:
+				txtGuestThree.setText("Mark");
+				break;
+			case 4:
+				txtGuestFour.setText("Mark");
+				break;
+			case 5:
+				txtGuestFive.setText("Mark");
+				break;
+			case 6:
+				txtGuestSix.setText("Mark");
+				break;
+			}
+    	}
+    	
+    	if (randomNum == 3)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_three_deborah);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Deborah");
+				break;
+			case 2:
+				txtGuestTwo.setText("Deborah");
+				break;
+			case 3:
+				txtGuestThree.setText("Deborah");
+				break;
+			case 4:
+				txtGuestFour.setText("Deborah");
+				break;
+			case 5:
+				txtGuestFive.setText("Deborah");
+				break;
+			case 6:
+				txtGuestSix.setText("Deborah");
+				break;
+			}
+    	}
+    	
+    	if (randomNum == 4)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_four_beth);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Beth");
+				break;
+			case 2:
+				txtGuestTwo.setText("Beth");
+				break;
+			case 3:
+				txtGuestThree.setText("Beth");
+				break;
+			case 4:
+				txtGuestFour.setText("Beth");
+				break;
+			case 5:
+				txtGuestFive.setText("Beth");
+				break;
+			case 6:
+				txtGuestSix.setText("Beth");
+				break;
+			}
+    	}
+    	
+    	if (randomNum == 5)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_five_eric);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Eric");
+				break;
+			case 2:
+				txtGuestTwo.setText("Eric");
+				break;
+			case 3:
+				txtGuestThree.setText("Eric");
+				break;
+			case 4:
+				txtGuestFour.setText("Eric");
+				break;
+			case 5:
+				txtGuestFive.setText("Eric");
+				break;
+			case 6:
+				txtGuestSix.setText("Eric");
+				break;
+			}
+    	}
+    	
+    	if (randomNum == 6)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_six_tom);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Tom");
+				break;
+			case 2:
+				txtGuestTwo.setText("Tom");
+				break;
+			case 3:
+				txtGuestThree.setText("Tom");
+				break;
+			case 4:
+				txtGuestFour.setText("Tom");
+				break;
+			case 5:
+				txtGuestFive.setText("Tom");
+				break;
+			case 6:
+				txtGuestSix.setText("Tom");
+				break;
+			}
+    	}
+    	
+    	if (randomNum == 7)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_seven_jill);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Jill");
+				break;
+			case 2:
+				txtGuestTwo.setText("Jill");
+				break;
+			case 3:
+				txtGuestThree.setText("Jill");
+				break;
+			case 4:
+				txtGuestFour.setText("Jill");
+				break;
+			case 5:
+				txtGuestFive.setText("Jill");
+				break;
+			case 6:
+				txtGuestSix.setText("Jill");
+				break;
+			}
+    	}
+    	
+    	if (randomNum == 8)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_eight_tina);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Tina");
+				break;
+			case 2:
+				txtGuestTwo.setText("Tina");
+				break;
+			case 3:
+				txtGuestThree.setText("Tina");
+				break;
+			case 4:
+				txtGuestFour.setText("Tina");
+				break;
+			case 5:
+				txtGuestFive.setText("Tina");
+				break;
+			case 6:
+				txtGuestSix.setText("Tina");
+				break;
+			}
+    	}
+    	
+    	if (randomNum == 9)
+    	{
+    		panelist = getResources().getDrawable(R.drawable.panelist_nine_judy);
+
+    		switch (panelistNumber) 
+    		{
+			case 1:
+				txtGuestOne.setText("Judy");
+				break;
+			case 2:
+				txtGuestTwo.setText("Judy");
+				break;
+			case 3:
+				txtGuestThree.setText("Judy");
+				break;
+			case 4:
+				txtGuestFour.setText("Judy");
+				break;
+			case 5:
+				txtGuestFive.setText("Judy");
+				break;
+			case 6:
+				txtGuestSix.setText("Judy");
+				break;
+			}
+    	}
+    	
+    	return panelist;
+    }
 }
