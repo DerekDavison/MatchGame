@@ -30,7 +30,7 @@ import android.widget.Toast;
 public class RoundTwo extends Activity implements OnClickListener
 {
 
-	private TextView qText, txtIntro;
+	private TextView qText, txtIntro, txtFirst, txtSecond, txtThird;
 	private Button submit;
 	private EditText ownText;
 	private RadioButton select, guestOne, guestTwo, guestThree;
@@ -58,6 +58,9 @@ public class RoundTwo extends Activity implements OnClickListener
         guestTwo = (RadioButton)findViewById(R.id.rdbGuest2);
         guestThree = (RadioButton)findViewById(R.id.rdbGuest3);
         selection = (RadioGroup)findViewById(R.id.radioGroup1);
+        txtFirst = (TextView)findViewById(R.id.txt100);
+        txtSecond = (TextView)findViewById(R.id.txt250);
+        txtThird = (TextView)findViewById(R.id.txt500);
         
         
         SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
@@ -88,13 +91,16 @@ public class RoundTwo extends Activity implements OnClickListener
                         ownText.setVisibility(View.VISIBLE);
                         break;
                     case R.id.rdbGuest1:
-                        ownText.setVisibility(View.GONE);                    
+                        ownText.setVisibility(View.GONE);
+                        ownText.setText("");
                         break;
                     case R.id.rdbGuest2:
-                        ownText.setVisibility(View.GONE);                    
+                        ownText.setVisibility(View.GONE); 
+                        ownText.setText("");
                         break;
                     case R.id.rdbGuest3:
-                        ownText.setVisibility(View.GONE);                    
+                        ownText.setVisibility(View.GONE);
+                        ownText.setText("");
                         break;
                 }
             }
@@ -118,38 +124,36 @@ public class RoundTwo extends Activity implements OnClickListener
 	    		{
 	    			
 	    			choice = ownText.getText().toString();
-	    			ownText.setText(choice);
 	    			
 	    			
 	    			determineScore(total);
+	    			loadRoundTwoEndDialog();
 	    			//compare choice to $100 $200 and $500 answers grabbed from database
 	    		}
 	    		else if(guestOne.isChecked())
 	    		{
 	    			
 	    			choice = guestOne.getText().toString();
-	    			ownText.setText(choice);
+	    			
 	    			
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
-	    			
+	    			loadRoundTwoEndDialog();
 	    		}
 	    		else if(guestTwo.isChecked())
 	    		{
 	    			
 	    			choice = guestTwo.getText().toString();
-	    			ownText.setText(choice);
 	    			
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
-	    			
+	    			loadRoundTwoEndDialog();
 	    		}
 	    		else if(guestThree.isChecked())
 	    		{
 	    			
 	    			choice = guestThree.getText().toString();
-	    			ownText.setText(choice);
 	    			
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
-	    			
+	    			loadRoundTwoEndDialog();
 	    		}
 	    		
 	    		//reveal answers 1 by 1
@@ -259,26 +263,41 @@ public class RoundTwo extends Activity implements OnClickListener
 	   				guestOne.setText(getRandomAnswer(152, 143, qId));
 	   				guestTwo.setText(getRandomAnswer(152, 143, qId));
 	   				guestThree.setText(getRandomAnswer(152, 143, qId));
+	   				ans1 = getRandomAnswer(152, 143, qId);
+	   				ans2 = getRandomAnswer(152, 143, qId);
+	   				ans3 = getRandomAnswer(152, 143, qId);
 	   				break;
 	   			case 2:
 	   				guestOne.setText(getRandomAnswer(162, 153, qId));
 	   				guestTwo.setText(getRandomAnswer(162, 153, qId));
 	   				guestThree.setText(getRandomAnswer(162, 153, qId));
+	   				ans1 = getRandomAnswer(162, 153, qId);
+	   				ans2 = getRandomAnswer(162, 153, qId);
+	   				ans3 = getRandomAnswer(162, 153, qId);
 	   				break;
 	   			case 3:
 	   				guestOne.setText(getRandomAnswer(172, 163, qId));
 	   				guestTwo.setText(getRandomAnswer(172, 163, qId));
 	   				guestThree.setText(getRandomAnswer(172, 163, qId));
+	   				ans1 = getRandomAnswer(172, 163, qId);
+	   				ans2 = getRandomAnswer(172, 163, qId);
+	   				ans3 = getRandomAnswer(172, 163, qId);
 	   				break;
 	   			case 4:
 	   				guestOne.setText(getRandomAnswer(182, 173, qId));
 	   				guestTwo.setText(getRandomAnswer(182, 173, qId));
 	   				guestThree.setText(getRandomAnswer(182, 173, qId));
+	   				ans1 = getRandomAnswer(182, 173, qId);
+	   				ans2 = getRandomAnswer(182, 173, qId);
+	   				ans3 = getRandomAnswer(182, 173, qId);
 	   				break;
 	   			case 5:
 	   				guestOne.setText(getRandomAnswer(192, 183, qId));
 	   				guestTwo.setText(getRandomAnswer(192, 183, qId));
 	   				guestThree.setText(getRandomAnswer(192, 183, qId));
+	   				ans1 = getRandomAnswer(192, 183, qId);
+	   				ans2 = getRandomAnswer(192, 183, qId);
+	   				ans3 = getRandomAnswer(192, 183, qId);
 	   				break;
 	   			}
 	   			
@@ -364,6 +383,8 @@ public class RoundTwo extends Activity implements OnClickListener
 		{
 			roundPrize = 100;
 			total = total + roundPrize;
+			loadAnswersDialog();
+			loadAnswersFDialog();
 			//fade away answer 1 to reveal prize
 			//host announces that is your winnings but lets see other answers.
 			//display others one by one.
@@ -374,6 +395,8 @@ public class RoundTwo extends Activity implements OnClickListener
 		{
 			roundPrize = 250;
 			total = total + roundPrize;
+			loadAnswersDialog();
+			loadAnswersSDialog();
 			//fade away answer 1 that is not your answer
 			//reveal answer 2 that is your prize
 			//display final answer with disappointment
@@ -383,6 +406,8 @@ public class RoundTwo extends Activity implements OnClickListener
 		{
 			roundPrize = 500;
 			total = total + roundPrize;
+			loadAnswersDialog();
+			loadAnswersTDialog();
 			//reveal first 2 answers with excitement
 			//reveal final answer with anticipation
 			//big celebration
@@ -391,8 +416,496 @@ public class RoundTwo extends Activity implements OnClickListener
 		{
 			roundPrize = 10;
 			total = total + roundPrize;
+			loadAnswersDialog();
+			loadAnswersLoseDialog();
 			//all answers revealed and no winner
 			//host feels sad and gives the player 10$ and moves him/her to final round
     	}
 	}
+    
+    private void loadAnswersDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(3000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersFDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 100 point answer is...\n" + ans1);
+    	txtFirst.setText(ans1);
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(5000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersFTwoDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersFTwoDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("Not bad, not bad. At least we can move on to the final round!");
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersFThreeDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersFThreeDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("Just for the fun of it, lets look at those other answers.");
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			txtSecond.setText(ans2);
+	   			txtThird.setText(ans3);
+	   			
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersSDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
+    	txtFirst.setText(ans1);
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(5000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersSTwoDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersSTwoDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 250 point answer is...\n" + ans2 +"\nNow we are making some money!");
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersSThreeDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersSThreeDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("Let`s look at what the 500 point answer was.");
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			txtThird.setText(ans3);
+	   			
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersTDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
+    	txtFirst.setText(ans1);
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(5000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersTTwoDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersTTwoDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 250 point answer is...\n" + ans2 +"\nOne last chance! All or Nothing!");
+        txtSecond.setText(ans2);
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersTThreeDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersTThreeDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 500 point answer is...\n" + ans3 + "\n Wow! That`s what I am talking about! You truely are a pro!");
+        txtThird.setText(ans3);
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			
+	   			
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersLoseDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
+    	txtFirst.setText(ans1);
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(5000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersLoseTwoDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersLoseTwoDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 250 point answer is...\n" + ans2 +"\nOne last chance! All or Nothing!");
+        txtSecond.setText(ans2);
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			loadAnswersLoseThreeDialog();
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    
+    private void loadAnswersLoseThreeDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("The 500 point answer is...\n" + ans3 + "\n Oh no! What a shame... \nFor being such a great sport, we will give you 10 points to move to the final round.");
+        txtThird.setText(ans3);
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			
+	   			
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+    private void loadRoundTwoEndDialog()
+    {
+    	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
+    	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+    	roundTwoAnswersDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundTwoAnswersDialog.setContentView(R.layout.round_two_answers);
+    	roundTwoAnswersDialog.setCancelable(true); 
+    	
+    	TextView answers = (TextView)findViewById(R.id.txtAnswerDialog);
+    	answers.setText("Time to move onto the final round where we will go on to see if we can multiply your winnings by 10.");
+        
+        roundTwoAnnouncementTimer = new CountDownTimer(4000, 1000) 
+	   	{
+	   		public void onTick(long millisUntilFinished) 
+	   		{ 
+	   			if (dialogTimer)
+	   			{
+	   				roundTwoAnswersDialog.show();
+	   				dialogTimer = false;
+	   			}
+	   		}
+
+	   		public void onFinish() 
+	   		{
+	   			dialogTimer = true;
+	   			roundTwoAnswersDialog.dismiss();
+	   			roundTwoAnnouncementTimer.cancel();
+	   			
+	   			
+	   		}
+	   	};
+	   	roundTwoAnnouncementTimer.start();
+    }
+
 }
