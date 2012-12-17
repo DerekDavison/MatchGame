@@ -60,7 +60,7 @@ public class RoundThree extends Activity
 		roundThreeAnnouncementDialog.setCancelable(true); 
 		
 		txtHost = (TextView)roundThreeAnnouncementDialog.findViewById(R.id.txtIntro);
-		txtHost.setText("Here we are in the Final Round!\n" + playerName + " is set to go up against...ME! Your lovely host.\n" + "Playing for " + total + " points!");
+		txtHost.setText("Here we are in the Final Round!\n" + playerName + " is set to go up against...ME! Your lovely host.\n" + "Playing for " + (total * 10) + " points!");
         
         roundThreeAnnouncementTimer = new CountDownTimer(5000, 1000) 
 	   	{
