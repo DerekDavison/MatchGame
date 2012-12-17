@@ -40,7 +40,7 @@ public class RoundTwo extends Activity
 	private RadioGroup selection;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound, answerByIdRoundAndQuestionId;
-	private CountDownTimer roundTwoAnnouncementTimer, loadingQuestionDialogTimer, delayToShowRoundTwoAnnouncementTimer;
+	private CountDownTimer roundTwoAnnouncementTimer, delayToShowRoundTwoAnnouncementTimer;
 	private Boolean firstTimeForRoundTwoAnnouncementTimer = true, dialogTimer = true;
 
     @Override
@@ -77,25 +77,21 @@ public class RoundTwo extends Activity
     			{
     			case R.id.rdbOther:
     				choice = ownText.getText().toString();
-    				System.out.print(choice);
 	    			determineScore();
 	    			loadRoundTwoEndDialog();
     				break;
     			case R.id.rdbGuest1:
     				choice = guestOne.getText().toString();
-    				System.out.println(choice);
 	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
 	    			loadRoundTwoEndDialog();
 	    			break;
     			case R.id.rdbGuest2:
     				choice = guestTwo.getText().toString();
-	    			System.out.println(choice);
 	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
 	    			loadRoundTwoEndDialog();
     				break;
     			case R.id.rdbGuest3:
     				choice = guestThree.getText().toString();
-	    			System.out.println();
 	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
 	    			loadRoundTwoEndDialog();
     				break;
@@ -338,11 +334,9 @@ public class RoundTwo extends Activity
 	    
     public void determineScore()
     {
-    	
-    	loadAnswersDialog();
-
 	    if(choice.equals(ans1))
 		{
+	    	//loadAnswersDialog();
 			roundPrize = 100;
 			total = total + roundPrize;
 			loadAnswersFDialog();
@@ -354,6 +348,7 @@ public class RoundTwo extends Activity
 		}
 	    else if(choice.equals(ans2))
 		{
+	    	//loadAnswersDialog();
 			roundPrize = 250;
 			total = total + roundPrize;
 			loadAnswersSDialog();
@@ -364,6 +359,7 @@ public class RoundTwo extends Activity
 		}
 	    else if(choice.equals(ans3))
 		{
+	    	//loadAnswersDialog();
 			roundPrize = 500;
 			total = total + roundPrize;
 			loadAnswersTDialog();
@@ -373,6 +369,7 @@ public class RoundTwo extends Activity
 		}
 		else
 		{
+			//loadAnswersDialog();
 			roundPrize = 10;
 			total = total + roundPrize;
 			loadAnswersLoseDialog();
@@ -511,13 +508,13 @@ public class RoundTwo extends Activity
 	   			dialogTimer = true;
 	   			roundTwoAnswersDialog.dismiss();
 	   			roundTwoAnnouncementTimer.cancel();
-	   			
+	   			txtSecond.setText(ans2);
+	   			txtThird.setText(ans3);
 	   			
 	   		}
 	   	};
 	   	roundTwoAnnouncementTimer.start();
-	   	txtSecond.setText(ans2);
-	   	txtThird.setText(ans3);
+	   	
     }
     
     private void loadAnswersSDialog()
@@ -618,12 +615,12 @@ public class RoundTwo extends Activity
 	   			dialogTimer = true;
 	   			roundTwoAnswersDialog.dismiss();
 	   			roundTwoAnnouncementTimer.cancel();
-	   			
+	   			txtThird.setText(ans3);
 	   			
 	   		}
 	   	};
 	   	roundTwoAnnouncementTimer.start();
-	   	txtThird.setText(ans3);
+	   	
     }
     
     private void loadAnswersTDialog()
@@ -815,7 +812,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 500 point answer is...\n" + ans3 + "\n Oh no! What a shame... \nFor being such a great sport, we will give you 10 points to move to the final round.");
         txtThird.setText(ans3);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
