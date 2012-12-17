@@ -16,6 +16,7 @@
         prizes, our champion will have the corresponding amount added to their prize money.</string>
     <string name="rtwostart">Now, let\'s get this round started!</string>
     <string name="rtwoanswers">Let us see how that response matches up. </string>
+    <string name="rtwoend">Time to move onto the final round where we will go on to see if we can multiply your winnings by 10.</string>
     <string name="player1">Player 1</string>
     <string name="player2">Player 2</string>
     <string name="guest1">Guest 1</string>
@@ -31,6 +32,7 @@
     <string name="selectOwn">Select Own</string>
     <string name="submit">Submit</string>
     <string name="continue_">Continue</string>
+    <string name="continuefinal">Continue to Final Round</string>
     
     <string name="log_in">LOG IN</string>
     <string name="guest">Guest</string>
