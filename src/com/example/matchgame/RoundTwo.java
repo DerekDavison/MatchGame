@@ -27,7 +27,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RoundTwo extends Activity implements OnClickListener
+public class RoundTwo extends Activity
 {
 
 	private TextView qText, txtIntro, txtFirst, txtSecond, txtThird;
@@ -69,6 +69,41 @@ public class RoundTwo extends Activity implements OnClickListener
         SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
         total = winnerScore.getInt(StaticData.SCORE, 0);
        
+        submit.setOnClickListener(new View.OnClickListener() {
+			
+        public void onClick(View v) {    				
+    			
+    			switch(selection.getCheckedRadioButtonId())
+    			{
+    			case R.id.rdbOther:
+    				choice = ownText.getText().toString();
+    				System.out.print(choice);
+	    			determineScore();
+	    			loadRoundTwoEndDialog();
+    				break;
+    			case R.id.rdbGuest1:
+    				choice = guestOne.getText().toString();
+    				System.out.println(choice);
+	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
+	    			loadRoundTwoEndDialog();
+	    			break;
+    			case R.id.rdbGuest2:
+    				choice = guestTwo.getText().toString();
+	    			System.out.println(choice);
+	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
+	    			loadRoundTwoEndDialog();
+    				break;
+    			case R.id.rdbGuest3:
+    				choice = guestThree.getText().toString();
+	    			System.out.println();
+	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
+	    			loadRoundTwoEndDialog();
+    				break;
+    			}
+        }
+        });
+    
+    	
         
         delayToShowRoundTwoAnnouncementTimer = new CountDownTimer(2000, 1000) 
 		   	{
@@ -93,14 +128,17 @@ public class RoundTwo extends Activity implements OnClickListener
                     case R.id.rdbGuest1:
                         ownText.setVisibility(View.GONE);
                         ownText.setText("");
+                        choice = guestThree.getText().toString();
                         break;
                     case R.id.rdbGuest2:
                         ownText.setVisibility(View.GONE); 
                         ownText.setText("");
+                        choice = guestThree.getText().toString();
                         break;
                     case R.id.rdbGuest3:
                         ownText.setVisibility(View.GONE);
                         ownText.setText("");
+                        choice = guestThree.getText().toString();
                         break;
                 }
             }
@@ -108,15 +146,52 @@ public class RoundTwo extends Activity implements OnClickListener
         
     }
     
-   
+    
+    			/*	
+    		        if(select.isChecked())
+    	    		{
+    	    			
+    	    			choice = ownText.getText().toString();
+    	    			
+    	    			
+    	    			determineScore(total);
+    	    			loadRoundTwoEndDialog();
+    	    			//compare choice to $100 $200 and $500 answers grabbed from database
+    	    		}
+    	    		else if(guestOne.isChecked())
+    	    		{
+    	    			
+    	    			choice = guestOne.getText().toString();
+    	    			
+    	    			
+    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+    	    			loadRoundTwoEndDialog();
+    	    		}
+    	    		else if(guestTwo.isChecked())
+    	    		{
+    	    			
+    	    			choice = guestTwo.getText().toString();
+    	    			
+    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+    	    			loadRoundTwoEndDialog();
+    	    		}
+    	    		else if(guestThree.isChecked())
+    	    		{
+    	    			
+    	    			choice = guestThree.getText().toString();
+    	    			
+    	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
+    	    			loadRoundTwoEndDialog();
+    	    		}*/
+    
+    
         
-    public void onClick(View v)
+    /*  public void onClick(View v)
 	{
     	
     	
 		switch(v.getId()) 
     	{  
-	    	
 	    	
 	    	case R.id.btnSubmit:
 	    	
@@ -155,12 +230,15 @@ public class RoundTwo extends Activity implements OnClickListener
 	    			determineScore(total);//compare choice to $100 $200 and $500 answers grabbed from database
 	    			loadRoundTwoEndDialog();
 	    		}
-	    		
+	    		break;
+	    	default:
+	    			break;
 	    		//reveal answers 1 by 1
 	    		//add winnings to running total
 	    		//move player to final round
     	}
-	}
+	
+    };*/
     
     private void loadRoundTwoIntroDialog()
     {
@@ -240,7 +318,7 @@ public class RoundTwo extends Activity implements OnClickListener
     	roundTwoStartDialog.setContentView(R.layout.round_two_start);
     	roundTwoStartDialog.setCancelable(true); 
         
-        roundTwoAnnouncementTimer = new CountDownTimer(3000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(2000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -263,41 +341,41 @@ public class RoundTwo extends Activity implements OnClickListener
 	   				guestOne.setText(getRandomAnswer(152, 143, qId));
 	   				guestTwo.setText(getRandomAnswer(152, 143, qId));
 	   				guestThree.setText(getRandomAnswer(152, 143, qId));
-	   				ans1 = getRandomAnswer(152, 143, qId);
-	   				ans2 = getRandomAnswer(152, 143, qId);
-	   				ans3 = getRandomAnswer(152, 143, qId);
+	   				ans1 = getRandomAnswer(152, 143, qId).toString();
+	   				ans2 = getRandomAnswer(152, 143, qId).toString();
+	   				ans3 = getRandomAnswer(152, 143, qId).toString();
 	   				break;
 	   			case 2:
 	   				guestOne.setText(getRandomAnswer(162, 153, qId));
 	   				guestTwo.setText(getRandomAnswer(162, 153, qId));
 	   				guestThree.setText(getRandomAnswer(162, 153, qId));
-	   				ans1 = getRandomAnswer(162, 153, qId);
-	   				ans2 = getRandomAnswer(162, 153, qId);
-	   				ans3 = getRandomAnswer(162, 153, qId);
+	   				ans1 = getRandomAnswer(162, 153, qId).toString();
+	   				ans2 = getRandomAnswer(162, 153, qId).toString();
+	   				ans3 = getRandomAnswer(162, 153, qId).toString();
 	   				break;
 	   			case 3:
 	   				guestOne.setText(getRandomAnswer(172, 163, qId));
 	   				guestTwo.setText(getRandomAnswer(172, 163, qId));
 	   				guestThree.setText(getRandomAnswer(172, 163, qId));
-	   				ans1 = getRandomAnswer(172, 163, qId);
-	   				ans2 = getRandomAnswer(172, 163, qId);
-	   				ans3 = getRandomAnswer(172, 163, qId);
+	   				ans1 = getRandomAnswer(172, 163, qId).toString();
+	   				ans2 = getRandomAnswer(172, 163, qId).toString();
+	   				ans3 = getRandomAnswer(172, 163, qId).toString();
 	   				break;
 	   			case 4:
 	   				guestOne.setText(getRandomAnswer(182, 173, qId));
 	   				guestTwo.setText(getRandomAnswer(182, 173, qId));
 	   				guestThree.setText(getRandomAnswer(182, 173, qId));
-	   				ans1 = getRandomAnswer(182, 173, qId);
-	   				ans2 = getRandomAnswer(182, 173, qId);
-	   				ans3 = getRandomAnswer(182, 173, qId);
+	   				ans1 = getRandomAnswer(182, 173, qId).toString();
+	   				ans2 = getRandomAnswer(182, 173, qId).toString();
+	   				ans3 = getRandomAnswer(182, 173, qId).toString();
 	   				break;
 	   			case 5:
 	   				guestOne.setText(getRandomAnswer(192, 183, qId));
 	   				guestTwo.setText(getRandomAnswer(192, 183, qId));
 	   				guestThree.setText(getRandomAnswer(192, 183, qId));
-	   				ans1 = getRandomAnswer(192, 183, qId);
-	   				ans2 = getRandomAnswer(192, 183, qId);
-	   				ans3 = getRandomAnswer(192, 183, qId);
+	   				ans1 = getRandomAnswer(192, 183, qId).toString();
+	   				ans2 = getRandomAnswer(192, 183, qId).toString();
+	   				ans3 = getRandomAnswer(192, 183, qId).toString();
 	   				break;
 	   			}
 	   			
@@ -377,12 +455,17 @@ public class RoundTwo extends Activity implements OnClickListener
         return dbHelper.readDBData(StaticData.SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND, answerByIdRoundAndQuestionId, "answer").get(0).toString();
 	}
 	    
-    public void determineScore(int total)
+    public void determineScore()
     {
-	    if(choice == ans1)
+    	System.out.println(choice);
+    	System.out.println(ans1);
+    	System.out.println(ans2);
+    	System.out.println(ans3);
+	    if(choice.equals(ans1))
 		{
+	    	System.out.println(choice);
 			roundPrize = 100;
-			total = total + roundPrize;
+			//total = total + roundPrize;
 			loadAnswersDialog();
 			loadAnswersFDialog();
 			//fade away answer 1 to reveal prize
@@ -391,10 +474,11 @@ public class RoundTwo extends Activity implements OnClickListener
 			
 			
 		}
-		if(choice == ans2)
+	    else if(choice.equals(ans2))
 		{
+	    	System.out.println(choice);
 			roundPrize = 250;
-			total = total + roundPrize;
+			//total = total + roundPrize;
 			loadAnswersDialog();
 			loadAnswersSDialog();
 			//fade away answer 1 that is not your answer
@@ -402,10 +486,11 @@ public class RoundTwo extends Activity implements OnClickListener
 			//display final answer with disappointment
 			
 		}
-		if(choice == ans3)
+	    else if(choice.equals(ans3))
 		{
+	    	System.out.println(choice);
 			roundPrize = 500;
-			total = total + roundPrize;
+			//total = total + roundPrize;
 			loadAnswersDialog();
 			loadAnswersTDialog();
 			//reveal first 2 answers with excitement
@@ -414,8 +499,9 @@ public class RoundTwo extends Activity implements OnClickListener
 		}
 		else
 		{
+			System.out.println(choice);
 			roundPrize = 10;
-			total = total + roundPrize;
+			//total = total + roundPrize;
 			loadAnswersDialog();
 			loadAnswersLoseDialog();
 			//all answers revealed and no winner
@@ -425,6 +511,7 @@ public class RoundTwo extends Activity implements OnClickListener
     
     private void loadAnswersDialog()
     {
+    	System.out.println(choice);
     	final Dialog roundTwoAnswersDialog = new Dialog(RoundTwo.this);
     	roundTwoAnswersDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         
