@@ -12,6 +12,7 @@ public class StaticData
     public final static String SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND = "SelectAnswerByIdQuestionIDAndRound.php"; 
     public final static String UPDATE_PLAYER_SCORE_BY_EMAIL = "UpdatePlayerScoreByEmail.php"; 
     public final static String SELECT_ROUND_TWO_QUESTION_BY_ID_AND_ROUND = "SelectRoundTwoQuestionByIdAndRound.php"; 
+    public final static String SELECT_ROUND_THREE_QUESTION_BY_ID_AND_ROUND = "SelectRoundThreeQuestionByIdAndRound.php"; 
     
 	public final static String USER_ID = "userId";
 	public final static String NAME = "name";

@@ -20,23 +20,13 @@
         android:layout_y="51dp"
         android:text="@string/answer"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/txtGuest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="23dp"
-        android:layout_y="98dp"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
+
     <TextView
         android:id="@+id/txtPhrase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="21dp"
         android:layout_y="168dp"
-        android:text="@string/question"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -57,5 +47,22 @@
         android:layout_x="442dp"
         android:layout_y="197dp"
         android:text="@string/submit" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="59dp"
+        android:layout_height="59dp"
+        android:layout_x="46dp"
+        android:layout_y="0dp"
+        android:src="@drawable/host" />
+
+    <TextView
+        android:id="@+id/txtGuest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="5dp"
+        android:layout_y="103dp"
+        android:text="The Host from Hell"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </AbsoluteLayout>

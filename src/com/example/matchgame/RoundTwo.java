@@ -36,7 +36,7 @@ public class RoundTwo extends Activity
 	private EditText ownText;
 	private RadioButton select, guestOne, guestTwo, guestThree;
 	private String choice, ans1, ans2, ans3, playerName, question;
-	private int random, roundPrize, total, qId;
+	private int random, roundPrize, total, qId, counter;
 	private RadioGroup selection;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound, answerByIdRoundAndQuestionId;
@@ -73,29 +73,41 @@ public class RoundTwo extends Activity
 			
         public void onClick(View v) {    				
     			
+        		counter++;
+        		if(counter <= 1)
+        		{
     			switch(selection.getCheckedRadioButtonId())
     			{
     			case R.id.rdbOther:
     				choice = ownText.getText().toString();
 	    			determineScore();
-	    			loadRoundTwoEndDialog();
     				break;
     			case R.id.rdbGuest1:
     				choice = guestOne.getText().toString();
 	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
-	    			loadRoundTwoEndDialog();
 	    			break;
     			case R.id.rdbGuest2:
     				choice = guestTwo.getText().toString();
 	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
-	    			loadRoundTwoEndDialog();
     				break;
     			case R.id.rdbGuest3:
     				choice = guestThree.getText().toString();
 	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
-	    			loadRoundTwoEndDialog();
     				break;
     			}
+    			submit.setText("To Final Round");
+        		}
+        		else
+        		{
+                	SharedPreferences score = getSharedPreferences(StaticData.SCORE, MODE_PRIVATE); 
+                	SharedPreferences.Editor e = score.edit();
+                	e.putInt(StaticData.SCORE, total);
+                	e.commit();
+                	
+                	Intent continueIntent = new Intent(RoundTwo.this, RoundThree.class); 
+                	startActivity(continueIntent);
+                	finish();
+        		}
         }
         });
     
@@ -510,6 +522,7 @@ public class RoundTwo extends Activity
 	   			roundTwoAnnouncementTimer.cancel();
 	   			txtSecond.setText(ans2);
 	   			txtThird.setText(ans3);
+	   			loadRoundTwoEndDialog();
 	   			
 	   		}
 	   	};
@@ -616,6 +629,7 @@ public class RoundTwo extends Activity
 	   			roundTwoAnswersDialog.dismiss();
 	   			roundTwoAnnouncementTimer.cancel();
 	   			txtThird.setText(ans3);
+	   			loadRoundTwoEndDialog();
 	   			
 	   		}
 	   	};
@@ -722,7 +736,7 @@ public class RoundTwo extends Activity
 	   			dialogTimer = true;
 	   			roundTwoAnswersDialog.dismiss();
 	   			roundTwoAnnouncementTimer.cancel();
-	   			
+	   			loadRoundTwoEndDialog();
 	   			
 	   		}
 	   	};
@@ -853,10 +867,12 @@ public class RoundTwo extends Activity
                 SharedPreferences.Editor e = score.edit();
                 e.putInt(StaticData.SCORE, total);
                 e.commit();
+                roundTwoEndDialog.dismiss();
             	Intent continueIntent = new Intent(RoundTwo.this, RoundThree.class); 
         		startActivity(continueIntent);
         		finish();
             }
     });
+        roundTwoEndDialog.show();
     }
 }
