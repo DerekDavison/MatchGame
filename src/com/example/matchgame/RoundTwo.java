@@ -326,8 +326,6 @@ public class RoundTwo extends Activity
     }
     
     
-    // need to get working
-    
     private String getRandomAnswer(int max, int min, int questionId)
 	{
 		dbHelper = new DBHelper();
@@ -435,7 +433,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 100 point answer is...\n" + ans1);
     	txtFirst.setText(ans1);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -470,7 +468,7 @@ public class RoundTwo extends Activity
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
     	answers.setText("Not bad, not bad. At least we can move on to the final round!");
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -504,7 +502,7 @@ public class RoundTwo extends Activity
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
     	answers.setText("Just for the fun of it, lets look at those other answers.");
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -543,7 +541,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
     	txtFirst.setText(ans1);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -578,7 +576,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 250 point answer is...\n" + ans2 +"\nNow we are making some money!");
     	txtSecond.setText(ans2);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -612,7 +610,7 @@ public class RoundTwo extends Activity
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
     	answers.setText("Let`s look at what the 500 point answer was.");
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -650,7 +648,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
     	txtFirst.setText(ans1);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -685,7 +683,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 250 point answer is...\n" + ans2 +"\nOne last chance! All or Nothing!");
         txtSecond.setText(ans2);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -720,7 +718,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 500 point answer is...\n" + ans3 + "\n Wow! That`s what I am talking about! You truely are a pro!");
         txtThird.setText(ans3);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -756,7 +754,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
     	txtFirst.setText(ans1);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -791,7 +789,7 @@ public class RoundTwo extends Activity
     	answers.setText("The 250 point answer is...\n" + ans2 +"\nOne last chance! All or Nothing!");
         txtSecond.setText(ans2);
         
-        roundTwoAnnouncementTimer = new CountDownTimer(6000, 1000) 
+        roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
