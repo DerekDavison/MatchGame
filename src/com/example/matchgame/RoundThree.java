@@ -47,7 +47,7 @@ public class RoundThree extends Activity
         playerEmail = winnerEmail.getString(StaticData.WINNING_PLAYER_EMAIL_SHARED_PREF, "");
         
         SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
-        total = winnerScore.getInt(StaticData.SCORE, 0);
+        total = winnerScore.getInt(StaticData.SCORE, 0); 
         
         txtQuestion = (TextView)findViewById(R.id.txtPhrase);
         ans = (EditText)findViewById(R.id.answer);
@@ -57,51 +57,44 @@ public class RoundThree extends Activity
         
         btnSubmit = (Button)findViewById(R.id.btnFinalSubmit);
         
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-			
-        public void onClick(View v) {  
-        	
-        		userAnswer = ans.getText().toString();
-        		
-    			if(userAnswer.equals(hostAnswer))
-    			{
-    				loadWinningDialog();
-    				finalAnswer.setText(hostAnswer);
-    				total = total * 10;
-    				updatePlayerScoreByEmail(playerEmail, total + "");
-    				updateUserSignInStateByEmail = new ArrayList<NameValuePair>();
-    				
-    				updateUserSignInStateByEmail.add(new BasicNameValuePair("email", playerEmail));
-    				updateUserSignInStateByEmail.add(new BasicNameValuePair("signed_in", "0"));
-    				dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
-    				
-    				//winning dialog
-    				//add to total
-    				
-    			}
-    			else
-    			{
-    				loadLosingDialog();
-    				finalAnswer.setText(hostAnswer);
-    				updatePlayerScoreByEmail(playerEmail, total + "");
-    				updateUserSignInStateByEmail = new ArrayList<NameValuePair>();
-    				
-    				updateUserSignInStateByEmail.add(new BasicNameValuePair("email", playerEmail));
-    				updateUserSignInStateByEmail.add(new BasicNameValuePair("signed_in", "0"));
-    				dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
-    				
-    				//good try dialog
-    				//add total to db
-    				//remove player active from game
-    			}
-    			}
-    			
+        btnSubmit.setOnClickListener(new View.OnClickListener() 
+        {
+	        public void onClick(View v) 
+	        {  
+	    		userAnswer = ans.getText().toString();
+	    		
+				if(userAnswer.equals(hostAnswer))
+				{
+					loadWinningDialog();
+					finalAnswer.setText(hostAnswer);
+					total = total * 10;
+					updatePlayerScoreByEmail(playerEmail, total + "");
+					updateUserSignInStateByEmail = new ArrayList<NameValuePair>();
+					
+					updateUserSignInStateByEmail.add(new BasicNameValuePair("email", playerEmail));
+					updateUserSignInStateByEmail.add(new BasicNameValuePair("signed_in", "0"));
+					dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
+					
+					//winning dialog
+					//add to total
+				}
+				else
+				{
+					loadLosingDialog();
+					finalAnswer.setText(hostAnswer);
+					updatePlayerScoreByEmail(playerEmail, total + "");
+					updateUserSignInStateByEmail = new ArrayList<NameValuePair>();
+					
+					updateUserSignInStateByEmail.add(new BasicNameValuePair("email", playerEmail));
+					updateUserSignInStateByEmail.add(new BasicNameValuePair("signed_in", "0"));
+					dbHelper.modifyData(updateUserSignInStateByEmail, StaticData.UPDATE_PLAYER_SIGN_IN_STATUS_BY_EMAIL);
+					
+					//good try dialog
+					//add total to db
+					//remove player active from game
+				}
+	    	}	
         });
-    
-   
-
-       
-		
     }
 
 	private void updatePlayerScoreByEmail(String playerEmail, String playerScore)
@@ -115,7 +108,6 @@ public class RoundThree extends Activity
 		dbHelper.modifyData(updatePlayerScoreByEmailNameValuePairs, StaticData.UPDATE_PLAYER_SCORE_BY_EMAIL);
 	}
 
-    
     private void loadRoundThreeIntroDialog()
     {
     	final Dialog roundThreeAnnouncementDialog = new Dialog(RoundThree.this);
@@ -142,7 +134,7 @@ public class RoundThree extends Activity
 	   		public void onFinish() 
 	   		{
 	   			firstTimeForRoundThreeAnnouncementTimer = true;
-	   		
+	   		 
 	   			roundThreeAnnouncementDialog.dismiss();
 	   			roundThreeAnnouncementTimer.cancel();
 	   			
@@ -151,13 +143,13 @@ public class RoundThree extends Activity
 	   	};
 	   	roundThreeAnnouncementTimer.start();
     }
-    
-    private void loadRulesDialog()
+     
+    private void loadRulesDialog() 
     {
     	final Dialog roundThreeDialog = new Dialog(RoundThree.this);
     	roundThreeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         
-    	roundThreeDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
+    	roundThreeDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT); 
     	roundThreeDialog.setContentView(R.layout.round_three_dialog);
     	roundThreeDialog.setCancelable(true); 
     	
@@ -272,7 +264,7 @@ public class RoundThree extends Activity
 	   			roundThreeAnnouncementTimer.cancel();
 	   			loadEndingDialog();
 	   		}
-	   	};
+	   	}; 
 	   	roundThreeAnnouncementTimer.start();
     }
     
@@ -286,7 +278,7 @@ public class RoundThree extends Activity
     	endingDialog.setCancelable(true); 
     	
     	txtHost = (TextView)endingDialog.findViewById(R.id.txtRoundThreeDialog);
-		txtHost.setText("Well that wraps up todays match, " + playerName + " has earned a whopping " + total + ".\nWe look forward to seeing you next time!\nGodbye!");
+		txtHost.setText("Well that wraps up todays match, " + playerName + " has earned a whopping " + total + ".\nWe look forward to seeing you next time!\nGoodbye!");
         
         roundThreeAnnouncementTimer = new CountDownTimer(10000, 1000) 
 	   	{
@@ -304,9 +296,13 @@ public class RoundThree extends Activity
 	   			dialogTimer = true;
 	   			endingDialog.dismiss();
 	   			roundThreeAnnouncementTimer.cancel();
+	   			
+	   			Intent continueIntent = new Intent(RoundThree.this, Login.class); 
+	   			startActivity(continueIntent);
+	   			finish();
 	   		}
 	   	};
-	   	roundThreeAnnouncementTimer.start();
+	   	roundThreeAnnouncementTimer.start();   
     }
     
     private void loadLosingDialog()
@@ -344,9 +340,6 @@ public class RoundThree extends Activity
 	   	roundThreeAnnouncementTimer.start();
     }
     
-    
-  
-        
     private void generateRandomQuestion()
     {
     	dbHelper = new DBHelper();
@@ -362,11 +355,8 @@ public class RoundThree extends Activity
     	qId = random;
     	
     	txtQuestion.setText(question);
-    	
-		
     }
-   
-    
+ 
     private String getRandomAnswer(int max, int min, int questionId)
 	{
 		dbHelper = new DBHelper();
@@ -379,8 +369,6 @@ public class RoundThree extends Activity
         answerByIdRoundAndQuestionId.add(new BasicNameValuePair("question_id", questionId + ""));
         answerByIdRoundAndQuestionId.add(new BasicNameValuePair("round", StaticData.ROUND_THREE));
         
-
         return dbHelper.readDBData(StaticData.SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND, answerByIdRoundAndQuestionId, "answer").get(0).toString();
-	}
-	    
+	}    
 }

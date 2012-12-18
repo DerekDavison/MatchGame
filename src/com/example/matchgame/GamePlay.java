@@ -48,7 +48,7 @@ public class GamePlay extends Activity implements OnClickListener
 	private ProgressDialog loadingQuestionDialog, loadingCelebrityAnswersDialog, loadingCheckingAnswerDialog, 
 		loadingCheckingFinalResultsDialog;
 	private int questionIdCouter = 0, playerOneScore = 0, playerTwoScore = 0, numberOfCorrectMatches = 0, countTurns = 0, 
-			seedForAnswers = 0, winner = 0, drwableID = 0;
+			seedForAnswers = 0, winner = 0;
 	private ArrayList<NameValuePair> questionByIdAndRoundNameValuePairs, playerOneNameByEmailNameValuePairs, 
 		playerTwoNameByEmailNameValuePairs, updatePlayerScoreByEmailNameValuePairs;
 	private TextView txtRoundOneQuestion, txtGamePlayPlayerOne, txtGamePlayPlayerTwo, 
@@ -91,12 +91,7 @@ public class GamePlay extends Activity implements OnClickListener
         determineGameMode();
         if(singlePlayerMode)
         {
-        	setPlayerOneAvatar();
-        	
-        	// need to find a better icon
-//        	Drawable avatarOne = getResources().getDrawable(R.drawable.computer_icon);
-//        	imgPlayerTwo = (ImageView)findViewById(R.id.imgPlayerTwo);
-//        	imgPlayerTwo.setImageDrawable(avatarOne);
+        	setPlayerOneAvatar(); 
         }
         else
         {
@@ -741,39 +736,39 @@ public class GamePlay extends Activity implements OnClickListener
     			   			
     			   			if (seedForAnswers == 1)
     			   			{
-    			   				guestAnswerOne = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerTwo = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerThree = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerFour = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerFive = getRandomAnswer(10, 1, seedForAnswers);
-        			   			guestAnswerSix = getRandomAnswer(10, 1, seedForAnswers);
+    			   				guestAnswerOne = getRandomAnswer(7, 1, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(7, 1, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(7, 1, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(7, 1, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(7, 1, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(7, 1, seedForAnswers);
     			   			}
     			   			else if (seedForAnswers == 2)
     			   			{
-    			   				guestAnswerOne = getRandomAnswer(62, 53, seedForAnswers);
-        			   			guestAnswerTwo = getRandomAnswer(62, 53, seedForAnswers);
-        			   			guestAnswerThree = getRandomAnswer(62, 53, seedForAnswers);
-        			   			guestAnswerFour = getRandomAnswer(62, 53, seedForAnswers);
-        			   			guestAnswerFive = getRandomAnswer(62, 53, seedForAnswers);
-        			   			guestAnswerSix = getRandomAnswer(62, 53, seedForAnswers);
+    			   				guestAnswerOne = getRandomAnswer(59, 53, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(59, 53, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(59, 53, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(59, 53, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(59, 53, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(59, 53, seedForAnswers);
     			   			}
     			   			else if (seedForAnswers == 3)
     			   			{
-    			   				guestAnswerOne = getRandomAnswer(72, 63, seedForAnswers);
-        			   			guestAnswerTwo = getRandomAnswer(72, 63, seedForAnswers);
-        			   			guestAnswerThree = getRandomAnswer(72, 63, seedForAnswers);
-        			   			guestAnswerFour = getRandomAnswer(72, 63, seedForAnswers);
-        			   			guestAnswerFive = getRandomAnswer(72, 63, seedForAnswers);
-        			   			guestAnswerSix = getRandomAnswer(72, 63, seedForAnswers);
+    			   				guestAnswerOne = getRandomAnswer(69, 63, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(69, 63, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(69, 63, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(69, 63, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(69, 63, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(69, 63, seedForAnswers);
     			   			}
     			   			else if (seedForAnswers == 4)
     			   			{
-    			   				guestAnswerOne = getRandomAnswer(82, 73, seedForAnswers);
-        			   			guestAnswerTwo = getRandomAnswer(82, 73, seedForAnswers);
-        			   			guestAnswerThree = getRandomAnswer(82, 73, seedForAnswers);
-        			   			guestAnswerFour = getRandomAnswer(82, 73, seedForAnswers);
-        			   			guestAnswerFive = getRandomAnswer(82, 73, seedForAnswers);
-        			   			guestAnswerSix = getRandomAnswer(82, 73, seedForAnswers);
+    			   				guestAnswerOne = getRandomAnswer(79, 73, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(79, 73, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(79, 73, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(79, 73, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(79, 73, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(79, 73, seedForAnswers);
     			   			}
     			   			
     			   			txtGuestOneAnswer.setText(guestAnswerOne); 
@@ -783,7 +778,7 @@ public class GamePlay extends Activity implements OnClickListener
     			   			txtGuestFiveAnswer.setText(guestAnswerFive);
     			   			txtGuestSixAnswer.setText(guestAnswerSix);
 
-    			   			genericDelayForNSecondsTimer = new CountDownTimer(3000, 1000) 
+    			   			genericDelayForNSecondsTimer = new CountDownTimer(5000, 1000) 
     	    			   	{
     	    			   		public void onTick(long millisUntilFinished) { }
 
@@ -1232,12 +1227,12 @@ public class GamePlay extends Activity implements OnClickListener
     			   			
     			   			if (seedForAnswers == 5)
     			   			{
-    			   				guestAnswerOne = getRandomAnswer(89, 83, seedForAnswers);
-        			   			guestAnswerTwo = getRandomAnswer(89, 83, seedForAnswers);
-        			   			guestAnswerThree = getRandomAnswer(89, 83, seedForAnswers);
-        			   			guestAnswerFour = getRandomAnswer(89, 83, seedForAnswers);
-        			   			guestAnswerFive = getRandomAnswer(89, 83, seedForAnswers);
-        			   			guestAnswerSix = getRandomAnswer(89, 83, seedForAnswers);
+    			   				guestAnswerOne = getRandomAnswer(86, 83, seedForAnswers);
+        			   			guestAnswerTwo = getRandomAnswer(86, 83, seedForAnswers);
+        			   			guestAnswerThree = getRandomAnswer(86, 83, seedForAnswers);
+        			   			guestAnswerFour = getRandomAnswer(86, 83, seedForAnswers);
+        			   			guestAnswerFive = getRandomAnswer(86, 83, seedForAnswers);
+        			   			guestAnswerSix = getRandomAnswer(86, 83, seedForAnswers);
     			   			}
     			   			
     			   			txtGuestOneAnswer.setText(guestAnswerOne); 
@@ -1247,7 +1242,7 @@ public class GamePlay extends Activity implements OnClickListener
     			   			txtGuestFiveAnswer.setText(guestAnswerFive);
     			   			txtGuestSixAnswer.setText(guestAnswerSix);
 
-    			   			genericDelayForNSecondsTimer = new CountDownTimer(2000, 1000) 
+    			   			genericDelayForNSecondsTimer = new CountDownTimer(5000, 1000) 
     	    			   	{
     	    			   		public void onTick(long millisUntilFinished) { }
 
@@ -1412,7 +1407,7 @@ public class GamePlay extends Activity implements OnClickListener
             
             SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
             SharedPreferences.Editor e = winnerName.edit();
-            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerOneName);
+            e.putString(StaticData.WINNING_PLAYER_SHARED_PREF, playerTwoName);
             e.commit();
     	}
     }

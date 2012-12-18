@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/AbsoluteLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/white" >
 
     <TextView
         android:id="@+id/textView3"
@@ -11,8 +12,9 @@
         android:layout_x="15dp"
         android:layout_y="188dp"
         android:text="@string/a"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000" />
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -20,17 +22,9 @@
         android:layout_x="15dp"
         android:layout_y="108dp"
         android:text="@string/c"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/txtQuestion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="0dp"
-        android:layout_y="0dp"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000" />
+
     <TextView
         android:id="@+id/txt500"
         android:layout_width="wrap_content"
@@ -38,8 +32,9 @@
         android:layout_x="130dp"
         android:layout_y="108dp"
         android:text="@string/answer"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000" />
+
     <TextView
         android:id="@+id/txt250"
         android:layout_width="wrap_content"
@@ -47,8 +42,9 @@
         android:layout_x="130dp"
         android:layout_y="148dp"
         android:text="@string/answer"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000" />
+
     <TextView
         android:id="@+id/txt100"
         android:layout_width="wrap_content"
@@ -56,8 +52,9 @@
         android:layout_x="130dp"
         android:layout_y="188dp"
         android:text="@string/answer"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000" />
+
     <EditText
         android:id="@+id/response"
         android:layout_width="152dp"
@@ -66,7 +63,7 @@
         android:layout_y="110dp"
         android:ems="10"
         android:visibility="invisible" />
-
+
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
@@ -74,7 +71,7 @@
         android:layout_x="382dp"
         android:layout_y="164dp"
         android:text="@string/submit" />
-
+
     <RadioGroup
         android:id="@+id/radioGroup1"
         android:layout_width="558dp"
@@ -82,34 +79,37 @@
         android:layout_x="1dp"
         android:layout_y="40dp"
         android:orientation="horizontal" >
-
+
         <RadioButton
             android:id="@+id/rdbGuest1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/guest1" />
-
+            android:text="@string/guest1" 
+            android:textColor="#000000" />
+
         <RadioButton
             android:id="@+id/rdbGuest2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/guest2" />
-
+            android:text="@string/guest2"
+            android:textColor="#000000"  />
+
         <RadioButton
             android:id="@+id/rdbGuest3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/guest3" />
-
+            android:text="@string/guest3"
+            android:textColor="#000000"  />
+
         <RadioButton
             android:id="@+id/rdbOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/selectOwn" />
-
+            android:text="@string/selectOwn" 
+            android:textColor="#000000" />
     </RadioGroup>
-
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -117,6 +117,17 @@
         android:layout_x="15dp"
         android:layout_y="146dp"
         android:text="@string/b"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000" />
+
+    <TextView
+        android:id="@+id/txtQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="15dp"
+        android:layout_y="10dp"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000000" />
 
 </AbsoluteLayout>

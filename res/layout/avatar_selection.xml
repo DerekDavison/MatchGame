@@ -99,7 +99,8 @@
         android:layout_x="146dp"
         android:layout_y="46dp"
         android:text="Player 1 - Choose an Avatar"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textColor="#000000" />
 
     <Button
         android:id="@+id/btnCheckOne"

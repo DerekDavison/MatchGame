@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/AbsoluteLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/white" >
 
     <ImageView
         android:id="@+id/imageView1"
@@ -11,7 +12,7 @@
         android:layout_x="32dp"
         android:layout_y="13dp"
         android:src="@drawable/chair" />
-
+
     <TextView
         android:id="@+id/txtAnswerFinal"
         android:layout_width="wrap_content"
@@ -19,16 +20,18 @@
         android:layout_x="268dp"
         android:layout_y="51dp"
         android:text="@string/answer"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:textColor="#000000" />
+
     <TextView
         android:id="@+id/txtPhrase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="21dp"
         android:layout_y="168dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:textColor="#000000" />
+
     <EditText
         android:id="@+id/answer"
         android:layout_width="187dp"
@@ -39,14 +42,6 @@
 
         <requestFocus />
     </EditText>
-
-    <Button
-        android:id="@+id/btnFinalSubmit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="442dp"
-        android:layout_y="197dp"
-        android:text="@string/submit" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -56,13 +51,22 @@
         android:layout_y="0dp"
         android:src="@drawable/host" />
 
+    <Button
+        android:id="@+id/btnFinalSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="443dp"
+        android:layout_y="156dp"
+        android:text="@string/submit" />
+
     <TextView
         android:id="@+id/txtGuest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="5dp"
-        android:layout_y="103dp"
-        android:text="The Host from Hell"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_x="38dp"
+        android:layout_y="104dp"
+        android:text="The Host"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000000" />
 
 </AbsoluteLayout>

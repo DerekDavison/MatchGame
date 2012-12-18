@@ -49,7 +49,6 @@ public class RoundTwo extends Activity
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.round_two);
         
-       
         qText = (TextView)findViewById(R.id.txtQuestion);
         submit = (Button)findViewById(R.id.btnSubmit);
         ownText = (EditText)findViewById(R.id.response);
@@ -62,6 +61,10 @@ public class RoundTwo extends Activity
         txtSecond = (TextView)findViewById(R.id.txt250);
         txtThird = (TextView)findViewById(R.id.txt500);
         
+        select.setText("________  ");
+        guestOne.setText("________  ");
+        guestTwo.setText("________  ");
+        guestThree.setText("________  ");
         
         SharedPreferences winnerName = getSharedPreferences(StaticData.WINNING_PLAYER_SHARED_PREF, MODE_PRIVATE); 
         playerName = winnerName.getString(StaticData.WINNING_PLAYER_SHARED_PREF, "");
@@ -69,33 +72,34 @@ public class RoundTwo extends Activity
         SharedPreferences winnerScore = getSharedPreferences(StaticData.SCORE, 0); 
         total = winnerScore.getInt(StaticData.SCORE, 0);
        
-        submit.setOnClickListener(new View.OnClickListener() {
-			
-        public void onClick(View v) {    				
-    			
-        		counter++;
+        submit.setOnClickListener(new View.OnClickListener() 
+        {
+	        public void onClick(View v) 
+	        {
+	        	counter++;
+	        	
         		if(counter <= 1)
         		{
-    			switch(selection.getCheckedRadioButtonId())
-    			{
-    			case R.id.rdbOther:
-    				choice = ownText.getText().toString();
-	    			determineScore();
-    				break;
-    			case R.id.rdbGuest1:
-    				choice = guestOne.getText().toString();
-	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
-	    			break;
-    			case R.id.rdbGuest2:
-    				choice = guestTwo.getText().toString();
-	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
-    				break;
-    			case R.id.rdbGuest3:
-    				choice = guestThree.getText().toString();
-	    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
-    				break;
-    			}
-    			submit.setText("To Final Round");
+	    			switch(selection.getCheckedRadioButtonId())
+	    			{
+	    			case R.id.rdbOther:
+	    				choice = ownText.getText().toString();
+		    			determineScore();
+	    				break;
+	    			case R.id.rdbGuest1:
+	    				choice = guestOne.getText().toString();
+		    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
+		    			break;
+	    			case R.id.rdbGuest2:
+	    				choice = guestTwo.getText().toString();
+		    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
+	    				break;
+	    			case R.id.rdbGuest3:
+	    				choice = guestThree.getText().toString();
+		    			determineScore();//compare choice to $100 $200 and $500 answers grabbed from database
+	    				break;
+	    			}
+	    			submit.setText("To Final Round");
         		}
         		else
         		{
@@ -108,28 +112,27 @@ public class RoundTwo extends Activity
                 	startActivity(continueIntent);
                 	finish();
         		}
-        }
+	        }
         });
-    
-    	
-        
+
         delayToShowRoundTwoAnnouncementTimer = new CountDownTimer(2000, 1000) 
-		   	{
-		   		public void onTick(long millisUntilFinished) { }
+	   	{
+	   		public void onTick(long millisUntilFinished) { }
 
-		   		public void onFinish() 
-		   		{
-		   			loadRoundTwoIntroDialog();
-		   			delayToShowRoundTwoAnnouncementTimer.cancel();
-		   		}
-		   	};
-		   	delayToShowRoundTwoAnnouncementTimer.start();
-        
-         selection.setOnCheckedChangeListener(
-            new RadioGroup.OnCheckedChangeListener() {
+	   		public void onFinish() 
+	   		{
+	   			loadRoundTwoIntroDialog();
+	   			delayToShowRoundTwoAnnouncementTimer.cancel();
+	   		}
+	   	};
+	   	delayToShowRoundTwoAnnouncementTimer.start();
 
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId) {
+	   	selection.setOnCheckedChangeListener( new RadioGroup.OnCheckedChangeListener() 
+	   	{
+	   		public void onCheckedChanged(RadioGroup group, int checkedId) 
+	   		{
+                switch(checkedId) 
+                {
                     case R.id.rdbOther:
                         ownText.setVisibility(View.VISIBLE);
                         break;
@@ -150,18 +153,14 @@ public class RoundTwo extends Activity
                         break;
                 }
             }
-            });
-        
+	   	});
     }
-    
-    
+
     private void loadRoundTwoIntroDialog()
     {
     	final Dialog roundTwoAnnouncementDialog = new Dialog(RoundTwo.this);
 		roundTwoAnnouncementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
-        
-		
+
 		roundTwoAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
 		roundTwoAnnouncementDialog.setContentView(R.layout.round_two_intro);
 		roundTwoAnnouncementDialog.setCancelable(true); 
@@ -294,18 +293,12 @@ public class RoundTwo extends Activity
 	   				break;
 	   			}
 	   			
-	   			
-	   			
-	   			
-	   			
 	   			roundTwoAnnouncementTimer.cancel();
 	   		}
 	   	};
 	   	roundTwoAnnouncementTimer.start();
     }
-    
-  
-        
+
     private void generateRandomQuestion()
     {
     	dbHelper = new DBHelper();
@@ -321,8 +314,6 @@ public class RoundTwo extends Activity
     	qId = random;
    
     	qText.setText(question);
-    	
-		
     }
     
     
@@ -338,7 +329,6 @@ public class RoundTwo extends Activity
         answerByIdRoundAndQuestionId.add(new BasicNameValuePair("question_id", questionId + ""));
         answerByIdRoundAndQuestionId.add(new BasicNameValuePair("round", StaticData.ROUND_TWO));
         
-
         return dbHelper.readDBData(StaticData.SELECT_ANSWER_BY_ID_QUESTION_ID_AND_ROUND, answerByIdRoundAndQuestionId, "answer").get(0).toString();
 	}
 	    
@@ -346,19 +336,15 @@ public class RoundTwo extends Activity
     {
 	    if(choice.equals(ans1))
 		{
-	    	//loadAnswersDialog();
 			roundPrize = 100;
 			total = total + roundPrize;
 			loadAnswersFDialog();
 			//fade away answer 1 to reveal prize
 			//host announces that is your winnings but lets see other answers.
 			//display others one by one.
-			
-			
 		}
 	    else if(choice.equals(ans2))
 		{
-	    	//loadAnswersDialog();
 			roundPrize = 250;
 			total = total + roundPrize;
 			loadAnswersSDialog();
@@ -369,7 +355,6 @@ public class RoundTwo extends Activity
 		}
 	    else if(choice.equals(ans3))
 		{
-	    	//loadAnswersDialog();
 			roundPrize = 500;
 			total = total + roundPrize;
 			loadAnswersTDialog();
@@ -379,7 +364,6 @@ public class RoundTwo extends Activity
 		}
 		else
 		{
-			//loadAnswersDialog();
 			roundPrize = 10;
 			total = total + roundPrize;
 			loadAnswersLoseDialog();
@@ -483,7 +467,7 @@ public class RoundTwo extends Activity
 	   		{
 	   			dialogTimer = true;
 	   			roundTwoAnswersDialog.dismiss();
-	   			roundTwoAnnouncementTimer.cancel();
+	   			roundTwoAnnouncementTimer.cancel();  
 	   			loadAnswersFThreeDialog();
 	   		}
 	   	};
@@ -538,7 +522,7 @@ public class RoundTwo extends Activity
     	roundTwoAnswersDialog.setCancelable(true); 
     	
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
-    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
+    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let's see if it's the 250 point answer.");
     	txtFirst.setText(ans1);
         
         roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
@@ -608,7 +592,7 @@ public class RoundTwo extends Activity
     	roundTwoAnswersDialog.setCancelable(true); 
     	
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
-    	answers.setText("Let`s look at what the 500 point answer was.");
+    	answers.setText("Let's look at what the 500 point answer was.");
         
         roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
 	   	{
@@ -645,7 +629,7 @@ public class RoundTwo extends Activity
     	roundTwoAnswersDialog.setCancelable(true); 
     	
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
-    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
+    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let's see if it's the 250 point answer.");
     	txtFirst.setText(ans1);
         
         roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
@@ -715,7 +699,7 @@ public class RoundTwo extends Activity
     	roundTwoAnswersDialog.setCancelable(true); 
     	
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
-    	answers.setText("The 500 point answer is...\n" + ans3 + "\n Wow! That`s what I am talking about! You truely are a pro!");
+    	answers.setText("The 500 point answer is...\n" + ans3 + "\n Wow! That's what I am talking about! You truely are a pro!");
         txtThird.setText(ans3);
         
         roundTwoAnnouncementTimer = new CountDownTimer(8000, 1000) 
@@ -751,7 +735,7 @@ public class RoundTwo extends Activity
     	roundTwoAnswersDialog.setCancelable(true); 
     	
     	TextView answers = (TextView)roundTwoAnswersDialog.findViewById(R.id.txtAnswerDialog);
-    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let`s see if it`s the 250 point answer.");
+    	answers.setText("The 100 point answer is...\n" + ans1 + "\n Not quite... Let's see if it's the 250 point answer.");
     	txtFirst.setText(ans1);
         
         roundTwoAnnouncementTimer = new CountDownTimer(7000, 1000) 
@@ -840,12 +824,11 @@ public class RoundTwo extends Activity
 	   			dialogTimer = true;
 	   			roundTwoAnswersDialog.dismiss();
 	   			roundTwoAnnouncementTimer.cancel();
-	   			
-	   			
 	   		}
 	   	};
 	   	roundTwoAnnouncementTimer.start();
     }
+    
     private void loadRoundTwoEndDialog()
     {
     	final Dialog roundTwoEndDialog = new Dialog(RoundTwo.this);
@@ -870,7 +853,7 @@ public class RoundTwo extends Activity
         		startActivity(continueIntent);
         		finish();
             }
-    });
+        });
         roundTwoEndDialog.show();
     }
 }
