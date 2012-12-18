@@ -10,10 +10,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -24,6 +27,7 @@ public class RoundThree extends Activity
 	private int total, qId, random;
 	private EditText ans;
 	private TextView txtHost, txtQuestion;
+	private Button btnSubmit;
 	private DBHelper dbHelper;
 	private ArrayList<NameValuePair> questionByIdAndRound, answerByIdRoundAndQuestionId;
 	private CountDownTimer roundThreeAnnouncementTimer, delayToShowRoundThreeAnnouncementTimer;
@@ -44,6 +48,33 @@ public class RoundThree extends Activity
         txtQuestion = (TextView)findViewById(R.id.txtRoundThreeDialog);
         ans = (EditText)findViewById(R.id.answer);
         
+        btnSubmit = (Button)findViewById(R.id.btnFinalSubmit);
+        
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+			
+        public void onClick(View v) {  
+        	
+        		userAnswer = ans.getText().toString();
+        		
+    			if(userAnswer.equals(hostAnswer))
+    			{
+    				//winning dialog
+    				//add to total
+    			}
+    			else
+    			{
+    				//good try dialog
+    				//add total to db
+    				//remove player active from game
+    			}
+    			}
+    			
+        });
+    
+   
+
+       
+		
     }
 
 
@@ -52,9 +83,7 @@ public class RoundThree extends Activity
     {
     	final Dialog roundThreeAnnouncementDialog = new Dialog(RoundThree.this);
 		roundThreeAnnouncementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
-        
-		
+
 		roundThreeAnnouncementDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
 		roundThreeAnnouncementDialog.setContentView(R.layout.round_three_dialog);
 		roundThreeAnnouncementDialog.setCancelable(true); 
@@ -96,9 +125,10 @@ public class RoundThree extends Activity
     	roundThreeDialog.setCancelable(true); 
     	
     	txtHost = (TextView)roundThreeDialog.findViewById(R.id.txtIntro);
-		txtHost.setText("Here we are in the Final Round!\n" + playerName + " is set to go up against...ME! Your lovely host.");
+		txtHost.setText("In this round, You will go one on one with me to match my answer. It will be one question and one chance to match my answer. " +
+				"If you succeed, you will increase your money tenfold! Otherwise, you will have to leave with your current winnings.");
         
-        roundThreeAnnouncementTimer = new CountDownTimer(10000, 1000) 
+        roundThreeAnnouncementTimer = new CountDownTimer(8000, 1000) 
 	   	{
 	   		public void onTick(long millisUntilFinished) 
 	   		{ 
@@ -128,6 +158,9 @@ public class RoundThree extends Activity
     	roundThreeStartDialog.requestWindowFeature(WindowManager.LayoutParams.WRAP_CONTENT);
     	roundThreeStartDialog.setContentView(R.layout.round_three_dialog);
     	roundThreeStartDialog.setCancelable(true); 
+    	
+    	txtHost = (TextView)roundThreeStartDialog.findViewById(R.id.txtIntro);
+		txtHost.setText("Are you ready? \nHere we go!");
         
         roundThreeAnnouncementTimer = new CountDownTimer(2000, 1000) 
 	   	{
